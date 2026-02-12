@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الله أولاً</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+        body { font-family: 'Amiri', serif; background-color: #fcf9f2; color: #4a342e; margin: 0; padding: 15px; line-height: 1.6; text-align: center; }
+        .header { padding: 20px 0; border-bottom: 2px double #d4af37; margin-bottom: 20px; }
+        .logo { font-size: 2.8em; font-weight: bold; color: #8b4513; margin: 0; }
+        .slogan { font-size: 1.3em; color: #a0522d; margin-top: 5px; font-style: italic; }
+        
+        /* الرسالة التعريفية التي طلبتها */
+        .intro-box { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 20px 0; border: 1px solid #eaddca; }
+        .intro-text { font-size: 1.2em; color: #5c4033; text-align: justify; }
+
+        .daily-section { background: #fff8dc; border-right: 5px solid #d4af37; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: right; }
+        .daily-title { font-weight: bold; color: #d4af37; }
+
+        .main-nav { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .nav-card { background: #8b4513; color: white; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .nav-card:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="logo">الله أولاً</h1>
+        <p class="slogan">"سيروا إلى الله عرجى ومكاسير"</p>
+    </div>
+
+    <div class="intro-box">
+        <p class="intro-text">
+            طريقنا يبدأ من هنا.. لأننا آمنّا أن <b>"من عرف الله أكثر، أحبّه أكثر"</b>. 
+            جئنا لنتدبر أسماءه الحسنى، فالمعرفة هي عتبة الحب، ومن امتلأ قلبه بمعرفة ربه، هانت عليه الدنيا بما فيها. 
+            لنعرف مَن نعبد، لنُحب مَن نرجو.
+        </p>
+    </div>
+
+    <div class="daily-section">
+        <span class="daily-title">✨ موقف اليوم:</span>
+        <p id="dailyQuote">"جبر الله قلبك بخبر ينسيك كل ما فات.."</p>
+    </div>
+
+    <div class="main-nav">
+        <div class="nav-card" onclick="tg.showAlert('قريباً سنبدأ برحلة الأسماء.. هل أنت مستعد؟')">
+            <h2>ابدأ رحلة المعرفة 📖</h2>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const quotes = [
+            "سيروا إلى الله عرجى ومكاسير، ولا تنتظروا الصحة فإن انتظار الصحة بطالة.",
+            "من عرف الله استقامت له الحياة.",
+            "كل كسرٍ في قلبك، جبرُه عند الله أولاً.",
+            "الحبُّ ثمرة المعرفة، فاعرف ربك يحبه قلبك."
+        ];
+        document.getElementById('dailyQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+    </script>
+</body>
+</html>
