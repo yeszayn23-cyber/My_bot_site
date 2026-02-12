@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي داخل تلجرام</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f0f0f0; }
+        h1 { color: #2481cc; }
+        .btn { background: #2481cc; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>أهلاً بك في بوتي الجديد! 🚀</h1>
+    <p>هذا هو الموقع اللي راح يشوفوه الناس داخل تلجرام.</p>
+    <button class="btn" onclick="tg.close()">إغلاق الموقع</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // يخلي الموقع يفتح على كامل الشاشة
+    </script>
+</body>
+</html>
