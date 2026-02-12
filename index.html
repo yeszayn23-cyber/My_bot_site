@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الله أولاً</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+        body { font-family: 'Amiri', serif; background-color: #fcf9f2; color: #4a342e; margin: 0; padding: 15px; text-align: center; }
+        .container { max-width: 500px; margin: auto; }
+        .header { padding: 20px 0; border-bottom: 2px double #d4af37; margin-bottom: 20px; }
+        .logo { font-size: 2.5em; font-weight: bold; color: #8b4513; margin: 0; }
+        .section { display: none; animation: fadeIn 0.5s; }
+        .active { display: block; }
+        .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; }
+        .back-btn { background: #d4af37; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; }
+        
+        /* تصميم خانة المواقف */
+        .comments-section { margin-top: 30px; background: #fdf6e3; padding: 15px; border-radius: 12px; border: 1px dashed #d4af37; text-align: right; }
+        textarea { width: 100%; height: 80px; border-radius: 8px; border: 1px solid #eaddca; padding: 10px; font-family: 'Amiri'; margin-top: 10px; resize: none; box-sizing: border-box; }
+        .comment-item { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; border-right: 4px solid #d4af37; font-size: 0.9em; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="home" class="section active">
+        <div class="header">
+            <h1 class="logo">الله أولاً</h1>
+            <p>"سيروا إلى الله عرجى ومكاسير"</p>
+        </div>
+        <div style="background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #eaddca; font-size: 1.1em;">
+            طريقنا يبدأ من هنا.. <b>"من عرف الله أكثر أحبه أكثر"</b>. لنعرف مَن نعبد، لنُحب مَن نرجو.
+        </div>
+        <button class="name-btn" style="width: 100%; font-size: 1.2em; background: #8b4513; color: white;" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
+        <button class="name-btn" style="width: 100%; font-size: 1.1em; margin-top: 10px; border: 1px solid #8b4513;" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
+    </div>
+
+    <div id="namesList" class="section">
+        <h2 style="color: #8b4513;">أسماء الله الحسنى</h2>
+        <div class="names-grid">
+            <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم، الجامع لكل معاني الألوهية والكمال...')">الله</div>
+            <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة الذي وسع كل شيء برحمته وفضله...')">الرحمن</div>
+        </div>
+        <button class="back-btn" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="article" class="section">
+        <h2 id="articleTitle" style="color: #8b4513;"></h2>
+        <div class="article-box">
+            <p id="articleContent"></p>
+        </div>
+        
+        <div class="comments-section">
+            <strong style="color: #8b4513;">✍️ أكتب موقفك مع هذا الاسم:</strong>
+            <textarea id="userStory" placeholder="احكِ لنا كيف تجلى هذا الاسم في حياتك..."></textarea>
+            <button class="name-btn" style="width: 100%; margin-top: 10px; padding: 8px; background: #d4af37; color: white;" onclick="saveStory()">نشر الموقف فوراً</button>
+            <div id="storiesList">
+                </div>
+        </div>
+        <button class="back-btn" onclick="showSection('namesList')">العودة للأسماء</button>
+    </div>
+
+    <div id="publicStories" class="section">
+        <h2 style="color: #8b4513;">قصص من واقع اليقين</h2>
+        <div id="allStories" style="text-align: right;">
+            <p style="text-align: center; color: #999;">لا توجد مواقف منشورة بعد..</p>
+        </div>
+        <button class="back-btn" onclick="showSection('home')">رجوع</button>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function openArticle(title, content) {
+        document.getElementById('articleTitle').innerText = title;
+        document.getElementById('articleContent').innerText = content;
+        showSection('article');
+        loadStories(title); // تحميل المواقف الخاصة بهذا الاسم
+    }
+
+    // وظيفة حفظ الموقف (حالياً تحفظ في ذاكرة الهاتف فقط)
+    function saveStory() {
+        const text = document.getElementById('userStory').value;
+        const title = document.getElementById('articleTitle').innerText;
+        if (!text) return tg.showAlert("من فضلك اكتب موقفك أولاً");
+
+        let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
+        stories.push(text);
+        localStorage.setItem('stories_' + title, JSON.stringify(stories));
+        
+        document.getElementById('userStory').value = ""; // مسح الخانة
+        loadStories(title);
+        tg.showAlert("تم نشر موقفك بنجاح ✨");
+    }
+
+    function loadStories(title) {
+        const list = document.getElementById('storiesList');
+        let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
+        list.innerHTML = stories.map(s => `<div class="comment-item">${s}</div>`).join('');
+    }
+</script>
+
+</body>
+</html>
