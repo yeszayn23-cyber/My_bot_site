@@ -15,10 +15,9 @@
         .active { display: block; }
         .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; }
+        .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; line-height: 1.8; white-space: pre-line; }
         .back-btn { background: #d4af37; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; }
         
-        /* تصميم خانة المواقف */
         .comments-section { margin-top: 30px; background: #fdf6e3; padding: 15px; border-radius: 12px; border: 1px dashed #d4af37; text-align: right; }
         textarea { width: 100%; height: 80px; border-radius: 8px; border: 1px solid #eaddca; padding: 10px; font-family: 'Amiri'; margin-top: 10px; resize: none; box-sizing: border-box; }
         .comment-item { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; border-right: 4px solid #d4af37; font-size: 0.9em; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -45,6 +44,18 @@
         <div class="names-grid">
             <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم، الجامع لكل معاني الألوهية والكمال...')">الله</div>
             <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة الذي وسع كل شيء برحمته وفضله...')">الرحمن</div>
+            <div class="name-btn" onclick="openArticle('الرقيب', `📌 رقيب عليك في كل حال 
+مراقبته لك أدق من أحدث الكاميرات🎦 التي ترصد الصوت والصورة 
+ملازم لك أكثر من والديك 🍃
+أقرب إليك من وريدك 
+يعلم بما يدور بينك وبين نفسك 🗣 ويطلع على سريرتك التي لا يطلع عليها أحد 💞
+يراقب أفعالك وكلامك و تفكيرك الداخلي بلا غفلة ولا غياب ولا تشويش❌ 
+يراقبك ويراقب كل ما تتخيل في العالم. من: إنس، جن، ملائكة، حيوان.. 
+يراقبنا بنفس الطريقة كلنا لا يغيب أحد عن رقابته ✅🍃
+وفوق هذا نعصيه 💔 وهو ينظر لنا ويسترنا😔 نكذب، نغتاب، نسب، نبطش، نذنب، نخطأ أمامه في حقه وفي أرضه ونتنعم بنعمه وهو يرى 💔 
+ألا نستحي منه؟! 
+نخاف من أن يرانا الناس ونخشى اطلاعهم على أسرارنا ونستحضر مراقبة أبسط الناس لنا حتى الآلات (الكاميرات..) ولا نستحضر رقابة الله الدائمة على أحوالنا وأفعال قلوبنا وأفعال جوارحنا وخواطر عقولنا💢📍
+وأنت الآن تقرأ رسالتي الله يراك ويسمع حديث نفسك، أوَلا تتق الله؟ 💔😔`)">الرقيب</div>
         </div>
         <button class="back-btn" onclick="showSection('home')">رجوع</button>
     </div>
@@ -59,8 +70,7 @@
             <strong style="color: #8b4513;">✍️ أكتب موقفك مع هذا الاسم:</strong>
             <textarea id="userStory" placeholder="احكِ لنا كيف تجلى هذا الاسم في حياتك..."></textarea>
             <button class="name-btn" style="width: 100%; margin-top: 10px; padding: 8px; background: #d4af37; color: white;" onclick="saveStory()">نشر الموقف فوراً</button>
-            <div id="storiesList">
-                </div>
+            <div id="storiesList"></div>
         </div>
         <button class="back-btn" onclick="showSection('namesList')">العودة للأسماء</button>
     </div>
@@ -81,28 +91,28 @@
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
     }
 
     function openArticle(title, content) {
         document.getElementById('articleTitle').innerText = title;
         document.getElementById('articleContent').innerText = content;
         showSection('article');
-        loadStories(title); // تحميل المواقف الخاصة بهذا الاسم
+        loadStories(title); 
     }
 
-    // وظيفة حفظ الموقف (حالياً تحفظ في ذاكرة الهاتف فقط)
     function saveStory() {
         const text = document.getElementById('userStory').value;
         const title = document.getElementById('articleTitle').innerText;
-        if (!text) return tg.showAlert("من فضلك اكتب موقفك أولاً");
+        if (!text) return alert("من فضلك اكتب موقفك أولاً");
 
         let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
         stories.push(text);
         localStorage.setItem('stories_' + title, JSON.stringify(stories));
         
-        document.getElementById('userStory').value = ""; // مسح الخانة
+        document.getElementById('userStory').value = ""; 
         loadStories(title);
-        tg.showAlert("تم نشر موقفك بنجاح ✨");
+        alert("تم نشر موقفك بنجاح ✨");
     }
 
     function loadStories(title) {
