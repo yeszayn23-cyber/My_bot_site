@@ -61,14 +61,23 @@
         }
         .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.2em; }
 
+        /* تنسيق شبكة المشاعر */
+        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .mood-btn { padding: 12px; border-radius: 15px; border: 1.5px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); cursor: pointer; font-family: 'Amiri'; font-weight: bold; transition: 0.2s; }
+        .mood-btn:active { transform: scale(0.95); }
+
         .controls-btns { position: fixed; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 1000; }
         .theme-toggle { background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; }
 
         .section { display: none; }
         .active { display: block; }
 
-        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative;}
         
+        /* أزرار الإدارة الصغيرة داخل الكرت */
+        .mini-admin-tools { display: none; margin-top: 15px; border-top: 1px dashed var(--dark-gold); padding-top: 10px; }
+        .mini-btn { background: none; border: none; cursor: pointer; font-size: 1.3em; margin-left: 15px; }
+
         #adminPanel { display: none; margin-top: 20px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
         .admin-input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); box-sizing: border-box; font-family: 'Amiri'; }
     </style>
@@ -92,6 +101,16 @@
             <h1 class="logo">الله أولاً</h1>
             <p style="color: var(--dark-gold); font-weight: bold;">"سيروا إلى الله عرجى ومكاسير"</p>
         </div>
+
+        <h3 style="color:var(--dark-gold)">كيف حال قلبك الآن؟</h3>
+        <div class="mood-grid">
+            <button class="mood-btn" onclick="openMood('مكسور')">💔 مكسور</button>
+            <button class="mood-btn" onclick="openMood('متعب')">😫 متعب</button>
+            <button class="mood-btn" onclick="openMood('خائف')">😨 خائف</button>
+            <button class="mood-btn" onclick="openMood('منزعج')">😤 منزعج</button>
+            <button class="mood-btn" onclick="openMood('منتكس')">🥀 منتكس</button>
+            <button class="mood-btn" onclick="openMood('سعيد')">😇 سعيد</button>
+        </div>
         
         <button class="name-btn main-action-btn" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
         <button class="name-btn" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
@@ -102,16 +121,44 @@
             <select id="adminActionType" class="admin-input" onchange="toggleAdminInputs()">
                 <option value="name">إضافة اسم الله</option>
                 <option value="thought">إضافة خاطرة</option>
+                <option value="mood">تعديل نصوص الحالات</option>
             </select>
+            
             <div id="nameInputs">
                 <input type="text" id="newName" class="admin-input" placeholder="اسم الله (مثال: الرحمن)">
                 <textarea id="newContent" class="admin-input" style="height:80px" placeholder="مقال عن الاسم..."></textarea>
             </div>
+            
             <div id="thoughtInputs" style="display:none">
                 <textarea id="thoughtText" class="admin-input" style="height:80px" placeholder="اكتب الخاطرة هنا..."></textarea>
             </div>
+
+            <div id="moodInputs" style="display:none">
+                <select id="targetMood" class="admin-input">
+                    <option value="مكسور">حالة مكسور</option>
+                    <option value="متعب">حالة متعب</option>
+                    <option value="خائف">حالة خائف</option>
+                    <option value="منزعج">حالة منزعج</option>
+                    <option value="منتكس">حالة منتكس</option>
+                    <option value="سعيد">حالة سعيد</option>
+                </select>
+                <textarea id="moodContentText" class="admin-input" style="height:100px" placeholder="اكتبي الدعاء أو النص الذي سيظهر للمستخدم..."></textarea>
+            </div>
+
             <button class="name-btn main-action-btn" onclick="saveAdminData()">حفظ البيانات ✓</button>
         </div>
+    </div>
+
+    <div id="moodDisplayPage" class="section">
+        <h2 id="moodTitle" style="color:var(--dark-gold)"></h2>
+        <div class="card">
+            <div id="moodBodyText" style="white-space: pre-wrap; line-height: 1.8;"></div>
+            <div id="adminOnlyTools" class="mini-admin-tools">
+                <button class="mini-btn" onclick="editCurrentMood()">✏️ تعديل</button>
+                <button class="mini-btn" onclick="deleteMoodContent()">🗑️ حذف</button>
+            </div>
+        </div>
+        <button class="name-btn" style="background:#444; color:white;" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="namesList" class="section">
@@ -142,21 +189,19 @@
 <script>
     const tg = window.Telegram.WebApp;
     const ADMIN_ID = 8421694319;
+    let activeMoodLabel = "";
 
-    // تبديل الأوضاع
     function toggleMode(mode) {
         document.body.classList.remove('dark-mode', 'ramadan-mode');
         if(mode === 'dark') document.body.classList.add('dark-mode');
         else document.body.classList.add('ramadan-mode');
     }
 
-    // التاريخ الهجري
     function updateHijri() {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('hijriDisplay').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', options).format(new Date());
     }
 
-    // تنقل الأقسام
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -166,39 +211,72 @@
         window.scrollTo(0,0);
     }
 
-    // إظهار لوحة الإدارة
-    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID) {
+    // التحقق من هوية المالكة
+    const isOwner = (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID);
+    if (isOwner) {
         document.getElementById('adminPanel').style.display = 'block';
+        document.getElementById('adminOnlyTools').style.display = 'block';
     }
 
     function toggleAdminInputs() {
-        const isName = document.getElementById('adminActionType').value === 'name';
-        document.getElementById('nameInputs').style.display = isName ? 'block' : 'none';
-        document.getElementById('thoughtInputs').style.display = isName ? 'none' : 'block';
+        const type = document.getElementById('adminActionType').value;
+        document.getElementById('nameInputs').style.display = type === 'name' ? 'block' : 'none';
+        document.getElementById('thoughtInputs').style.display = type === 'thought' ? 'block' : 'none';
+        document.getElementById('moodInputs').style.display = type === 'mood' ? 'block' : 'none';
     }
 
-    // حفظ البيانات
+    function openMood(mood) {
+        activeMoodLabel = mood;
+        const db = JSON.parse(localStorage.getItem('moods_content_db') || "{}");
+        document.getElementById('moodTitle').innerText = "لأنك " + mood;
+        document.getElementById('moodBodyText').innerText = db[mood] || "لا يوجد نص مضاف لهذه الحالة بعد.. يمكنكِ إضافته من لوحة التحكم.";
+        showSection('moodDisplayPage');
+    }
+
     function saveAdminData() {
         const type = document.getElementById('adminActionType').value;
         if(type === 'name') {
             const name = document.getElementById('newName').value;
             const content = document.getElementById('newContent').value;
-            if(!name || !content) return alert("امسحي الخانات الفارغة");
+            if(!name || !content) return alert("الخانات فارغة");
             let data = JSON.parse(localStorage.getItem('names_db') || "{}");
             data[name] = content;
             localStorage.setItem('names_db', JSON.stringify(data));
-        } else {
+        } else if(type === 'thought') {
             const text = document.getElementById('thoughtText').value;
             if(!text) return alert("اكتبي الخاطرة أولاً");
             let thoughts = JSON.parse(localStorage.getItem('thoughts_db') || "[]");
             thoughts.push(text);
             localStorage.setItem('thoughts_db', JSON.stringify(thoughts));
+        } else if(type === 'mood') {
+            const mKey = document.getElementById('targetMood').value;
+            const mText = document.getElementById('moodContentText').value;
+            let mDb = JSON.parse(localStorage.getItem('moods_content_db') || "{}");
+            mDb[mKey] = mText;
+            localStorage.setItem('moods_content_db', JSON.stringify(mDb));
         }
         alert("تم الحفظ بنجاح ✓");
         location.reload();
     }
 
-    // عرض الأسماء
+    function editCurrentMood() {
+        showSection('home');
+        document.getElementById('adminActionType').value = 'mood';
+        toggleAdminInputs();
+        document.getElementById('targetMood').value = activeMoodLabel;
+        const db = JSON.parse(localStorage.getItem('moods_content_db') || "{}");
+        document.getElementById('moodContentText').value = db[activeMoodLabel] || "";
+    }
+
+    function deleteMoodContent() {
+        if(confirm("حذف نص هذه الحالة؟")) {
+            let db = JSON.parse(localStorage.getItem('moods_content_db') || "{}");
+            delete db[activeMoodLabel];
+            localStorage.setItem('moods_content_db', JSON.stringify(db));
+            openMood(activeMoodLabel);
+        }
+    }
+
     function renderNames() {
         const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
         const data = JSON.parse(localStorage.getItem('names_db') || "{}");
@@ -214,7 +292,6 @@
         });
     }
 
-    // عرض الخواطر
     function renderThoughts() {
         const list = document.getElementById('thoughtsList'); list.innerHTML = "";
         const thoughts = JSON.parse(localStorage.getItem('thoughts_db') || "[]");
@@ -223,10 +300,8 @@
         });
     }
 
-    // عرض المواقف (تجريبي)
     function renderStories() {
-        const list = document.getElementById('storiesList');
-        list.innerHTML = `<div class="card"><p>سيظهر هنا المواقف التي يشاركها المستخدمون قريباً...</p></div>`;
+        document.getElementById('storiesList').innerHTML = `<div class="card"><p>قريباً سيتمكن المستخدمون من إضافة مواقفهم هنا.</p></div>`;
     }
 
     updateHijri();
