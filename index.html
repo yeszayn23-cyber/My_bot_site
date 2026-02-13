@@ -29,7 +29,6 @@
         .header { padding: 15px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
         .logo { font-size: 3em; font-weight: 700; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
-        /* السبحة */
         .global-tasbih { background: var(--card-bg); padding: 20px; border-radius: 25px; border: 2px solid var(--dark-gold); margin: 15px 0; cursor: pointer; }
         .tasbih-count { font-size: 2.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
         .birr-text { color: var(--dark-gold); font-size: 0.95em; margin-top: 10px; font-weight: bold; }
@@ -47,14 +46,12 @@
         .active { display: block; }
 
         .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .task-item { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding-bottom: 8px; border-bottom: 1px dashed #ccc; }
+        .item-list { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding-bottom: 8px; border-bottom: 1px dashed #ccc; }
         .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; }
 
         #adminPanel { display: none; margin-top: 25px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
         .admin-input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
-        
-        /* زر التصفير الخاص بكِ */
-        .reset-btn { background: #ff4d4d !important; color: white !important; margin-top: 15px; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Amiri'; font-weight: bold; }
+        .reset-btn { background: #ff4d4d !important; color: white !important; margin: 10px 0; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Amiri'; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -68,14 +65,11 @@
     <div id="home" class="section active">
         <div class="hijri-container" id="hijriDisplay">...</div>
         <div class="header"><h1 class="logo">الله أولاً</h1></div>
-
         <div class="global-tasbih" onclick="incrementGlobal()">
             <div style="color: var(--dark-gold); font-weight: bold;">السبحة الجماعية</div>
             <div id="globalCount" class="tasbih-count">0</div>
             <div class="birr-text">﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ ﴾</div>
         </div>
-
-        <h3 style="color:var(--dark-gold)">كيف حال قلبك الآن؟</h3>
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMood('مكسور')">💔 مكسور</button>
             <button class="mood-btn" onclick="openMood('متعب')">😫 متعب</button>
@@ -84,19 +78,16 @@
             <button class="mood-btn" onclick="openMood('منتكس')">🥀 منتكس</button>
             <button class="mood-btn" onclick="openMood('سعيد')">😇 سعيد</button>
         </div>
-
         <button class="name-btn main-action-btn" onclick="showSection('namesList')">📖 رحلة المعرفة بالأسماء</button>
         <button class="name-btn main-action-btn" style="margin-top:5px" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
 
         <div id="adminPanel">
             <h4 style="color:var(--dark-gold); margin:0;">🛠 لوحة تحكم المالكة</h4>
-            
             <button class="reset-btn" onclick="resetGlobalCounter()">🔄 تصفير السبحة الجماعية</button>
-            <hr style="border: 0.5px solid var(--dark-gold); margin: 15px 0;">
-
             <select id="adminActionType" class="admin-input">
                 <option value="name">إضافة/تعديل اسم ومقاله</option>
                 <option value="task">إضافة نقطة عملية لاسم</option>
+                <option value="story">إضافة موقف لاسم</option>
                 <option value="thought">إضافة خاطرة جديدة</option>
                 <option value="mood">تعديل نصوص الحالات</option>
             </select>
@@ -115,8 +106,13 @@
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" style="color:var(--dark-gold)"></h2>
         <div class="card" id="detContent" style="white-space: pre-wrap; line-height: 1.7;"></div>
-        <h3 style="color:var(--dark-gold)">📍 نقاط عملية تطبيقية</h3>
+        
+        <h3 style="color:var(--dark-gold)">📍 نقاط عملية</h3>
         <div class="card" id="detTasks"></div>
+
+        <h3 style="color:var(--dark-gold)">💭 مواقف وعِبر</h3>
+        <div class="card" id="detStories"></div>
+
         <div class="global-tasbih" onclick="incrementLocal()">
             <div style="color: var(--dark-gold)">سبحة الورد</div>
             <div id="localCount" class="tasbih-count">0</div>
@@ -167,13 +163,10 @@
         if(navigator.vibrate) navigator.vibrate(40);
     }
 
-    // دالة تصفير السبحة (لكِ فقط)
     function resetGlobalCounter() {
-        if(confirm("هل تريدين تصفير السبحة الجماعية للجميع؟")) {
-            gCnt = 0;
-            document.getElementById('globalCount').innerText = 0;
+        if(confirm("تصفير السبحة الجماعية؟")) {
+            gCnt = 0; document.getElementById('globalCount').innerText = 0;
             localStorage.setItem('g_total', 0);
-            alert("تم تصفير العداد بنجاح ✓");
         }
     }
 
@@ -190,7 +183,7 @@
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
         const text = document.getElementById('mainContent').value;
-        if(!text && type !== 'task') return;
+        if(!text && type !== 'task' && type !== 'story') return;
 
         if(type === 'name') {
             let db = JSON.parse(localStorage.getItem('db_names') || "{}");
@@ -199,6 +192,10 @@
             let db = JSON.parse(localStorage.getItem('db_tasks') || "{}");
             if(!db[target]) db[target] = [];
             db[target].push(text); localStorage.setItem('db_tasks', JSON.stringify(db));
+        } else if(type === 'story') {
+            let db = JSON.parse(localStorage.getItem('db_stories') || "{}");
+            if(!db[target]) db[target] = [];
+            db[target].push(text); localStorage.setItem('db_stories', JSON.stringify(db));
         } else if(type === 'thought') {
             let db = JSON.parse(localStorage.getItem('db_thoughts') || "[]");
             db.push(text); localStorage.setItem('db_thoughts', JSON.stringify(db));
@@ -206,7 +203,7 @@
             let db = JSON.parse(localStorage.getItem('db_moods') || "{}");
             db[target] = text; localStorage.setItem('db_moods', JSON.stringify(db));
         }
-        alert("تم الحفظ بنجاح ✓"); location.reload();
+        alert("تم الحفظ ✓"); location.reload();
     }
 
     function renderNames() {
@@ -225,39 +222,30 @@
         const names = JSON.parse(localStorage.getItem('db_names') || "{}");
         document.getElementById('detTitle').innerText = n;
         document.getElementById('detContent').innerText = names[n] || "لا يوجد مقال.";
-        renderTasks(n);
+        renderSubItems(n, 'db_tasks', 'detTasks');
+        renderSubItems(n, 'db_stories', 'detStories');
         showSection('nameDetailsPage');
     }
 
-    function renderTasks(n) {
-        const container = document.getElementById('detTasks'); container.innerHTML = "";
-        const allTasks = JSON.parse(localStorage.getItem('db_tasks') || "{}");
-        const tasks = allTasks[n] || [];
-        if(tasks.length === 0) container.innerHTML = "لا توجد نقاط عملية.";
-        tasks.forEach((t, i) => {
-            const item = document.createElement('div'); item.className = "task-item";
-            item.innerHTML = `<span>🔹 ${t}</span>`;
-            if(isOwner) item.innerHTML += `<button class="tool-btn" onclick="deleteTask(${i})" style="margin-right:auto">🗑️</button>`;
+    function renderSubItems(n, dbKey, containerId) {
+        const container = document.getElementById(containerId); container.innerHTML = "";
+        const all = JSON.parse(localStorage.getItem(dbKey) || "{}");
+        const items = all[n] || [];
+        if(items.length === 0) container.innerHTML = "لا يوجد محتوى مضاف.";
+        items.forEach((t, i) => {
+            const item = document.createElement('div'); item.className = "item-list";
+            item.innerHTML = `<span>• ${t}</span>`;
+            if(isOwner) item.innerHTML += `<button class="tool-btn" onclick="deleteSubItem('${dbKey}', ${i})" style="margin-right:auto">🗑️</button>`;
             container.appendChild(item);
         });
     }
 
-    function renderThoughts() {
-        const list = document.getElementById('thoughtsList'); list.innerHTML = "";
-        const data = JSON.parse(localStorage.getItem('db_thoughts') || "[]");
-        data.slice().reverse().forEach((t, i) => {
-            const card = document.createElement('div'); card.className = "card";
-            card.innerHTML = `<p>${t}</p>`;
-            if(isOwner) card.innerHTML += `<button class="tool-btn" style="color:red" onclick="deleteItem(${data.length-1-i},'thought')">🗑️ حذف</button>`;
-            list.appendChild(card);
-        });
-    }
-
-    function openMood(m) {
-        const moods = JSON.parse(localStorage.getItem('db_moods') || "{}");
-        document.getElementById('moodViewTitle').innerText = "لأنك " + m;
-        document.getElementById('moodViewContent').innerText = moods[m] || "لا يوجد نص.";
-        showSection('moodViewPage');
+    window.deleteSubItem = function(dbKey, i) {
+        if(!confirm("حذف؟")) return;
+        let db = JSON.parse(localStorage.getItem(dbKey));
+        db[currentActiveName].splice(i, 1);
+        localStorage.setItem(dbKey, JSON.stringify(db));
+        openNamePage(currentActiveName);
     }
 
     window.deleteItem = function(id, type) {
@@ -269,12 +257,11 @@
         location.reload();
     }
 
-    window.deleteTask = function(i) {
-        if(!confirm("حذف النقطة؟")) return;
-        let db = JSON.parse(localStorage.getItem('db_tasks'));
-        db[currentActiveName].splice(i, 1);
-        localStorage.setItem('db_tasks', JSON.stringify(db));
-        renderTasks(currentActiveName);
+    function openMood(m) {
+        const moods = JSON.parse(localStorage.getItem('db_moods') || "{}");
+        document.getElementById('moodViewTitle').innerText = "لأنك " + m;
+        document.getElementById('moodViewContent').innerText = moods[m] || "لا يوجد نص مضاف.";
+        showSection('moodViewPage');
     }
 
     function updateHijri() {
