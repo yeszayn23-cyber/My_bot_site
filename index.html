@@ -19,11 +19,9 @@
             --silver: linear-gradient(45deg, #bfc0c0, #ffffff, #8d99ae, #ffffff, #bfc0c0);
         }
 
-        /* سرعة الانتقال الفورية */
         body { 
             font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); 
-            margin: 0; padding: 15px; text-align: center; 
-            transition: background-color 0.2s ease, color 0.2s ease;
+            margin: 0; padding: 15px; text-align: center; transition: 0.2s;
         }
 
         body.dark-mode { --bg-color: #1a0f00; --text-color: #fcf9f2; --card-bg: #2d1b0a; }
@@ -31,53 +29,48 @@
 
         .container { max-width: 500px; margin: auto; position: relative; z-index: 2; }
 
-        /* التقويم الهجري */
         .hijri-container {
             margin-bottom: 15px; display: inline-block; border: 1px solid var(--dark-gold);
             padding: 5px 15px; border-radius: 15px; background: var(--card-bg);
             font-weight: bold; color: var(--dark-gold);
         }
 
-        /* الفوانيس المحسنة */
         .lanterns-box {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; display: none; will-change: transform;
+            pointer-events: none; z-index: 1; display: none;
         }
         body.ramadan-mode .lanterns-box { display: block; }
         .lantern {
             position: absolute; width: 35px; height: 55px; background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 15px rgba(255,255,255,0.1);
             clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
-            animation: glow 2s ease-in-out infinite alternate;
+            animation: glow 2s infinite alternate;
         }
-        @keyframes glow { from { opacity: 0.4; transform: scale(0.95); } to { opacity: 0.9; transform: scale(1); } }
 
-        /* العناصر الأساسية */
+        @keyframes glow { from { opacity: 0.4; } to { opacity: 0.9; } }
+
         .header { padding: 25px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
         .logo { 
             font-size: 3.5em; font-weight: 700; background: var(--gold);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.2)); margin: 0;
         }
-        .global-counter-box { background: var(--card-bg); border: 2px solid var(--dark-gold); padding: 15px; border-radius: 20px; margin-bottom: 25px; }
-        .global-count-num { font-size: 2.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
         
         .name-btn { 
             background: var(--card-bg); border: 1.5px solid var(--dark-gold); padding: 16px; border-radius: 18px; 
-            cursor: pointer; color: var(--text-color); font-weight: bold; width: 100%; margin-bottom: 12px;
+            cursor: pointer; color: var(--text-color); font-weight: bold; width: 100%; margin-bottom: 12px; font-family: 'Amiri';
         }
-        .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; }
+        .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.2em; }
 
         .controls-btns { position: fixed; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 1000; }
-        .theme-toggle { background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .theme-toggle { background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; }
 
         .section { display: none; }
-        .active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active { display: block; }
 
-        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; }
-        #adminPanel { display: none; margin-top: 20px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); }
-        .admin-input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); box-sizing: border-box;}
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        #adminPanel { display: none; margin-top: 20px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
+        .admin-input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); box-sizing: border-box; font-family: 'Amiri'; }
     </style>
 </head>
 <body id="mainBody">
@@ -88,8 +81,8 @@
 </div>
 
 <div class="controls-btns">
-    <button class="theme-toggle" onclick="toggleMode('dark')" title="وضع ليلي">🌓</button>
-    <button class="theme-toggle" onclick="toggleMode('ramadan')" title="وضع رمضاني">🌙</button>
+    <button class="theme-toggle" onclick="toggleMode('dark')">🌓</button>
+    <button class="theme-toggle" onclick="toggleMode('ramadan')">🌙</button>
 </div>
 
 <div class="container">
@@ -97,31 +90,27 @@
         <div class="hijri-container" id="hijriDisplay">...</div>
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
-            <p style="color: var(--dark-gold); font-style: italic;">"سيروا إلى الله عرجى ومكاسير"</p>
+            <p style="color: var(--dark-gold); font-weight: bold;">"سيروا إلى الله عرجى ومكاسير"</p>
         </div>
-        <div class="global-counter-box">
-            <span style="font-weight: bold; color: var(--dark-gold);">إجمالي تسبيحاتنا معاً</span>
-            <span id="globalCounterDisplay" class="global-count-num">0</span>
-        </div>
+        
         <button class="name-btn main-action-btn" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
+        <button class="name-btn" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
         <button class="name-btn" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
-        <button class="name-btn" style="border: 2px solid var(--dark-gold);" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
 
         <div id="adminPanel">
-            <h4 style="color:var(--dark-gold)">🛠 إدارة المحتوى</h4>
+            <h4 style="color:var(--dark-gold)">🛠 إدارة المحتوى (للمالكة)</h4>
             <select id="adminActionType" class="admin-input" onchange="toggleAdminInputs()">
                 <option value="name">إضافة اسم الله</option>
                 <option value="thought">إضافة خاطرة</option>
             </select>
             <div id="nameInputs">
-                <input type="text" id="newName" class="admin-input" placeholder="الاسم">
-                <textarea id="newContent" class="admin-input" style="height:80px" placeholder="المقال"></textarea>
-                <textarea id="newPoints" class="admin-input" placeholder="النقاط..."></textarea>
+                <input type="text" id="newName" class="admin-input" placeholder="اسم الله (مثال: الرحمن)">
+                <textarea id="newContent" class="admin-input" style="height:80px" placeholder="مقال عن الاسم..."></textarea>
             </div>
             <div id="thoughtInputs" style="display:none">
-                <textarea id="thoughtText" class="admin-input" style="height:80px" placeholder="الخاطرة..."></textarea>
+                <textarea id="thoughtText" class="admin-input" style="height:80px" placeholder="اكتب الخاطرة هنا..."></textarea>
             </div>
-            <button class="name-btn main-action-btn" onclick="saveAdminData()">حفظ ✓</button>
+            <button class="name-btn main-action-btn" onclick="saveAdminData()">حفظ البيانات ✓</button>
         </div>
     </div>
 
@@ -129,6 +118,12 @@
         <h2 style="color:var(--dark-gold)">أسماء الله الحسنى</h2>
         <div id="mainGrid"></div>
         <button class="name-btn" style="background:#444; color:white;" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="article" class="section">
+        <h2 id="articleTitle" style="color:var(--dark-gold)"></h2>
+        <div id="articleContent" class="card" style="line-height:1.8; text-align:justify;"></div>
+        <button class="name-btn" style="background:#444; color:white;" onclick="showSection('namesList')">رجوع للقائمة</button>
     </div>
 
     <div id="thoughtsSection" class="section">
@@ -139,7 +134,7 @@
 
     <div id="publicStories" class="section">
         <h2 style="color:var(--dark-gold)">مواقفكم مع الله</h2>
-        <div id="allPublicStories"></div>
+        <div id="storiesList"></div>
         <button class="name-btn" style="background:#444; color:white;" onclick="showSection('home')">رجوع</button>
     </div>
 </div>
@@ -148,59 +143,93 @@
     const tg = window.Telegram.WebApp;
     const ADMIN_ID = 8421694319;
 
+    // تبديل الأوضاع
     function toggleMode(mode) {
-        const body = document.body;
-        if(mode === 'dark') {
-            body.classList.remove('ramadan-mode');
-            body.classList.toggle('dark-mode');
-        } else {
-            body.classList.remove('dark-mode');
-            body.classList.toggle('ramadan-mode');
-        }
+        document.body.classList.remove('dark-mode', 'ramadan-mode');
+        if(mode === 'dark') document.body.classList.add('dark-mode');
+        else document.body.classList.add('ramadan-mode');
     }
 
+    // التاريخ الهجري
     function updateHijri() {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('hijriDisplay').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', options).format(new Date());
     }
 
+    // تنقل الأقسام
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'namesList') renderNames();
         if(id === 'thoughtsSection') renderThoughts();
-        if(id === 'publicStories') renderPublicStories();
+        if(id === 'publicStories') renderStories();
+        window.scrollTo(0,0);
     }
 
-    function isAdmin() { return tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID; }
-    if (isAdmin()) document.getElementById('adminPanel').style.display = 'block';
+    // إظهار لوحة الإدارة
+    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID) {
+        document.getElementById('adminPanel').style.display = 'block';
+    }
 
+    function toggleAdminInputs() {
+        const isName = document.getElementById('adminActionType').value === 'name';
+        document.getElementById('nameInputs').style.display = isName ? 'block' : 'none';
+        document.getElementById('thoughtInputs').style.display = isName ? 'none' : 'block';
+    }
+
+    // حفظ البيانات
+    function saveAdminData() {
+        const type = document.getElementById('adminActionType').value;
+        if(type === 'name') {
+            const name = document.getElementById('newName').value;
+            const content = document.getElementById('newContent').value;
+            if(!name || !content) return alert("امسحي الخانات الفارغة");
+            let data = JSON.parse(localStorage.getItem('names_db') || "{}");
+            data[name] = content;
+            localStorage.setItem('names_db', JSON.stringify(data));
+        } else {
+            const text = document.getElementById('thoughtText').value;
+            if(!text) return alert("اكتبي الخاطرة أولاً");
+            let thoughts = JSON.parse(localStorage.getItem('thoughts_db') || "[]");
+            thoughts.push(text);
+            localStorage.setItem('thoughts_db', JSON.stringify(thoughts));
+        }
+        alert("تم الحفظ بنجاح ✓");
+        location.reload();
+    }
+
+    // عرض الأسماء
     function renderNames() {
         const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
-        const data = JSON.parse(localStorage.getItem('app_names_data') || "{}");
+        const data = JSON.parse(localStorage.getItem('names_db') || "{}");
         Object.keys(data).forEach(name => {
             const btn = document.createElement('button');
             btn.className = "name-btn"; btn.innerText = name;
+            btn.onclick = () => {
+                document.getElementById('articleTitle').innerText = name;
+                document.getElementById('articleContent').innerText = data[name];
+                showSection('article');
+            };
             grid.appendChild(btn);
         });
     }
 
+    // عرض الخواطر
     function renderThoughts() {
         const list = document.getElementById('thoughtsList'); list.innerHTML = "";
-        const thoughts = JSON.parse(localStorage.getItem('app_thoughts') || "[]");
-        thoughts.forEach(t => {
-            list.innerHTML += `<div class="card"><p>${t.text}</p></div>`;
+        const thoughts = JSON.parse(localStorage.getItem('thoughts_db') || "[]");
+        thoughts.reverse().forEach(t => {
+            list.innerHTML += `<div class="card"><p>${t}</p></div>`;
         });
     }
 
-    function renderPublicStories() {
-        const div = document.getElementById('allPublicStories');
-        let p = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
-        div.innerHTML = p.map(s => `<div class="card"><strong>${s.name}</strong><p>${s.text}</p></div>`).join('');
+    // عرض المواقف (تجريبي)
+    function renderStories() {
+        const list = document.getElementById('storiesList');
+        list.innerHTML = `<div class="card"><p>سيظهر هنا المواقف التي يشاركها المستخدمون قريباً...</p></div>`;
     }
 
     updateHijri();
-    document.getElementById('globalCounterDisplay').innerText = (localStorage.getItem('global_tasbih_count') || 0);
     tg.ready();
 </script>
 </body>
