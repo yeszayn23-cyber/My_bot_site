@@ -7,28 +7,63 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-        body { font-family: 'Amiri', serif; background-color: #fcf9f2; color: #4a342e; margin: 0; padding: 15px; text-align: center; }
-        .container { max-width: 500px; margin: auto; }
-        .header { padding: 20px 0; border-bottom: 2px double #d4af37; margin-bottom: 20px; }
-        .logo { font-size: 2.5em; font-weight: bold; color: #8b4513; margin: 0; }
-        .section { display: none; animation: fadeIn 0.5s; }
-        .active { display: block; }
         
-        .name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; width: 100%; }
-        .name-btn { flex-grow: 1; background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; font-family: 'Amiri'; }
-        
-        .edit-btn { background: #ffc107; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
-        .del-btn { background: #dc3545; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+        :root {
+            --gold: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --dark-gold: #8b6b23;
+            --creamy: #fdfaf1;
+            --brown: #4a342e;
+        }
 
-        .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; line-height: 1.8; white-space: pre-line; }
-        .back-btn { background: #d4af37; color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; width: 100%; font-family: 'Amiri'; }
+        body { 
+            font-family: 'Amiri', serif; 
+            background-color: var(--creamy); 
+            background-image: radial-gradient(#e6d5b8 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            color: var(--brown); 
+            margin: 0; padding: 15px; text-align: center; 
+        }
+
+        .container { max-width: 500px; margin: auto; }
+
+        .header { padding: 30px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 25px; }
+        .logo { 
+            font-size: 3.5em; font-weight: 700; 
+            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.3));
+            margin: 0; letter-spacing: 2px;
+        }
+        .subtitle { font-style: italic; color: var(--dark-gold); margin-top: 10px; font-size: 1.2em; }
+
+        .name-btn { 
+            background: white; border: 1.5px solid var(--dark-gold); padding: 15px; border-radius: 15px; 
+            cursor: pointer; color: var(--brown); font-weight: bold; font-family: 'Amiri';
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s;
+        }
         
-        #adminPanel { display: none; margin-top: 20px; padding: 15px; border: 2px solid #8b4513; border-radius: 15px; background: #f0f0f0; text-align: right; }
-        .admin-input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Amiri'; }
-        
-        .comment-item { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; border-right: 4px solid #d4af37; text-align: right; font-size: 0.9em; }
-        .points-box { background: #fffde7; padding: 15px; border-radius: 12px; border: 1px solid #fdd835; margin-top: 15px; text-align: right; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .main-action-btn { background: var(--gold) !important; color: var(--brown) !important; border: none !important; }
+
+        .name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .edit-btn { background: #e9ecef; border: 1px solid #ccc; padding: 12px; border-radius: 12px; cursor: pointer; }
+        .del-btn { background: #fdeaea; border: 1px solid #f5c6cb; padding: 12px; border-radius: 12px; cursor: pointer; color: #721c24; }
+
+        .article-box { background: white; padding: 25px; border-radius: 20px; text-align: justify; border: 1px solid #eaddca; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-top: 20px; line-height: 2; }
+
+        .section { display: none; animation: fadeIn 0.6s ease; }
+        .active { display: block; }
+
+        #adminPanel { display: none; margin-top: 30px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: #fffcf5; text-align: right; }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #dcdcdc; font-family: 'Amiri'; background: white; box-sizing: border-box;}
+
+        .points-box { background: #fffef0; padding: 20px; border-radius: 15px; border: 1px solid #f9e79f; margin-top: 20px; text-align: right; }
+
+        .back-btn { background: var(--brown); color: #fcf9f2; border: none; padding: 14px; border-radius: 12px; margin-top: 25px; cursor: pointer; font-weight: bold; width: 100%; font-family: 'Amiri'; }
+
+        .story-card { background: white; padding: 12px; border-radius: 12px; margin-top: 10px; border-right: 4px solid var(--dark-gold); text-align: right; position: relative; }
+        .admin-story-tools { margin-top: 8px; display: flex; gap: 5px; }
+        .mini-del-btn { background: #ff4d4d; color: white; border: none; padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 0.8em; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -37,35 +72,35 @@
     <div id="home" class="section active">
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
-            <p>"سيروا إلى الله عرجى ومكاسير"</p>
+            <p class="subtitle">"سيروا إلى الله عرجى ومكاسير"</p>
         </div>
-        <button class="name-btn" style="background:#8b4513; color:white; width:100%" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
-        <button class="name-btn" style="margin-top:10px; width:100%" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
+        <button class="name-btn main-action-btn" style="width:100%; font-size:1.3em;" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
+        <button class="name-btn" style="margin-top:15px; width:100%" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
 
         <div id="adminPanel">
-            <h3 style="color:#8b4513; margin-top:0;">🛠 إدارة المحتوى</h3>
+            <h3 style="color:var(--dark-gold); margin-top:0;">🛠 إدارة المحتوى</h3>
             <input type="text" id="newName" class="admin-input" placeholder="اسم الله">
-            <textarea id="newContent" class="admin-input" style="height:80px" placeholder="المقال الرئيسي"></textarea>
-            <textarea id="newPoints" class="admin-input" style="height:60px" placeholder="النقاط العملية (كل نقطة في سطر)"></textarea>
-            <button class="name-btn" style="background:#28a745; color:white; width:100%" onclick="addNewData()">حفظ البيانات ✓</button>
-            <button class="name-btn" style="background:#dc3545; color:white; width:100%; margin-top:5px; font-size:0.8em;" onclick="resetAllNames()">⚠️ حذف كل الأسماء والبدء من الصفر</button>
+            <textarea id="newContent" class="admin-input" style="height:100px" placeholder="المقال الرئيسي"></textarea>
+            <textarea id="newPoints" class="admin-input" style="height:80px" placeholder="النقاط العملية..."></textarea>
+            <button class="name-btn main-action-btn" style="width:100%" onclick="addNewData()">حفظ ✓</button>
+            <button class="name-btn" style="background:#fff1f1!important; color:#c0392b!important; width:100%; margin-top:5px; font-size:0.8em;" onclick="resetAllNames()">🗑 تصفير كل الأسماء</button>
         </div>
     </div>
 
     <div id="namesList" class="section">
-        <h2 style="color:#8b4513;">أسماء الله الحسنى</h2>
+        <h2 style="color:var(--dark-gold);">أسماء الله الحسنى</h2>
         <div id="mainGrid"></div>
-        <button class="back-btn" onclick="showSection('home')">رجوع</button>
+        <button class="back-btn" onclick="showSection('home')">العودة للرئيسية</button>
     </div>
 
     <div id="article" class="section">
-        <h2 id="articleTitle" style="color:#8b4513;"></h2>
+        <h2 id="articleTitle" style="color:var(--dark-gold);"></h2>
         <div class="article-box" id="articleContent"></div>
-        <button class="name-btn" style="width:100%; margin-top:15px; background:#d4af37; color:white;" onclick="showPoints()">💡 نقاط عملية لتثبيت الاسم</button>
-        <div style="margin-top:20px; text-align:right;">
-            <strong>✍️ أكتب موقفك:</strong>
-            <textarea id="userStory" style="width:100%; height:70px; margin-top:5px; padding:10px; border-radius:8px; border:1px solid #ddd; font-family:'Amiri';"></textarea>
-            <button class="name-btn" style="width:100%; margin-top:10px; background:#8b4513; color:white;" onclick="saveStory()">نشر الموقف</button>
+        <button class="name-btn main-action-btn" style="width:100%; margin-top:20px;" onclick="showPoints()">💡 نقاط عملية لتثبيت الاسم</button>
+        <div style="margin-top:30px; text-align:right;">
+            <strong>✍️ أكتب موقفك مع هذا الاسم:</strong>
+            <textarea id="userStory" style="width:100%; height:80px; margin-top:10px; padding:12px; border-radius:12px; border:1.5px solid #eaddca; font-family:'Amiri';"></textarea>
+            <button class="name-btn" style="width:100%; margin-top:10px; background:var(--brown); color:white;" onclick="saveStory()">نشر الموقف</button>
             <div id="storiesList"></div>
         </div>
         <button class="back-btn" onclick="showSection('namesList')">رجوع</button>
@@ -73,15 +108,14 @@
 
     <div id="pointsSection" class="section">
         <div class="points-box">
-            <h4 style="color:#8b4513;">📍 لتثبيت الاسم في القلب:</h4>
-            <p style="font-size:0.85em; color:#6d4c41; margin-bottom:10px;">« سلوكيات بسيطة لكن لها أثر كبير »</p>
-            <ul id="pointsList" style="list-style-type:disc; padding-right:20px; line-height:1.6; text-align:right;"></ul>
+            <h3 style="color:var(--dark-gold);">📍 لتثبيت الاسم في القلب:</h3>
+            <ul id="pointsList" style="list-style-type:none; padding-right:10px; line-height:2; text-align:right;"></ul>
         </div>
-        <button class="back-btn" onclick="showSection('article')">رجوع</button>
+        <button class="back-btn" onclick="showSection('article')">العودة</button>
     </div>
 
     <div id="publicStories" class="section">
-        <h2 style="color:#8b4513;">قصص من واقع اليقين</h2>
+        <h2 style="color:var(--dark-gold);">قصص من واقع اليقين</h2>
         <div id="allPublicStories"></div>
         <button class="back-btn" onclick="showSection('home')">رجوع</button>
     </div>
@@ -89,33 +123,13 @@
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; // الايدي الخاص بك
+    const ADMIN_ID = 8421694319; 
     let currentName = "";
 
-    // الأسماء الافتراضية (تظهر فقط إذا كانت الذاكرة فارغة)
-    const defaultData = {
-        "الله": { content: "هو الاسم الأعظم...", points: ["تعظيم الله في القلب"] },
-        "الرحمن": { content: "واسع الرحمة...", points: ["الرحمة بالخلق"] },
-        "الرقيب": { content: "رقيب عليك في كل حال...", points: ["مراقبة النفس"] }
-    };
+    function checkAdmin() { return (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID); }
+    if (checkAdmin()) document.getElementById('adminPanel').style.display = 'block';
 
-    function checkAdmin() {
-        return (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID);
-    }
-
-    if (checkAdmin()) {
-        document.getElementById('adminPanel').style.display = 'block';
-    }
-
-    // دالة لجلب البيانات من الذاكرة أو وضع الافتراضية لأول مرة فقط
-    function getAllData() {
-        let stored = localStorage.getItem('app_names_data');
-        if (!stored) {
-            localStorage.setItem('app_names_data', JSON.stringify(defaultData));
-            return defaultData;
-        }
-        return JSON.parse(stored);
-    }
+    function getAllData() { return JSON.parse(localStorage.getItem('app_names_data') || "{}"); }
 
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -129,70 +143,28 @@
         const name = document.getElementById('newName').value;
         const content = document.getElementById('newContent').value;
         const points = document.getElementById('newPoints').value.split('\n').filter(p => p.trim() !== "");
-        if(!name || !content) return alert("املئي الفراغات أولاً");
-
+        if(!name || !content) return alert("املئي البيانات");
         let allData = getAllData();
         allData[name] = { content, points };
         localStorage.setItem('app_names_data', JSON.stringify(allData));
-        alert("تم الحفظ بنجاح!");
-        document.getElementById('newName').value = "";
-        document.getElementById('newContent').value = "";
-        document.getElementById('newPoints').value = "";
+        alert("تم الحفظ ✓");
+        document.getElementById('newName').value = ""; document.getElementById('newContent').value = ""; document.getElementById('newPoints').value = "";
         renderNames();
     }
 
-    function resetAllNames() {
-        if(confirm("هل أنتِ متأكدة؟ سيتم حذف كل الأسماء ولن يتبقى شيء في القائمة.")){
-            localStorage.setItem('app_names_data', JSON.stringify({}));
-            renderNames();
-        }
-    }
-
     function renderNames() {
-        const grid = document.getElementById('mainGrid');
-        grid.innerHTML = "";
+        const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
         const allData = getAllData();
-        
         Object.keys(allData).forEach(name => {
-            const row = document.createElement('div');
-            row.className = 'name-row';
-            
-            const btn = document.createElement('button');
-            btn.className = 'name-btn';
-            btn.innerText = name;
+            const row = document.createElement('div'); row.className = 'name-row';
+            const btn = document.createElement('button'); btn.className = 'name-btn'; btn.innerText = name;
             btn.onclick = () => openArticle(name);
             row.appendChild(btn);
-
             if (checkAdmin()) {
-                const adminDiv = document.createElement('div');
-                adminDiv.style.display = 'flex';
-                adminDiv.style.gap = '5px';
-
-                const editBtn = document.createElement('button');
-                editBtn.className = 'edit-btn';
-                editBtn.innerHTML = '✏️';
-                editBtn.onclick = () => {
-                    document.getElementById('newName').value = name;
-                    document.getElementById('newContent').value = allData[name].content;
-                    document.getElementById('newPoints').value = allData[name].points.join('\n');
-                    showSection('home');
-                };
-
-                const delBtn = document.createElement('button');
-                delBtn.className = 'del-btn';
-                delBtn.innerHTML = '🗑️';
-                delBtn.onclick = () => {
-                    if(confirm(`حذف اسم (${name}) نهائياً؟`)) {
-                        let allData = getAllData();
-                        delete allData[name];
-                        localStorage.setItem('app_names_data', JSON.stringify(allData));
-                        renderNames();
-                    }
-                };
-
-                adminDiv.appendChild(editBtn);
-                adminDiv.appendChild(delBtn);
-                row.appendChild(adminDiv);
+                const adminDiv = document.createElement('div'); adminDiv.style.display = 'flex'; adminDiv.style.gap = '5px';
+                const delBtn = document.createElement('button'); delBtn.className = 'del-btn'; delBtn.innerHTML = '🗑️';
+                delBtn.onclick = () => { if(confirm(`حذف (${name})؟`)) { delete allData[name]; localStorage.setItem('app_names_data', JSON.stringify(allData)); renderNames(); } };
+                adminDiv.appendChild(delBtn); row.appendChild(adminDiv);
             }
             grid.appendChild(row);
         });
@@ -210,43 +182,65 @@
     function showPoints() {
         const allData = getAllData();
         const list = document.getElementById('pointsList');
-        list.innerHTML = allData[currentName].points.map(p => `<li>${p}</li>`).join('');
+        list.innerHTML = allData[currentName].points.map(p => `<li>✨ ${p}</li>`).join('');
         showSection('pointsSection');
     }
 
     function saveStory() {
-        const text = document.getElementById('userStory').value;
-        if (!text) return;
-        let myStories = JSON.parse(localStorage.getItem('my_stories_' + currentName) || "[]");
-        myStories.push(text);
-        localStorage.setItem('my_stories_' + currentName, JSON.stringify(myStories));
-        document.getElementById('userStory').value = "";
-        loadStories(currentName);
+        const text = document.getElementById('userStory').value; if (!text) return;
+        let stories = JSON.parse(localStorage.getItem('my_stories_' + currentName) || "[]");
+        stories.push(text);
+        localStorage.setItem('my_stories_' + currentName, JSON.stringify(stories));
+        document.getElementById('userStory').value = ""; loadStories(currentName);
     }
 
     function loadStories(name) {
         const list = document.getElementById('storiesList');
-        let myStories = JSON.parse(localStorage.getItem('my_stories_' + name) || "[]");
-        list.innerHTML = myStories.map(s => `
-            <div class="comment-item">${s}<br>
-            ${checkAdmin() ? `<button onclick="addToPublic('${s}')" style="background:#28a745; color:white; border:none; padding:5px; border-radius:5px; margin-top:5px; cursor:pointer;">⭐ نشر عام</button>` : ""}
+        let stories = JSON.parse(localStorage.getItem('my_stories_' + name) || "[]");
+        list.innerHTML = stories.map((s, index) => `
+            <div class="story-card">
+                ${s}
+                ${checkAdmin() ? `
+                <div class="admin-story-tools">
+                    <button onclick="addToPublic('${s}')" style="background:var(--gold); border:none; padding:4px; border-radius:5px; cursor:pointer;">⭐ نشر</button>
+                    <button onclick="deletePrivateStory(${index})" class="mini-del-btn">🗑️ حذف</button>
+                </div>` : ""}
             </div>`).join('');
+    }
+
+    function deletePrivateStory(index) {
+        if(confirm("حذف هذا الموقف؟")) {
+            let stories = JSON.parse(localStorage.getItem('my_stories_' + currentName) || "[]");
+            stories.splice(index, 1);
+            localStorage.setItem('my_stories_' + currentName, JSON.stringify(stories));
+            loadStories(currentName);
+        }
     }
 
     function addToPublic(text) {
         let publicStories = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
         publicStories.push({name: currentName, text: text});
         localStorage.setItem('public_stories_all', JSON.stringify(publicStories));
-        alert("تم النشر في القسم العام!");
+        alert("تم النشر للعامة!");
     }
 
     function renderPublicStories() {
         const div = document.getElementById('allPublicStories');
         let publicStories = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
-        div.innerHTML = publicStories.length ? publicStories.map(s => `
-            <div class="comment-item">
-                <small style="color:#d4af37">عن اسم: ${s.name}</small><br>${s.text}
-            </div>`).join('') : "<p>لا توجد مواقف منشورة.</p>";
+        div.innerHTML = publicStories.map((s, index) => `
+            <div class="story-card">
+                <small style="color:var(--dark-gold); font-weight:bold;">${s.name}</small><p>${s.text}</p>
+                ${checkAdmin() ? `<button onclick="deletePublicStory(${index})" class="mini-del-btn">🗑️ حذف من العامة</button>` : ""}
+            </div>`).join('');
+    }
+
+    function deletePublicStory(index) {
+        if(confirm("حذف الموقف من القسم العام؟")) {
+            let publicStories = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
+            publicStories.splice(index, 1);
+            localStorage.setItem('public_stories_all', JSON.stringify(publicStories));
+            renderPublicStories();
+        }
     }
 </script>
 </body>
