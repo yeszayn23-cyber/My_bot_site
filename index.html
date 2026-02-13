@@ -16,13 +16,25 @@
             --bg-color: var(--creamy);
             --text-color: var(--brown);
             --card-bg: #ffffff;
+            --silver: linear-gradient(45deg, #bfc0c0, #ffffff, #8d99ae, #ffffff, #bfc0c0);
         }
 
+        /* الوضع الليلي */
         body.dark-mode {
             --bg-color: #1a0f00; 
             --text-color: #fcf9f2;
             --card-bg: #2d1b0a;
             background-image: radial-gradient(#3d2b1a 0.5px, transparent 0.5px);
+        }
+
+        /* الوضع الرمضاني الملكي */
+        body.ramadan-mode {
+            --bg-color: #050a18;
+            --text-color: #e0e0e0;
+            --card-bg: #0d1b3e;
+            --dark-gold: #bfc0c0; /* لون فضي */
+            --gold: var(--silver);
+            background-image: radial-gradient(#1a2a4a 0.8px, transparent 0.8px);
         }
 
         body { 
@@ -35,7 +47,35 @@
             transition: 0.5s;
         }
 
-        .container { max-width: 500px; margin: auto; }
+        .container { max-width: 500px; margin: auto; position: relative; z-index: 2; }
+
+        /* التقويم الهجري */
+        .hijri-container {
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px solid var(--dark-gold);
+            padding: 5px 15px;
+            border-radius: 15px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+            color: var(--dark-gold);
+        }
+
+        /* الفوانيس */
+        .lanterns-box {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; display: none;
+        }
+        body.ramadan-mode .lanterns-box { display: block; }
+        .lantern {
+            position: absolute; width: 40px; height: 60px;
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow { from { opacity: 0.4; } to { opacity: 1; box-shadow: 0 0 30px #ffffff44; } }
 
         /* الشعار الذهبي */
         .header { padding: 30px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
@@ -51,7 +91,6 @@
         @keyframes shine { to { background-position: 200% center; } }
         .subtitle { font-style: italic; color: var(--dark-gold); margin-top: 10px; font-size: 1.2em; }
 
-        /* العداد الجماعي */
         .global-counter-box {
             background: var(--card-bg);
             border: 2px solid var(--dark-gold);
@@ -87,7 +126,8 @@
 
         .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 
-        .theme-toggle { position: absolute; top: 15px; left: 15px; background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; }
+        .controls-btns { position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; }
+        .theme-toggle { background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 40px; height: 40px; }
 
         .section { display: none; animation: fadeIn 0.5s ease; }
         .active { display: block; }
@@ -99,10 +139,20 @@
 </head>
 <body id="mainBody">
 
-<button class="theme-toggle" onclick="toggleDarkMode()">🌓</button>
+<div class="lanterns-box">
+    <div class="lantern" style="top: 10px; right: 20px;"></div>
+    <div class="lantern" style="top: 15px; left: 20px;"></div>
+</div>
+
+<div class="controls-btns">
+    <button class="theme-toggle" onclick="toggleDarkMode()" title="وضع ليلي">🌓</button>
+    <button class="theme-toggle" onclick="toggleRamadanMode()" title="وضع رمضاني">🌙</button>
+</div>
 
 <div class="container">
     <div id="home" class="section active">
+        <div class="hijri-container" id="hijriDisplay">...</div>
+
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
             <p class="subtitle">"سيروا إلى الله عرجى ومكاسير"</p>
@@ -177,14 +227,27 @@
     let currentName = "";
     let localSebha = 0;
 
-    // تهيئة العداد الجماعي
-    function updateGlobalDisplay() {
-        const count = localStorage.getItem('global_tasbih_count') || 0;
-        document.getElementById('globalCounterDisplay').innerText = Number(count).toLocaleString();
+    // التاريخ الهجري التلقائي
+    function updateHijri() {
+        const date = new Date();
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', options).format(date);
+        document.getElementById('hijriDisplay').innerText = hijri;
     }
 
     function toggleDarkMode() {
+        document.getElementById('mainBody').classList.remove('ramadan-mode');
         document.getElementById('mainBody').classList.toggle('dark-mode');
+    }
+
+    function toggleRamadanMode() {
+        document.getElementById('mainBody').classList.remove('dark-mode');
+        document.getElementById('mainBody').classList.toggle('ramadan-mode');
+    }
+
+    function updateGlobalDisplay() {
+        const count = localStorage.getItem('global_tasbih_count') || 0;
+        document.getElementById('globalCounterDisplay').innerText = Number(count).toLocaleString();
     }
 
     function isAdmin() { return tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID; }
@@ -200,16 +263,12 @@
         window.scrollTo(0,0);
     }
 
-    // التسبيح وزيادة العداد الجماعي
     function countSebha() {
         localSebha++;
         document.getElementById('sebhaDisplay').innerText = localSebha;
-        
-        // زيادة العداد الجماعي في الذاكرة
         let globalCount = Number(localStorage.getItem('global_tasbih_count') || 0);
         globalCount++;
         localStorage.setItem('global_tasbih_count', globalCount);
-        
         if (navigator.vibrate) navigator.vibrate(40);
     }
 
@@ -222,7 +281,6 @@
         }
     }
 
-    // إدارة المحتوى (Names & Thoughts)
     function toggleAdminInputs() {
         const type = document.getElementById('adminActionType').value;
         document.getElementById('nameInputs').style.display = type === 'name' ? 'block' : 'none';
@@ -287,8 +345,8 @@
         div.innerHTML = p.map(s => `<div class="card"><small style="color:var(--dark-gold)">${s.name}</small><p>${s.text}</p></div>`).join('');
     }
 
-    // تشغيل العداد عند البداية
     updateGlobalDisplay();
+    updateHijri();
 </script>
 </body>
 </html>
