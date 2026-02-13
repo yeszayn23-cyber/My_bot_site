@@ -20,8 +20,8 @@
         }
 
         body { font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; text-align: center; }
-        body.dark-mode { --bg-color: #1a0f00; --text-color: #fcf9f2; --card-bg: #2d1b0a; }
-        body.ramadan-mode { --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #bfc0c0; --gold: var(--silver); }
+        .dark-mode { --bg-color: #1a0f00; --text-color: #fcf9f2; --card-bg: #2d1b0a; }
+        .ramadan-mode { --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #bfc0c0; --gold: var(--silver); }
 
         .container { max-width: 500px; margin: auto; position: relative; z-index: 2; }
         .hijri-container { margin-bottom: 10px; display: inline-block; border: 1px solid var(--dark-gold); padding: 5px 15px; border-radius: 15px; background: var(--card-bg); font-weight: bold; color: var(--dark-gold); font-size: 0.9em; }
@@ -40,7 +40,7 @@
         .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.1em; justify-content: center !important; }
 
         .controls-btns { position: fixed; top: 15px; left: 15px; display: flex; gap: 8px; z-index: 1000; }
-        .theme-toggle { background: var(--gold); border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        .theme-toggle { background: var(--gold); border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
         .section { display: none; }
         .active { display: block; }
@@ -52,16 +52,14 @@
         #adminPanel { display: none; margin-top: 25px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
         .admin-input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
         .reset-btn { background: #ff4d4d !important; color: white !important; margin: 10px 0; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Amiri'; font-weight: bold; }
-
-        /* ستايل الموقف المكتوب من قبل المستخدم */
-        .user-story-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--dark-gold); margin-bottom: 10px; font-family: 'Amiri'; }
+        .user-story-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--dark-gold); margin-bottom: 10px; font-family: 'Amiri'; background: var(--bg-color); color: var(--text-color); }
     </style>
 </head>
 <body>
 
 <div class="controls-btns">
-    <button class="theme-toggle" onclick="setMode('dark')">🌓</button>
-    <button class="theme-toggle" onclick="setMode('ramadan')">🌙</button>
+    <button class="theme-toggle" onclick="toggleMode('dark-mode')">🌓</button>
+    <button class="theme-toggle" onclick="toggleMode('ramadan-mode')">🌙</button>
 </div>
 
 <div class="container">
@@ -108,17 +106,14 @@
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" style="color:var(--dark-gold)"></h2>
         <div class="card" id="detContent" style="white-space: pre-wrap; line-height: 1.7;"></div>
-        
         <h3 style="color:var(--dark-gold)">📍 نقاط عملية</h3>
         <div class="card" id="detTasks"></div>
-
-        <h3 style="color:var(--dark-gold)">💬 شاركنا موقفك مع هذا الاسم</h3>
+        <h3 style="color:var(--dark-gold)">💬 شاركنا موقفك</h3>
         <div class="card">
-            <textarea id="userStoryText" class="user-story-input" placeholder="اكتب موقفاً أثّر فيك..."></textarea>
+            <textarea id="userStoryText" class="user-story-input" placeholder="اكتب موقفك هنا..."></textarea>
             <button class="name-btn main-action-btn" style="padding:10px" onclick="submitUserStory()">إرسال الموقف ✨</button>
-            <div id="detStories" style="margin-top:20px"></div>
+            <div id="detStories" style="margin-top:15px"></div>
         </div>
-
         <div class="global-tasbih" onclick="incrementLocal()">
             <div style="color: var(--dark-gold)">سبحة الورد</div>
             <div id="localCount" class="tasbih-count">0</div>
@@ -144,10 +139,12 @@
     const ADMIN_ID = 8421694319;
     let currentActiveName = "";
 
-    function setMode(mode) {
-        const b = document.body; b.classList.remove('dark-mode', 'ramadan-mode');
-        if (mode === 'dark') b.classList.add('dark-mode');
-        if (mode === 'ramadan') b.classList.add('ramadan-mode');
+    // إصلاح دالة الأوضاع لتكون فورية ومستقرة
+    function toggleMode(modeName) {
+        const body = document.body;
+        const isActive = body.classList.contains(modeName);
+        body.classList.remove('dark-mode', 'ramadan-mode');
+        if (!isActive) body.classList.add(modeName);
     }
 
     function showSection(id) {
@@ -176,7 +173,6 @@
     let lCnt = 0;
     function incrementLocal() {
         lCnt++; document.getElementById('localCount').innerText = lCnt;
-        if(navigator.vibrate) navigator.vibrate(30);
     }
 
     const isOwner = (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID);
@@ -188,27 +184,20 @@
         const text = document.getElementById('mainContent').value;
         if(!text && type !== 'task') return;
 
-        if(type === 'name') {
-            let db = JSON.parse(localStorage.getItem('db_names') || "{}");
-            db[target] = text; localStorage.setItem('db_names', JSON.stringify(db));
-        } else if(type === 'task') {
-            let db = JSON.parse(localStorage.getItem('db_tasks') || "{}");
-            if(!db[target]) db[target] = [];
-            db[target].push(text); localStorage.setItem('db_tasks', JSON.stringify(db));
-        } else if(type === 'thought') {
-            let db = JSON.parse(localStorage.getItem('db_thoughts') || "[]");
-            db.push(text); localStorage.setItem('db_thoughts', JSON.stringify(db));
-        } else if(type === 'mood') {
-            let db = JSON.parse(localStorage.getItem('db_moods') || "{}");
-            db[target] = text; localStorage.setItem('db_moods', JSON.stringify(db));
-        }
+        let key = (type==='name')?'db_names':(type==='task')?'db_tasks':(type==='thought')?'db_thoughts':'db_moods';
+        let db = JSON.parse(localStorage.getItem(key) || (type==='thought'?"[]":"{}"));
+        
+        if(type==='thought') db.push(text);
+        else if(type==='task') { if(!db[target]) db[target]=[]; db[target].push(text); }
+        else db[target] = text;
+
+        localStorage.setItem(key, JSON.stringify(db));
         alert("تم الحفظ ✓"); location.reload();
     }
 
-    // وظيفة المستخدم لإرسال موقف
     function submitUserStory() {
         const text = document.getElementById('userStoryText').value;
-        if(!text) return alert("اكتب شيئاً أولاً");
+        if(!text) return;
         let db = JSON.parse(localStorage.getItem('db_stories') || "{}");
         if(!db[currentActiveName]) db[currentActiveName] = [];
         db[currentActiveName].push(text);
@@ -223,7 +212,7 @@
         Object.keys(data).forEach(n => {
             const btn = document.createElement('div'); btn.className = "name-btn";
             btn.innerHTML = `<span style="flex:1; text-align:right;" onclick="openNamePage('${n}')">${n}</span>`;
-            if(isOwner) btn.innerHTML += `<button class="tool-btn" onclick="event.stopPropagation(); deleteItem('${n}','name')">🗑️</button>`;
+            if(isOwner) btn.innerHTML += `<button class="tool-btn" onclick="event.stopPropagation(); deleteMainItem('${n}','db_names')">🗑️</button>`;
             grid.appendChild(btn);
         });
     }
@@ -232,7 +221,7 @@
         currentActiveName = n; lCnt = 0; document.getElementById('localCount').innerText = 0;
         const names = JSON.parse(localStorage.getItem('db_names') || "{}");
         document.getElementById('detTitle').innerText = n;
-        document.getElementById('detContent').innerText = names[n] || "لا يوجد مقال.";
+        document.getElementById('detContent').innerText = names[n] || "";
         renderSubItems(n, 'db_tasks', 'detTasks');
         renderSubItems(n, 'db_stories', 'detStories');
         showSection('nameDetailsPage');
@@ -241,8 +230,7 @@
     function renderSubItems(n, dbKey, containerId) {
         const container = document.getElementById(containerId); container.innerHTML = "";
         const all = JSON.parse(localStorage.getItem(dbKey) || "{}");
-        const items = all[n] || [];
-        items.forEach((t, i) => {
+        (all[n] || []).forEach((t, i) => {
             const item = document.createElement('div'); item.className = "item-list";
             item.innerHTML = `<span>• ${t}</span>`;
             if(isOwner) item.innerHTML += `<button class="tool-btn" onclick="deleteSubItem('${dbKey}', ${i})" style="margin-right:auto">🗑️</button>`;
@@ -250,19 +238,28 @@
         });
     }
 
-    window.deleteSubItem = function(dbKey, i) {
-        if(!confirm("حذف؟")) return;
-        let db = JSON.parse(localStorage.getItem(dbKey));
+    function renderThoughts() {
+        const list = document.getElementById('thoughtsList'); list.innerHTML = "";
+        const data = JSON.parse(localStorage.getItem('db_thoughts') || "[]");
+        data.slice().reverse().forEach((t, i) => {
+            const card = document.createElement('div'); card.className = "card";
+            card.innerHTML = `<p>${t}</p>`;
+            if(isOwner) card.innerHTML += `<button class="tool-btn" style="color:red" onclick="deleteMainItem(${data.length-1-i},'db_thoughts')">🗑️ حذف</button>`;
+            list.appendChild(card);
+        });
+    }
+
+    window.deleteSubItem = function(key, i) {
+        let db = JSON.parse(localStorage.getItem(key));
         db[currentActiveName].splice(i, 1);
-        localStorage.setItem(dbKey, JSON.stringify(db));
+        localStorage.setItem(key, JSON.stringify(db));
         openNamePage(currentActiveName);
     }
 
-    window.deleteItem = function(id, type) {
+    window.deleteMainItem = function(id, key) {
         if(!confirm("حذف؟")) return;
-        let key = type === 'name' ? 'db_names' : 'db_thoughts';
         let data = JSON.parse(localStorage.getItem(key));
-        if(type === 'name') delete data[id]; else data.splice(id, 1);
+        if(key==='db_names') delete data[id]; else data.splice(id, 1);
         localStorage.setItem(key, JSON.stringify(data));
         location.reload();
     }
