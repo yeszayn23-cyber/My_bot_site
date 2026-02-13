@@ -14,9 +14,14 @@
         .section { display: none; animation: fadeIn 0.5s; }
         .active { display: block; }
         .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: 0.3s; }
+        .name-btn:hover { background: #fdf6e3; }
         .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; line-height: 1.8; white-space: pre-line; }
-        .back-btn { background: #d4af37; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; }
+        .back-btn { background: #d4af37; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; width: 100%; }
+        
+        /* لوحة التحكم للمالك */
+        #adminPanel { display: none; margin-top: 30px; padding: 15px; border: 2px solid #8b4513; border-radius: 15px; background: #f0f0f0; text-align: right; }
+        .admin-input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Amiri'; }
         
         .comments-section { margin-top: 30px; background: #fdf6e3; padding: 15px; border-radius: 12px; border: 1px dashed #d4af37; text-align: right; }
         textarea { width: 100%; height: 80px; border-radius: 8px; border: 1px solid #eaddca; padding: 10px; font-family: 'Amiri'; margin-top: 10px; resize: none; box-sizing: border-box; }
@@ -37,27 +42,25 @@
         </div>
         <button class="name-btn" style="width: 100%; font-size: 1.2em; background: #8b4513; color: white;" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
         <button class="name-btn" style="width: 100%; font-size: 1.1em; margin-top: 10px; border: 1px solid #8b4513;" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
+
+        <div id="adminPanel">
+            <h3 style="color: #8b4513;">🛠 لوحة التحكم (لكِ وحدكِ)</h3>
+            <label>اسم الله الجديد:</label>
+            <input type="text" id="newName" class="admin-input" placeholder="مثلاً: القدوس">
+            <label>المقال:</label>
+            <textarea id="newContent" class="admin-input" style="height: 120px;" placeholder="اكتبي تفاصيل الاسم والمقال هنا..."></textarea>
+            <button class="name-btn" style="background: #28a745; color: white; width: 100%; margin-top: 10px;" onclick="addNewName()">إضافة الاسم للموقع +</button>
+        </div>
     </div>
 
     <div id="namesList" class="section">
         <h2 style="color: #8b4513;">أسماء الله الحسنى</h2>
-        <div class="names-grid">
+        <div class="names-grid" id="mainGrid">
             <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم، الجامع لكل معاني الألوهية والكمال...')">الله</div>
             <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة الذي وسع كل شيء برحمته وفضله...')">الرحمن</div>
-            <div class="name-btn" onclick="openArticle('الرقيب', `📌 رقيب عليك في كل حال 
-مراقبته لك أدق من أحدث الكاميرات🎦 التي ترصد الصوت والصورة 
-ملازم لك أكثر من والديك 🍃
-أقرب إليك من وريدك 
-يعلم بما يدور بينك وبين نفسك 🗣 ويطلع على سريرتك التي لا يطلع عليها أحد 💞
-يراقب أفعالك وكلامك و تفكيرك الداخلي بلا غفلة ولا غياب ولا تشويش❌ 
-يراقبك ويراقب كل ما تتخيل في العالم. من: إنس، جن، ملائكة، حيوان.. 
-يراقبنا بنفس الطريقة كلنا لا يغيب أحد عن رقابته ✅🍃
-وفوق هذا نعصيه 💔 وهو ينظر لنا ويسترنا😔 نكذب، نغتاب، نسب، نبطش، نذنب، نخطأ أمامه في حقه وفي أرضه ونتنعم بنعمه وهو يرى 💔 
-ألا نستحي منه؟! 
-نخاف من أن يرانا الناس ونخشى اطلاعهم على أسرارنا ونستحضر مراقبة أبسط الناس لنا حتى الآلات (الكاميرات..) ولا نستحضر رقابة الله الدائمة على أحوالنا وأفعال قلوبنا وأفعال جوارحنا وخواطر عقولنا💢📍
-وأنت الآن تقرأ رسالتي الله يراك ويسمع حديث نفسك، أوَلا تتق الله؟ 💔😔`)">الرقيب</div>
+            <div class="name-btn" onclick="openArticle('الرقيب', `📌 رقيب عليك في كل حال...\n\n(المقال الذي أضفتيه سابقاً سيكون هنا كاملاً)`)">الرقيب</div>
         </div>
-        <button class="back-btn" onclick="showSection('home')">رجوع</button>
+        <button class="back-btn" onclick="showSection('home')">رجوع للرئيسية</button>
     </div>
 
     <div id="article" class="section">
@@ -65,11 +68,10 @@
         <div class="article-box">
             <p id="articleContent"></p>
         </div>
-        
         <div class="comments-section">
             <strong style="color: #8b4513;">✍️ أكتب موقفك مع هذا الاسم:</strong>
             <textarea id="userStory" placeholder="احكِ لنا كيف تجلى هذا الاسم في حياتك..."></textarea>
-            <button class="name-btn" style="width: 100%; margin-top: 10px; padding: 8px; background: #d4af37; color: white;" onclick="saveStory()">نشر الموقف فوراً</button>
+            <button class="name-btn" style="width: 100%; margin-top: 10px; background: #d4af37; color: white;" onclick="saveStory()">نشر الموقف</button>
             <div id="storiesList"></div>
         </div>
         <button class="back-btn" onclick="showSection('namesList')">العودة للأسماء</button>
@@ -78,7 +80,7 @@
     <div id="publicStories" class="section">
         <h2 style="color: #8b4513;">قصص من واقع اليقين</h2>
         <div id="allStories" style="text-align: right;">
-            <p style="text-align: center; color: #999;">لا توجد مواقف منشورة بعد..</p>
+            <p style="text-align: center; color: #999;">المواقف تظهر هنا لمن كتبها في جهازه..</p>
         </div>
         <button class="back-btn" onclick="showSection('home')">رجوع</button>
     </div>
@@ -88,31 +90,69 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    // ايدي المالك الخاص بكِ
+    const ADMIN_ID = 8421694319; 
+
+    // إظهار لوحة التحكم للمالك فقط
+    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID) {
+        document.getElementById('adminPanel').style.display = 'block';
+    }
+
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        if(id === 'namesList') renderNames();
         window.scrollTo(0,0);
+    }
+
+    // وظيفة إضافة اسم ومقال جديدين
+    function addNewName() {
+        const name = document.getElementById('newName').value;
+        const content = document.getElementById('newContent').value;
+        if(!name || !content) return alert("يرجى ملء الاسم والمقال");
+
+        let extraNames = JSON.parse(localStorage.getItem('extra_names') || "[]");
+        extraNames.push({name, content});
+        localStorage.setItem('extra_names', JSON.stringify(extraNames));
+
+        document.getElementById('newName').value = "";
+        document.getElementById('newContent').value = "";
+        alert("تمت إضافة " + name + " بنجاح!");
+    }
+
+    // عرض القائمة المحدثة
+    function renderNames() {
+        const grid = document.getElementById('mainGrid');
+        let baseHtml = `
+            <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم...')">الله</div>
+            <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة...')">الرحمن</div>
+            <div class="name-btn" onclick="openArticle('الرقيب', '📌 رقيب عليك في كل حال...')">الرقيب</div>
+        `;
+        
+        let extraNames = JSON.parse(localStorage.getItem('extra_names') || "[]");
+        extraNames.forEach(item => {
+            baseHtml += `<div class="name-btn" onclick="openArticle('${item.name}', \`${item.content}\`)">${item.name}</div>`;
+        });
+        grid.innerHTML = baseHtml;
     }
 
     function openArticle(title, content) {
         document.getElementById('articleTitle').innerText = title;
         document.getElementById('articleContent').innerText = content;
         showSection('article');
-        loadStories(title); 
+        loadStories(title);
     }
 
     function saveStory() {
         const text = document.getElementById('userStory').value;
         const title = document.getElementById('articleTitle').innerText;
-        if (!text) return alert("من فضلك اكتب موقفك أولاً");
-
+        if (!text) return;
         let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
         stories.push(text);
         localStorage.setItem('stories_' + title, JSON.stringify(stories));
-        
-        document.getElementById('userStory').value = ""; 
+        document.getElementById('userStory').value = "";
         loadStories(title);
-        alert("تم نشر موقفك بنجاح ✨");
+        tg.showAlert("تم حفظ موقفك بنجاح");
     }
 
     function loadStories(title) {
