@@ -14,18 +14,21 @@
         .section { display: none; animation: fadeIn 0.5s; }
         .active { display: block; }
         .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: 0.3s; }
-        .name-btn:hover { background: #fdf6e3; }
+        .name-btn { background: #fff; border: 1px solid #d4af37; padding: 15px; border-radius: 10px; cursor: pointer; color: #8b4513; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .article-box { background: #fff; padding: 20px; border-radius: 15px; text-align: justify; border: 1px solid #eaddca; margin-top: 20px; line-height: 1.8; white-space: pre-line; }
         .back-btn { background: #d4af37; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; width: 100%; }
         
-        /* لوحة التحكم للمالك */
+        /* لوحة التحكم */
         #adminPanel { display: none; margin-top: 30px; padding: 15px; border: 2px solid #8b4513; border-radius: 15px; background: #f0f0f0; text-align: right; }
         .admin-input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: 'Amiri'; }
         
         .comments-section { margin-top: 30px; background: #fdf6e3; padding: 15px; border-radius: 12px; border: 1px dashed #d4af37; text-align: right; }
         textarea { width: 100%; height: 80px; border-radius: 8px; border: 1px solid #eaddca; padding: 10px; font-family: 'Amiri'; margin-top: 10px; resize: none; box-sizing: border-box; }
-        .comment-item { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; border-right: 4px solid #d4af37; font-size: 0.9em; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .comment-item { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; border-right: 4px solid #d4af37; font-size: 0.9em; position: relative; }
+        
+        .admin-action-btn { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; cursor: pointer; margin-top: 5px; }
+        .points-box { background: #fffde7; padding: 15px; border-radius: 12px; border: 1px solid #fdd835; margin-top: 15px; text-align: right; }
+        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -37,130 +40,161 @@
             <h1 class="logo">الله أولاً</h1>
             <p>"سيروا إلى الله عرجى ومكاسير"</p>
         </div>
-        <div style="background: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #eaddca; font-size: 1.1em;">
-            طريقنا يبدأ من هنا.. <b>"من عرف الله أكثر أحبه أكثر"</b>. لنعرف مَن نعبد، لنُحب مَن نرجو.
-        </div>
         <button class="name-btn" style="width: 100%; font-size: 1.2em; background: #8b4513; color: white;" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
         <button class="name-btn" style="width: 100%; font-size: 1.1em; margin-top: 10px; border: 1px solid #8b4513;" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
 
         <div id="adminPanel">
-            <h3 style="color: #8b4513;">🛠 لوحة التحكم (لكِ وحدكِ)</h3>
-            <label>اسم الله الجديد:</label>
-            <input type="text" id="newName" class="admin-input" placeholder="مثلاً: القدوس">
-            <label>المقال:</label>
-            <textarea id="newContent" class="admin-input" style="height: 120px;" placeholder="اكتبي تفاصيل الاسم والمقال هنا..."></textarea>
-            <button class="name-btn" style="background: #28a745; color: white; width: 100%; margin-top: 10px;" onclick="addNewName()">إضافة الاسم للموقع +</button>
+            <h3 style="color: #8b4513;">🛠 لوحة الإدارة</h3>
+            <input type="text" id="newName" class="admin-input" placeholder="اسم الله">
+            <textarea id="newContent" class="admin-input" placeholder="المقال الرئيسي"></textarea>
+            <textarea id="newPoints" class="admin-input" placeholder="النقاط العملية (نقطة في كل سطر)"></textarea>
+            <button class="name-btn" style="background: #8b4513; color: white; width: 100%;" onclick="addNewData()">حفظ الاسم والنقاط +</button>
         </div>
     </div>
 
     <div id="namesList" class="section">
         <h2 style="color: #8b4513;">أسماء الله الحسنى</h2>
-        <div class="names-grid" id="mainGrid">
-            <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم، الجامع لكل معاني الألوهية والكمال...')">الله</div>
-            <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة الذي وسع كل شيء برحمته وفضله...')">الرحمن</div>
-            <div class="name-btn" onclick="openArticle('الرقيب', `📌 رقيب عليك في كل حال...\n\n(المقال الذي أضفتيه سابقاً سيكون هنا كاملاً)`)">الرقيب</div>
-        </div>
-        <button class="back-btn" onclick="showSection('home')">رجوع للرئيسية</button>
+        <div class="names-grid" id="mainGrid"></div>
+        <button class="back-btn" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="article" class="section">
         <h2 id="articleTitle" style="color: #8b4513;"></h2>
-        <div class="article-box">
-            <p id="articleContent"></p>
-        </div>
+        <div class="article-box" id="articleContent"></div>
+        
+        <button class="name-btn" style="width: 100%; margin-top: 15px; background: #d4af37; color: white;" onclick="showPoints()">💡 نقاط عملية لتثبيت الاسم</button>
+
         <div class="comments-section">
-            <strong style="color: #8b4513;">✍️ أكتب موقفك مع هذا الاسم:</strong>
-            <textarea id="userStory" placeholder="احكِ لنا كيف تجلى هذا الاسم في حياتك..."></textarea>
-            <button class="name-btn" style="width: 100%; margin-top: 10px; background: #d4af37; color: white;" onclick="saveStory()">نشر الموقف</button>
+            <strong style="color: #8b4513;">✍️ أكتب موقفك:</strong>
+            <textarea id="userStory" placeholder="كيف تجلى هذا الاسم في حياتك؟"></textarea>
+            <button class="name-btn" style="width: 100%; margin-top: 10px; background: #8b4513; color: white;" onclick="saveStory()">نشر الموقف</button>
             <div id="storiesList"></div>
         </div>
-        <button class="back-btn" onclick="showSection('namesList')">العودة للأسماء</button>
+        <button class="back-btn" onclick="showSection('namesList')">رجوع</button>
+    </div>
+
+    <div id="pointsSection" class="section">
+        <h2 style="color: #8b4513;">تطبيق عملي</h2>
+        <div class="points-box">
+            <h4 style="color: #8b4513; border-bottom: 1px solid #d4af37; padding-bottom: 5px;">📍 لتثبيت الاسم في القلب عود نفسك على هته النقاط:</h4>
+            <p style="font-style: italic; font-size: 0.9em; color: #6d4c41;">« سلوكيات بسيطة لكن لها أثر كبير »</p>
+            <ul id="pointsList" style="list-style-type: disc; padding-right: 20px; line-height: 1.8;"></ul>
+        </div>
+        <button class="back-btn" onclick="showSection('article')">العودة للمقال</button>
     </div>
 
     <div id="publicStories" class="section">
         <h2 style="color: #8b4513;">قصص من واقع اليقين</h2>
-        <div id="allStories" style="text-align: right;">
-            <p style="text-align: center; color: #999;">المواقف تظهر هنا لمن كتبها في جهازه..</p>
-        </div>
+        <div id="allPublicStories" style="text-align: right;"></div>
         <button class="back-btn" onclick="showSection('home')">رجوع</button>
     </div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    tg.expand();
+    const ADMIN_ID = 8421694319;
+    let currentName = "";
 
-    // ايدي المالك الخاص بكِ
-    const ADMIN_ID = 8421694319; 
-
-    // إظهار لوحة التحكم للمالك فقط
     if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
     }
+
+    // البيانات الأساسية
+    const baseData = {
+        "الله": { content: "هو الاسم الأعظم...", points: ["التعلق بالله وحده", "كثرة ذكره"] },
+        "الرحمن": { content: "واسع الرحمة...", points: ["ارحم من في الأرض", "عدم اليأس"] },
+        "الرقيب": { content: "📌 رقيب عليك في كل حال...", points: ["استحضار رؤية الله لك", "تطهير السريرة"] }
+    };
 
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'namesList') renderNames();
-        window.scrollTo(0,0);
+        if(id === 'publicStories') renderPublicStories();
     }
 
-    // وظيفة إضافة اسم ومقال جديدين
-    function addNewName() {
+    function addNewData() {
         const name = document.getElementById('newName').value;
         const content = document.getElementById('newContent').value;
-        if(!name || !content) return alert("يرجى ملء الاسم والمقال");
+        const points = document.getElementById('newPoints').value.split('\n');
+        if(!name) return;
 
-        let extraNames = JSON.parse(localStorage.getItem('extra_names') || "[]");
-        extraNames.push({name, content});
-        localStorage.setItem('extra_names', JSON.stringify(extraNames));
-
-        document.getElementById('newName').value = "";
-        document.getElementById('newContent').value = "";
-        alert("تمت إضافة " + name + " بنجاح!");
+        let customData = JSON.parse(localStorage.getItem('custom_data') || "{}");
+        customData[name] = { content, points };
+        localStorage.setItem('custom_data', JSON.stringify(customData));
+        alert("تم الحفظ!");
     }
 
-    // عرض القائمة المحدثة
     function renderNames() {
         const grid = document.getElementById('mainGrid');
-        let baseHtml = `
-            <div class="name-btn" onclick="openArticle('الله', 'هو الاسم الأعظم...')">الله</div>
-            <div class="name-btn" onclick="openArticle('الرحمن', 'واسع الرحمة...')">الرحمن</div>
-            <div class="name-btn" onclick="openArticle('الرقيب', '📌 رقيب عليك في كل حال...')">الرقيب</div>
-        `;
-        
-        let extraNames = JSON.parse(localStorage.getItem('extra_names') || "[]");
-        extraNames.forEach(item => {
-            baseHtml += `<div class="name-btn" onclick="openArticle('${item.name}', \`${item.content}\`)">${item.name}</div>`;
+        let html = "";
+        const allData = {...baseData, ...JSON.parse(localStorage.getItem('custom_data') || "{}")};
+        Object.keys(allData).forEach(name => {
+            html += `<div class="name-btn" onclick="openArticle('${name}')">${name}</div>`;
         });
-        grid.innerHTML = baseHtml;
+        grid.innerHTML = html;
     }
 
-    function openArticle(title, content) {
-        document.getElementById('articleTitle').innerText = title;
-        document.getElementById('articleContent').innerText = content;
+    function openArticle(name) {
+        currentName = name;
+        const allData = {...baseData, ...JSON.parse(localStorage.getItem('custom_data') || "{}")};
+        document.getElementById('articleTitle').innerText = name;
+        document.getElementById('articleContent').innerText = allData[name].content;
         showSection('article');
-        loadStories(title);
+        loadStories(name);
+    }
+
+    function showPoints() {
+        const allData = {...baseData, ...JSON.parse(localStorage.getItem('custom_data') || "{}")};
+        const list = document.getElementById('pointsList');
+        list.innerHTML = allData[currentName].points.map(p => p ? `<li>${p}</li>` : "").join('');
+        showSection('pointsSection');
     }
 
     function saveStory() {
         const text = document.getElementById('userStory').value;
-        const title = document.getElementById('articleTitle').innerText;
         if (!text) return;
-        let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
-        stories.push(text);
-        localStorage.setItem('stories_' + title, JSON.stringify(stories));
+        let myStories = JSON.parse(localStorage.getItem('my_stories_' + currentName) || "[]");
+        myStories.push(text);
+        localStorage.setItem('my_stories_' + currentName, JSON.stringify(myStories));
         document.getElementById('userStory').value = "";
-        loadStories(title);
-        tg.showAlert("تم حفظ موقفك بنجاح");
+        loadStories(currentName);
     }
 
-    function loadStories(title) {
+    function loadStories(name) {
         const list = document.getElementById('storiesList');
-        let stories = JSON.parse(localStorage.getItem('stories_' + title) || "[]");
-        list.innerHTML = stories.map(s => `<div class="comment-item">${s}</div>`).join('');
+        let myStories = JSON.parse(localStorage.getItem('my_stories_' + name) || "[]");
+        let html = myStories.map(s => {
+            let adminBtn = (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID) 
+                ? `<button class="admin-action-btn" onclick="addToPublic('${s}')">⭐ نشر للعامة</button>` 
+                : "";
+            return `<div class="comment-item">${s}<br>${adminBtn}</div>`;
+        }).join('');
+        list.innerHTML = html;
+    }
+
+    function addToPublic(text) {
+        let publicStories = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
+        if(!publicStories.includes(text)) {
+            publicStories.push({name: currentName, text: text});
+            localStorage.setItem('public_stories_all', JSON.stringify(publicStories));
+            alert("تمت الإضافة للمواقف العامة!");
+        }
+    }
+
+    function renderPublicStories() {
+        const div = document.getElementById('allPublicStories');
+        let publicStories = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
+        if(publicStories.length === 0) {
+            div.innerHTML = "<p style='text-align:center'>لا توجد مواقف مختارة بعد.</p>";
+            return;
+        }
+        div.innerHTML = publicStories.map(s => `
+            <div class="comment-item">
+                <small style="color:#d4af37">مع اسم الله: ${s.name}</small><br>${s.text}
+            </div>
+        `).join('');
     }
 </script>
-
 </body>
 </html>
