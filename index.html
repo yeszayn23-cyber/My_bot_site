@@ -19,7 +19,7 @@
             --silver: linear-gradient(45deg, #bfc0c0, #ffffff, #8d99ae, #ffffff, #bfc0c0);
         }
 
-        body { font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; text-align: center; transition: none; }
+        body { font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; text-align: center; }
         body.dark-mode { --bg-color: #1a0f00; --text-color: #fcf9f2; --card-bg: #2d1b0a; }
         body.ramadan-mode { --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #bfc0c0; --gold: var(--silver); }
 
@@ -29,34 +29,32 @@
         .header { padding: 15px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
         .logo { font-size: 3em; font-weight: 700; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
-        /* السبحة الجماعية */
-        .global-tasbih { background: var(--card-bg); padding: 20px; border-radius: 25px; border: 2px solid var(--dark-gold); margin: 15px 0; cursor: pointer; position: relative; overflow: hidden; }
+        /* السبحة */
+        .global-tasbih { background: var(--card-bg); padding: 20px; border-radius: 25px; border: 2px solid var(--dark-gold); margin: 15px 0; cursor: pointer; }
         .tasbih-count { font-size: 2.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
         .birr-text { color: var(--dark-gold); font-size: 0.95em; margin-top: 10px; font-weight: bold; }
 
-        /* المشاعر والحالات */
         .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .mood-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); cursor: pointer; font-family: 'Amiri'; font-weight: bold; font-size: 0.9em; }
+        .mood-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); cursor: pointer; font-family: 'Amiri'; font-weight: bold; }
 
-        /* الأزرار الرئيسية */
         .name-btn { background: var(--card-bg); border: 1.5px solid var(--dark-gold); padding: 16px; border-radius: 18px; cursor: pointer; color: var(--text-color); font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; font-family: 'Amiri'; }
         .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.1em; justify-content: center !important; }
 
-        /* التحكم بالأوضاع */
         .controls-btns { position: fixed; top: 15px; left: 15px; display: flex; gap: 8px; z-index: 1000; }
-        .theme-toggle { background: var(--gold); border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .theme-toggle { background: var(--gold); border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
 
         .section { display: none; }
         .active { display: block; }
 
-        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; }
-        
-        /* النقاط العملية */
-        .task-item { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding-bottom: 8px; border-bottom: 1px dashed #ccc; font-size: 1.05em; line-height: 1.4; }
-        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0 5px; }
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .task-item { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding-bottom: 8px; border-bottom: 1px dashed #ccc; }
+        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; }
 
         #adminPanel { display: none; margin-top: 25px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
         .admin-input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
+        
+        /* زر التصفير الخاص بكِ */
+        .reset-btn { background: #ff4d4d !important; color: white !important; margin-top: 15px; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Amiri'; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -69,9 +67,7 @@
 <div class="container">
     <div id="home" class="section active">
         <div class="hijri-container" id="hijriDisplay">...</div>
-        <div class="header">
-            <h1 class="logo">الله أولاً</h1>
-        </div>
+        <div class="header"><h1 class="logo">الله أولاً</h1></div>
 
         <div class="global-tasbih" onclick="incrementGlobal()">
             <div style="color: var(--dark-gold); font-weight: bold;">السبحة الجماعية</div>
@@ -93,18 +89,20 @@
         <button class="name-btn main-action-btn" style="margin-top:5px" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
 
         <div id="adminPanel">
-            <h4 style="color:var(--dark-gold); margin-top:0;">🛠 لوحة تحكم المالكة</h4>
-            <select id="adminActionType" class="admin-input" onchange="toggleAdminInputs()">
+            <h4 style="color:var(--dark-gold); margin:0;">🛠 لوحة تحكم المالكة</h4>
+            
+            <button class="reset-btn" onclick="resetGlobalCounter()">🔄 تصفير السبحة الجماعية</button>
+            <hr style="border: 0.5px solid var(--dark-gold); margin: 15px 0;">
+
+            <select id="adminActionType" class="admin-input">
                 <option value="name">إضافة/تعديل اسم ومقاله</option>
                 <option value="task">إضافة نقطة عملية لاسم</option>
                 <option value="thought">إضافة خاطرة جديدة</option>
-                <option value="mood">تعديل نصوص الحالات (كيف حال قلبك)</option>
+                <option value="mood">تعديل نصوص الحالات</option>
             </select>
-            <div id="adminInputs">
-                <input type="text" id="targetName" class="admin-input" placeholder="اسم الله (أو عنوان الحالة)">
-                <textarea id="mainContent" class="admin-input" style="height:80px" placeholder="اكتبي النص هنا..."></textarea>
-            </div>
-            <button class="name-btn main-action-btn" style="width:100%" onclick="saveAdminData()">حفظ البيانات ✓</button>
+            <input type="text" id="targetName" class="admin-input" placeholder="اسم الله / العنوان">
+            <textarea id="mainContent" class="admin-input" style="height:80px" placeholder="النص..."></textarea>
+            <button class="name-btn main-action-btn" style="width:100%" onclick="saveAdminData()">حفظ ✓</button>
         </div>
     </div>
 
@@ -117,15 +115,13 @@
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" style="color:var(--dark-gold)"></h2>
         <div class="card" id="detContent" style="white-space: pre-wrap; line-height: 1.7;"></div>
-        
         <h3 style="color:var(--dark-gold)">📍 نقاط عملية تطبيقية</h3>
         <div class="card" id="detTasks"></div>
-
         <div class="global-tasbih" onclick="incrementLocal()">
-            <div style="color: var(--dark-gold)">سبحة الورد (خاصة بهذا الاسم)</div>
+            <div style="color: var(--dark-gold)">سبحة الورد</div>
             <div id="localCount" class="tasbih-count">0</div>
         </div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center;" onclick="showSection('namesList')">رجوع للقائمة</button>
+        <button class="name-btn" style="background:#444; color:white; justify-content:center;" onclick="showSection('namesList')">رجوع</button>
     </div>
 
     <div id="thoughtsSection" class="section">
@@ -146,7 +142,6 @@
     const ADMIN_ID = 8421694319;
     let currentActiveName = "";
 
-    // 1. الأوضاع (ليلي/رمضاني)
     function setMode(mode) {
         const b = document.body;
         const isD = b.classList.contains('dark-mode');
@@ -156,7 +151,6 @@
         if (mode === 'ramadan' && !isR) b.classList.add('ramadan-mode');
     }
 
-    // 2. التنقل بين الأقسام
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -165,7 +159,6 @@
         window.scrollTo(0,0);
     }
 
-    // 3. السبحة (جماعية ومحلية)
     let gCnt = parseInt(localStorage.getItem('g_total') || "0");
     document.getElementById('globalCount').innerText = gCnt;
     function incrementGlobal() {
@@ -173,13 +166,23 @@
         localStorage.setItem('g_total', gCnt);
         if(navigator.vibrate) navigator.vibrate(40);
     }
+
+    // دالة تصفير السبحة (لكِ فقط)
+    function resetGlobalCounter() {
+        if(confirm("هل تريدين تصفير السبحة الجماعية للجميع؟")) {
+            gCnt = 0;
+            document.getElementById('globalCount').innerText = 0;
+            localStorage.setItem('g_total', 0);
+            alert("تم تصفير العداد بنجاح ✓");
+        }
+    }
+
     let lCnt = 0;
     function incrementLocal() {
         lCnt++; document.getElementById('localCount').innerText = lCnt;
         if(navigator.vibrate) navigator.vibrate(30);
     }
 
-    // 4. الإدارة والبيانات
     const isOwner = (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID);
     if(isOwner) document.getElementById('adminPanel').style.display = 'block';
 
@@ -206,14 +209,13 @@
         alert("تم الحفظ بنجاح ✓"); location.reload();
     }
 
-    // 5. العرض (الرندرة)
     function renderNames() {
         const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
         const data = JSON.parse(localStorage.getItem('db_names') || "{}");
         Object.keys(data).forEach(n => {
             const btn = document.createElement('div'); btn.className = "name-btn";
             btn.innerHTML = `<span style="flex:1; text-align:right;" onclick="openNamePage('${n}')">${n}</span>`;
-            if(isOwner) btn.innerHTML += `<button class="tool-btn" onclick="deleteItem('${n}','name')">🗑️</button>`;
+            if(isOwner) btn.innerHTML += `<button class="tool-btn" onclick="event.stopPropagation(); deleteItem('${n}','name')">🗑️</button>`;
             grid.appendChild(btn);
         });
     }
@@ -231,7 +233,7 @@
         const container = document.getElementById('detTasks'); container.innerHTML = "";
         const allTasks = JSON.parse(localStorage.getItem('db_tasks') || "{}");
         const tasks = allTasks[n] || [];
-        if(tasks.length === 0) container.innerHTML = "لا توجد نقاط عملية بعد.";
+        if(tasks.length === 0) container.innerHTML = "لا توجد نقاط عملية.";
         tasks.forEach((t, i) => {
             const item = document.createElement('div'); item.className = "task-item";
             item.innerHTML = `<span>🔹 ${t}</span>`;
@@ -254,11 +256,10 @@
     function openMood(m) {
         const moods = JSON.parse(localStorage.getItem('db_moods') || "{}");
         document.getElementById('moodViewTitle').innerText = "لأنك " + m;
-        document.getElementById('moodViewContent').innerText = moods[m] || "لا يوجد نص مضاف لهذه الحالة.";
+        document.getElementById('moodViewContent').innerText = moods[m] || "لا يوجد نص.";
         showSection('moodViewPage');
     }
 
-    // 6. الحذف
     window.deleteItem = function(id, type) {
         if(!confirm("حذف؟")) return;
         let key = type === 'name' ? 'db_names' : 'db_thoughts';
