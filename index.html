@@ -37,30 +37,8 @@
 
         .container { max-width: 500px; margin: auto; }
 
-        /* إطار التاريخ الهجري */
-        .hijri-wrapper {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: center;
-        }
-        .hijri-badge {
-            background: var(--card-bg);
-            border: 2px solid var(--dark-gold);
-            padding: 5px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            color: var(--dark-gold);
-            font-size: 0.9em;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            display: inline-block;
-        }
-        .hijri-badge::before, .hijri-badge::after {
-            content: " ❃ ";
-            opacity: 0.6;
-        }
-
         /* الشعار الذهبي */
-        .header { padding: 20px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
+        .header { padding: 30px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
         .logo { 
             font-size: 3.8em; font-weight: 700; 
             background: var(--gold);
@@ -73,7 +51,7 @@
         @keyframes shine { to { background-position: 200% center; } }
         .subtitle { font-style: italic; color: var(--dark-gold); margin-top: 10px; font-size: 1.2em; }
 
-        /* باقي التنسيقات */
+        /* العداد الجماعي */
         .global-counter-box {
             background: var(--card-bg);
             border: 2px solid var(--dark-gold);
@@ -125,10 +103,192 @@
 
 <div class="container">
     <div id="home" class="section active">
-        <div class="hijri-wrapper">
-            <div id="hijriDisplay" class="hijri-badge">جاري التحميل...</div>
-        </div>
-
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
-            <p class="subtitle
+            <p class="subtitle">"سيروا إلى الله عرجى ومكاسير"</p>
+        </div>
+
+        <div class="global-counter-box">
+            <span class="global-label">إجمالي تسبيحاتنا معاً</span>
+            <span id="globalCounterDisplay" class="global-count-num">0</span>
+            <p class="taawano">"وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَى"</p>
+        </div>
+
+        <button class="name-btn main-action-btn" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
+        <button class="name-btn" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
+        <button class="name-btn" style="border: 2px solid var(--dark-gold);" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
+
+        <div id="adminPanel">
+            <h4 style="color:var(--dark-gold)">🛠 إدارة المحتوى</h4>
+            <select id="adminActionType" class="admin-input" onchange="toggleAdminInputs()">
+                <option value="name">إضافة اسم الله</option>
+                <option value="thought">إضافة خاطرة/رسالة</option>
+            </select>
+            <div id="nameInputs">
+                <input type="text" id="newName" class="admin-input" placeholder="الاسم">
+                <textarea id="newContent" class="admin-input" style="height:80px" placeholder="المقال"></textarea>
+                <textarea id="newPoints" class="admin-input" placeholder="النقاط..."></textarea>
+            </div>
+            <div id="thoughtInputs" style="display:none">
+                <textarea id="thoughtText" class="admin-input" style="height:80px" placeholder="الخاطرة..."></textarea>
+            </div>
+            <button class="name-btn main-action-btn" onclick="saveAdminData()">حفظ ✓</button>
+            <button class="name-btn" style="background:#fdeaea !important; color:red !important; font-size:0.8em;" onclick="resetGlobalCounter()">🗑 تصفير العداد الجماعي</button>
+        </div>
+    </div>
+
+    <div id="namesList" class="section">
+        <h2 style="color:var(--dark-gold)">أسماء الله الحسنى</h2>
+        <div id="mainGrid"></div>
+        <button class="name-btn" style="background:var(--brown); color:white;" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="article" class="section">
+        <h2 id="articleTitle" style="color:var(--dark-gold); font-size:2.5em;"></h2>
+        <div id="articleContent" class="card" style="line-height:2;"></div>
+        
+        <div class="sebha-container" onclick="countSebha()">
+            <span style="font-size:0.8em;">ورد الاسم</span>
+            <span id="sebhaDisplay" style="font-size:2.3em; font-weight:bold; color:var(--dark-gold);">0</span>
+            <span style="font-size:0.7em;">تسبيح</span>
+        </div>
+        <button onclick="resetSebha()" style="background:none; border:none; color:var(--dark-gold); cursor:pointer; margin-bottom:20px;">تصفير عداد الاسم</button>
+
+        <button class="name-btn main-action-btn" onclick="showPoints()">💡 نقاط عملية لتثبيت الاسم</button>
+        <button class="name-btn" style="background:var(--brown); color:white;" onclick="showSection('namesList')">رجوع للقائمة</button>
+    </div>
+
+    <div id="thoughtsSection" class="section">
+        <h2 style="color:var(--dark-gold)">خواطر ورسائل ربانية</h2>
+        <div id="thoughtsList"></div>
+        <button class="name-btn" style="background:var(--brown); color:white;" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="publicStories" class="section">
+        <h2 style="color:var(--dark-gold)">مواقفكم مع الله</h2>
+        <div id="allPublicStories"></div>
+        <button class="name-btn" style="background:var(--brown); color:white;" onclick="showSection('home')">رجوع</button>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    const ADMIN_ID = 8421694319;
+    let currentName = "";
+    let localSebha = 0;
+
+    // تهيئة العداد الجماعي
+    function updateGlobalDisplay() {
+        const count = localStorage.getItem('global_tasbih_count') || 0;
+        document.getElementById('globalCounterDisplay').innerText = Number(count).toLocaleString();
+    }
+
+    function toggleDarkMode() {
+        document.getElementById('mainBody').classList.toggle('dark-mode');
+    }
+
+    function isAdmin() { return tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === ADMIN_ID; }
+    if (isAdmin()) document.getElementById('adminPanel').style.display = 'block';
+
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'home') updateGlobalDisplay();
+        if(id === 'namesList') renderNames();
+        if(id === 'thoughtsSection') renderThoughts();
+        if(id === 'publicStories') renderPublicStories();
+        window.scrollTo(0,0);
+    }
+
+    // التسبيح وزيادة العداد الجماعي
+    function countSebha() {
+        localSebha++;
+        document.getElementById('sebhaDisplay').innerText = localSebha;
+        
+        // زيادة العداد الجماعي في الذاكرة
+        let globalCount = Number(localStorage.getItem('global_tasbih_count') || 0);
+        globalCount++;
+        localStorage.setItem('global_tasbih_count', globalCount);
+        
+        if (navigator.vibrate) navigator.vibrate(40);
+    }
+
+    function resetSebha() { localSebha = 0; document.getElementById('sebhaDisplay').innerText = 0; }
+    
+    function resetGlobalCounter() {
+        if(confirm("هل تريدين تصفير العداد الجماعي؟")) {
+            localStorage.setItem('global_tasbih_count', 0);
+            updateGlobalDisplay();
+        }
+    }
+
+    // إدارة المحتوى (Names & Thoughts)
+    function toggleAdminInputs() {
+        const type = document.getElementById('adminActionType').value;
+        document.getElementById('nameInputs').style.display = type === 'name' ? 'block' : 'none';
+        document.getElementById('thoughtInputs').style.display = type === 'thought' ? 'block' : 'none';
+    }
+
+    function saveAdminData() {
+        const type = document.getElementById('adminActionType').value;
+        if(type === 'name') {
+            const name = document.getElementById('newName').value;
+            const content = document.getElementById('newContent').value;
+            const points = document.getElementById('newPoints').value.split('\n');
+            let data = JSON.parse(localStorage.getItem('app_names_data') || "{}");
+            data[name] = { content, points };
+            localStorage.setItem('app_names_data', JSON.stringify(data));
+        } else {
+            const tText = document.getElementById('thoughtText').value;
+            let thoughts = JSON.parse(localStorage.getItem('app_thoughts') || "[]");
+            thoughts.push({ text: tText });
+            localStorage.setItem('app_thoughts', JSON.stringify(thoughts));
+        }
+        alert("تم الحفظ ✓");
+        location.reload();
+    }
+
+    function renderNames() {
+        const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
+        const data = JSON.parse(localStorage.getItem('app_names_data') || "{}");
+        Object.keys(data).forEach(name => {
+            const div = document.createElement('div'); div.style.display="flex"; div.style.gap="5px";
+            div.innerHTML = `<button class="name-btn" onclick="openArticle('${name}')">${name}</button>
+            ${isAdmin() ? `<button onclick="deleteName('${name}')" style="background:#fdeaea; border:1px solid #ddd; border-radius:10px; margin-bottom:12px; padding:0 10px;">🗑️</button>` : ""}`;
+            grid.appendChild(div);
+        });
+    }
+
+    function openArticle(name) {
+        currentName = name;
+        const data = JSON.parse(localStorage.getItem('app_names_data') || "{}");
+        document.getElementById('articleTitle').innerText = name;
+        document.getElementById('articleContent').innerText = data[name].content;
+        localSebha = 0; document.getElementById('sebhaDisplay').innerText = 0;
+        showSection('article');
+    }
+
+    function renderThoughts() {
+        const list = document.getElementById('thoughtsList'); list.innerHTML = "";
+        const thoughts = JSON.parse(localStorage.getItem('app_thoughts') || "[]");
+        thoughts.forEach((t, i) => {
+            const div = document.createElement('div'); div.className = "card";
+            div.innerHTML = `<p>${t.text}</p>${isAdmin() ? `<button onclick="deleteThought(${i})" style="color:red; background:none; border:none;">🗑️ حذف</button>` : ""}`;
+            list.appendChild(div);
+        });
+    }
+
+    function deleteName(name) { if(confirm("حذف الاسم؟")) { let d = JSON.parse(localStorage.getItem('app_names_data')); delete d[name]; localStorage.setItem('app_names_data', JSON.stringify(d)); renderNames(); } }
+    function deleteThought(i) { let t = JSON.parse(localStorage.getItem('app_thoughts')); t.splice(i, 1); localStorage.setItem('app_thoughts', JSON.stringify(t)); renderThoughts(); }
+
+    function renderPublicStories() {
+        const div = document.getElementById('allPublicStories');
+        let p = JSON.parse(localStorage.getItem('public_stories_all') || "[]");
+        div.innerHTML = p.map(s => `<div class="card"><small style="color:var(--dark-gold)">${s.name}</small><p>${s.text}</p></div>`).join('');
+    }
+
+    // تشغيل العداد عند البداية
+    updateGlobalDisplay();
+</script>
+</body>
+</html>
