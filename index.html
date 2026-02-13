@@ -10,180 +10,125 @@
         
         :root {
             --gold: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            --silver: linear-gradient(45deg, #bfc0c0, #ffffff, #8d99ae, #ffffff, #bfc0c0);
-            --dark-gold: #b38728;
+            --dark-gold: #8b6b23;
             --creamy: #fdfaf1;
             --brown: #4a342e;
-            --bg: var(--creamy);
-            --txt: var(--brown);
-            --card: #ffffff;
+            --bg-color: var(--creamy);
+            --text-color: var(--brown);
+            --card-bg: #ffffff;
         }
 
-        body.dark-mode { --bg: #000000; --txt: #fcf6ba; --card: #1a1a1a; --dark-gold: #fcf6ba; }
-        body.ramadan-mode { --bg: #050a18; --txt: #e0e0e0; --card: #0d1b3e; --dark-gold: #ffffff; }
-
-        body { font-family: 'Amiri', serif; background-color: var(--bg); color: var(--txt); margin: 0; padding: 15px; transition: 0.5s; text-align: center; overflow-x: hidden; }
-
-        /* إطار التاريخ الهجري المزخرف */
-        .hijri-container {
-            position: absolute; top: 15px; right: 15px;
-            border: 2px solid var(--dark-gold); padding: 5px 15px;
-            border-radius: 10px; background: var(--card);
-            box-shadow: 0 0 10px rgba(184, 134, 11, 0.2);
-            font-weight: bold; font-size: 0.8em; color: var(--dark-gold);
+        body.dark-mode {
+            --bg-color: #1a0f00; 
+            --text-color: #fcf9f2;
+            --card-bg: #2d1b0a;
+            background-image: radial-gradient(#3d2b1a 0.5px, transparent 0.5px);
         }
-        .hijri-container::before { content: "❃ "; }
-        .hijri-container::after { content: " ❃"; }
 
-        /* أزرار التحكم */
-        .controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; }
-        .mode-btn { background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; font-size: 1.2em; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        body { 
+            font-family: 'Amiri', serif; 
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(#e6d5b8 0.5px, transparent 0.5px);
+            background-size: 20px 20px; 
+            color: var(--text-color); 
+            margin: 0; padding: 15px; text-align: center; 
+            transition: 0.5s;
+        }
 
-        /* الشعار الفخم */
-        .header { padding: 40px 0 20px 0; }
+        .container { max-width: 500px; margin: auto; }
+
+        /* إطار التاريخ الهجري */
+        .hijri-wrapper {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .hijri-badge {
+            background: var(--card-bg);
+            border: 2px solid var(--dark-gold);
+            padding: 5px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: var(--dark-gold);
+            font-size: 0.9em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: inline-block;
+        }
+        .hijri-badge::before, .hijri-badge::after {
+            content: " ❃ ";
+            opacity: 0.6;
+        }
+
+        /* الشعار الذهبي */
+        .header { padding: 20px 0; border-bottom: 3px double var(--dark-gold); margin-bottom: 20px; }
         .logo { 
-            font-size: 4.8em; font-weight: 700; background: var(--gold);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 5px 4px rgba(0,0,0,0.4)); margin: 0; line-height: 1.1;
+            font-size: 3.8em; font-weight: 700; 
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 4px 3px rgba(0,0,0,0.3));
+            margin: 0; animation: shine 4s linear infinite;
+            background-size: 200% auto;
         }
-        .subtitle { font-size: 1.2em; color: var(--dark-gold); margin-top: 15px; line-height: 1.6; max-width: 85%; margin-left: auto; margin-right: auto; font-weight: bold; }
+        @keyframes shine { to { background-position: 200% center; } }
+        .subtitle { font-style: italic; color: var(--dark-gold); margin-top: 10px; font-size: 1.2em; }
 
-        /* لوحة المراقبة (خاصة بكِ فقط) */
-        #ownerPanel { 
-            display: none; background: #000; color: #00ff00; font-family: monospace; 
-            padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; direction: ltr;
-            border: 1px solid #00ff00; font-size: 0.8em; box-shadow: 0 0 15px #00ff0044;
+        /* باقي التنسيقات */
+        .global-counter-box {
+            background: var(--card-bg);
+            border: 2px solid var(--dark-gold);
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .global-count-num {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+        .global-label { font-size: 1em; color: var(--dark-gold); font-weight: bold; }
+        .taawano { font-size: 0.9em; color: var(--text-color); opacity: 0.8; margin-top: 5px; }
+
+        .name-btn { 
+            background: var(--card-bg); border: 1.5px solid var(--dark-gold); padding: 16px; border-radius: 18px; 
+            cursor: pointer; color: var(--text-color); font-weight: bold; font-family: 'Amiri'; width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 12px; transition: 0.3s;
+        }
+        .main-action-btn { background: var(--gold) !important; color: #4a342e !important; border: none !important; font-size: 1.2em; }
+
+        .sebha-container { 
+            margin: 20px auto; padding: 15px; background: var(--card-bg); 
+            border-radius: 50%; width: 120px; height: 120px; 
+            border: 5px solid var(--dark-gold); display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; cursor: pointer; 
         }
 
-        /* العداد الجماعي */
-        .global-box { background: var(--card); border: 2px solid var(--dark-gold); padding: 20px; border-radius: 25px; margin: 20px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .global-num { font-size: 3em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 
-        .name-btn { background: var(--gold); color: #222; border: none; padding: 18px; border-radius: 20px; font-weight: bold; width: 100%; margin-bottom: 15px; font-size: 1.3em; cursor: pointer; box-shadow: 0 4px 15px rgba(184,134,11,0.3); }
+        .theme-toggle { position: absolute; top: 15px; left: 15px; background: var(--gold); border: none; padding: 8px; border-radius: 50%; cursor: pointer; }
+
         .section { display: none; animation: fadeIn 0.5s ease; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* الفوانيس في وضع رمضان */
-        .lantern { position: fixed; top: -10px; width: 30px; height: 45px; background: var(--silver); clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%); animation: swing 3s infinite; opacity: 0; pointer-events: none; }
-        body.ramadan-mode .lantern { opacity: 0.6; }
-        @keyframes swing { 0%, 100% { transform: rotate(-10deg); transform-origin: top; } 50% { transform: rotate(10deg); transform-origin: top; } }
+        #adminPanel { display: none; margin-top: 20px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
+        .admin-input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); font-family: 'Amiri'; background: var(--bg-color); color: var(--text-color); box-sizing: border-box;}
     </style>
 </head>
 <body id="mainBody">
 
-<div class="hijri-container" id="hijriDate">...</div>
+<button class="theme-toggle" onclick="toggleDarkMode()">🌓</button>
 
-<div class="lantern" style="left: 10%;"></div>
-<div class="lantern" style="right: 10%; animation-delay: 1.5s;"></div>
-
-<div class="controls">
-    <button class="mode-btn" onclick="toggleMode('dark')">🕶️</button>
-    <button class="mode-btn" onclick="toggleMode('ramadan')">🌙</button>
-</div>
-
-<div class="container" style="max-width: 500px; margin: auto; padding-top: 40px;">
-    
+<div class="container">
     <div id="home" class="section active">
+        <div class="hijri-wrapper">
+            <div id="hijriDisplay" class="hijri-badge">جاري التحميل...</div>
+        </div>
+
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
-            <p class="subtitle">سيروا إلى الله عرجى و مكاسير فإن انتظار الصحة بطالة</p>
-        </div>
-
-        <div class="global-box">
-            <small style="color:var(--dark-gold); font-weight:bold;">إجمالي تسبيحات الأمة</small>
-            <span id="globalCounterDisplay" class="global-num">0</span>
-            <small>"وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَى"</small>
-        </div>
-
-        <button class="name-btn" onclick="showSection('namesList')">📖 ابدأ رحلة المعرفة</button>
-        <button class="name-btn" style="background:var(--card); color:var(--txt); border:1px solid var(--dark-gold);" onclick="showSection('publicStories')">💬 مواقفكم مع الله</button>
-        <button class="name-btn" style="background:var(--card); color:var(--txt); border:1px solid var(--dark-gold);" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
-
-        <div id="ownerPanel">
-            <div style="color: white; border-bottom: 1px solid #00ff00; margin-bottom: 5px;">OWNER CONTROL SYSTEM</div>
-            <div>> Total Visitors: <span id="vCount">0</span></div>
-            <div>> Recent Activity: <span id="lastAction">Active</span></div>
-            <div>> User ID Identified: <span id="uID">Checking...</span></div>
-        </div>
-
-        <div id="adminPanel" style="display:none; margin-top: 20px;">
-            <button class="name-btn" style="background:#444; color:white;" onclick="alert('لوحة التحكم جاهزة')">🛠 إعدادات الأدمن</button>
-        </div>
-    </div>
-
-    <div id="namesList" class="section">
-        <h2 style="color:var(--dark-gold)">أسماء الله الحسنى</h2>
-        <div id="mainGrid"></div>
-        <button class="name-btn" style="background:#444; color:white;" onclick="showSection('home')">رجوع</button>
-    </div>
-    
-    <div id="publicStories" class="section">
-        <h2 style="color:var(--dark-gold)">مواقفكم مع الله</h2>
-        <div id="allPublicStories"></div>
-        <button class="name-btn" style="background:#444; color:white;" onclick="showSection('home')">رجوع</button>
-    </div>
-
-</div>
-
-<script>
-    const tg = window.Telegram.WebApp;
-    const OWNER_ID = 8421694319;
-
-    function toggleMode(mode) {
-        if(mode === 'dark') {
-            document.body.classList.remove('ramadan-mode');
-            document.body.classList.toggle('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-            document.body.classList.toggle('ramadan-mode');
-        }
-    }
-
-    function updateHijri() {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const date = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', options).format(new Date());
-        document.getElementById('hijriDate').innerText = date;
-    }
-
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(id === 'namesList') renderNames();
-    }
-
-    // تتبع الزوار للمالكة
-    function trackVisitor() {
-        let count = localStorage.getItem('owner_v_count') || 0;
-        if(!sessionStorage.getItem('counted')) {
-            count++;
-            localStorage.setItem('owner_v_count', count);
-            sessionStorage.setItem('counted', 'true');
-        }
-        document.getElementById('vCount').innerText = count;
-    }
-
-    // فحص الهوية
-    if (tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === OWNER_ID) {
-        document.getElementById('ownerPanel').style.display = 'block';
-        document.getElementById('adminPanel').style.display = 'block';
-        document.getElementById('uID').innerText = tg.initDataUnsafe.user.id;
-    }
-
-    function renderNames() {
-        const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
-        const data = JSON.parse(localStorage.getItem('app_names_data') || "{}");
-        Object.keys(data).forEach(name => {
-            const btn = document.createElement('button');
-            btn.className = "name-btn"; btn.innerText = name;
-            grid.appendChild(btn);
-        });
-    }
-
-    // تشغيل عند البدء
-    updateHijri();
-    trackVisitor();
-    document.getElementById('globalCounterDisplay').innerText = (localStorage.getItem('global_tasbih_count') || 0);
-</script>
-</body>
-</html>
+            <p class="subtitle
