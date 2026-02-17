@@ -65,13 +65,15 @@
         .top-left-controls { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
         .theme-toggle { background: var(--gold); border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; }
 
-        /* إضافات جديدة للخلوة والمناجاة والمفضلة */
         #khalwaOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#1a0f00; z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:#fdfaf1; padding:20px; text-align:center; }
         #khalwaAyah { font-size: 2.2em; line-height: 1.8; transition: opacity 1.5s; opacity: 0; font-family: 'Amiri', serif; }
         .fav-heart { position: absolute; top: 12px; left: 12px; cursor: pointer; font-size: 1.3em; color: #ccc; transition: 0.3s; }
         .fav-heart.active { color: #e74c3c; }
         .new-feature-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .feature-mini-btn { padding: 10px 5px; border-radius: 12px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-size: 0.85em; cursor: pointer; font-weight: bold; }
+
+        /* ستايل زر الصوت */
+        .audio-btn { background: var(--gold); border: none; border-radius: 10px; padding: 5px 12px; font-size: 0.8em; cursor: pointer; font-weight: bold; margin-top: 10px; display: inline-block; color: #1a0f00; }
     </style>
 </head>
 <body>
@@ -119,12 +121,13 @@
         <div id="adminPanel">
             <h4 style="color:var(--dark-gold); margin-bottom:15px; border-bottom: 1px solid var(--dark-gold); padding-bottom: 5px;">🛠 لوحة تحكم المالكة</h4>
             <select id="adminActionType" class="admin-input">
+                <option value="thoughts">إضافة خاطرة جديدة</option>
                 <option value="names">إضافة/تعديل اسم ومقاله</option>
                 <option value="tasks">إضافة نقطة عملية لاسم</option>
-                <option value="thoughts">إضافة خاطرة جديدة</option>
                 <option value="moods">تعديل نصوص الحالات</option>
             </select>
             <input type="text" id="targetName" class="admin-input" placeholder="اسم الله / العنوان">
+            <input type="text" id="audioLink" class="admin-input" placeholder="رابط الصوت (اختياري)">
             <textarea id="mainContent" class="admin-input" style="height:100px" placeholder="النص..."></textarea>
             <button class="name-btn main-action-btn" style="width:100%" onclick="saveToFirebase()">حفظ في السحابة ✓</button>
         </div>
@@ -156,17 +159,14 @@
         <h2 id="detTitle" style="color:var(--dark-gold); font-size: 2.2em;"></h2>
         <div class="card" id="detContent" style="white-space: pre-wrap;"></div>
         <button class="name-btn" style="border: 1px dashed var(--dark-gold); color: var(--dark-gold); justify-content: center; margin-bottom: 20px;" onclick="shareArticle()">🔗 شارك هذا النور</button>
-        
         <h3 style="color:var(--dark-gold)">📍 نقاط عملية للعمل بالاسم</h3>
         <div id="detTasks"></div>
-
         <h3 style="color:var(--dark-gold); margin-top: 30px;">💬 شاركنا أثر الاسم في حياتك</h3>
         <div class="card" style="border-right: 6px solid #8d99ae;">
             <textarea id="userStoryText" class="user-story-input" style="width:100%; height:80px; border-radius:12px; border:1px solid #ccc; padding:10px; font-family:'Amiri'; outline:none;" placeholder="اكتب موقفك هنا بصمت..."></textarea>
             <button class="name-btn main-action-btn" style="padding:10px; margin-top:10px" onclick="submitUserStory()">إرسال الموقف ✨</button>
             <div id="detStories" style="margin-top:20px"></div>
         </div>
-
         <div class="global-tasbih" onclick="incrementLocal()" style="background: var(--gold); border: none;">
             <div style="color: #1a0f00; font-weight: bold">سبحة الورد الخاص</div>
             <div id="localCount" class="tasbih-count" style="-webkit-text-fill-color: #1a0f00;">0</div>
@@ -196,7 +196,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // خزانة الرسائل المحلية (تُحفظ في هاتف المستخدم)
     let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
 
     function toggleMode(modeName) {
@@ -219,29 +218,39 @@
     let lCnt = 0;
     function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; }
 
-    function shareArticle() {
-        const text = `✨ اسم الله: ${document.getElementById('detTitle').innerText}\n\n${document.getElementById('detContent').innerText}\n\n📖 من تطبيق: الله أولاً`;
-        navigator.clipboard.writeText(text).then(() => alert("تم نسخ المقال.. انشره لتنال الأجر ✨"));
-    }
-
     function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
         const text = document.getElementById('mainContent').value;
+        const audio = document.getElementById('audioLink').value || ""; // جلب رابط الصوت
         if(!text || !target) return;
-        if(type === 'thoughts') db.ref('thoughts').push({ text: text });
+        
+        if(type === 'thoughts') db.ref('thoughts').push({ text: text, audio: audio });
         else if(type === 'tasks') db.ref('tasks/' + target).push(text);
         else db.ref(type + '/' + target).set(text);
         alert("تم الحفظ بنجاح ✓");
     }
 
-    function submitUserStory() {
-        const text = document.getElementById('userStoryText').value;
-        if(!text) return;
-        db.ref('stories/' + currentActiveName).push(text);
-        document.getElementById('userStoryText').value = "";
+    function loadThoughts() {
+        db.ref('thoughts').on('value', s => {
+            const list = document.getElementById('thoughtsList'); list.innerHTML = "";
+            const data = s.val() || {};
+            Object.keys(data).reverse().forEach(k => {
+                const item = data[k];
+                const card = document.createElement('div'); card.className = "card";
+                const isFav = myFavs.includes(item.text);
+                
+                // إضافة زر الصوت إذا وجد رابط
+                let audioBtn = item.audio ? `<button class="audio-btn" onclick="new Audio('${item.audio}').play()">🎙️ استمع للخاطرة</button>` : "";
+                
+                card.innerHTML = `<span class="fav-heart ${isFav?'active':''}" onclick="toggleFavorite(this, \`${item.text.replace(/`/g, "\\`")}\`)">❤️</span><p>${item.text}</p>${audioBtn}`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<button class="tool-btn" style="color:red; display:block; margin-top:10px;" onclick="db.ref('thoughts/${k}').remove()">🗑️ حذف</button>`;
+                list.appendChild(card);
+            });
+        });
     }
 
+    // بقية الدوال (كما هي في كودك)
     function loadNames() {
         db.ref('names').on('value', s => {
             const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
@@ -279,21 +288,6 @@
         });
     }
 
-    function loadThoughts() {
-        db.ref('thoughts').on('value', s => {
-            const list = document.getElementById('thoughtsList'); list.innerHTML = "";
-            const data = s.val() || {};
-            Object.keys(data).reverse().forEach(k => {
-                const text = data[k].text;
-                const card = document.createElement('div'); card.className = "card";
-                const isFav = myFavs.includes(text);
-                card.innerHTML = `<span class="fav-heart ${isFav?'active':''}" onclick="toggleFavorite(this, \`${text.replace(/`/g, "\\`")}\`)">❤️</span><p>${text}</p>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<button class="tool-btn" style="color:red" onclick="db.ref('thoughts/${k}').remove()">🗑️ حذف</button>`;
-                list.appendChild(card);
-            });
-        });
-    }
-
     function openMood(m) {
         db.ref('moods/' + m).once('value', s => {
             document.getElementById('moodViewTitle').innerText = "لأنك " + m;
@@ -302,22 +296,8 @@
         });
     }
 
-    function updateHijri() {
-        const opt = { day: 'numeric', month: 'long', year: 'numeric' };
-        document.getElementById('hijriDisplay').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', opt).format(new Date());
-    }
-
-    // --- وظائف الإضافات الجديدة ---
-    function sendMunajat() {
-        const input = document.getElementById('munajatInput');
-        if(!input.value) return;
-        alert("الله يسمعك.. طِب نفساً ✨");
-        input.value = "";
-        showSection('home');
-    }
-
     function startKhalwa() {
-        const ayahs = ["أَلَيْسَ اللَّهُ بِكَافٍ عَبْدَهُ", "فَإِنِّي قَرِيبٌ", "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا", "وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "نَبِّئْ عِبَادِي أَنِّي أَنَا الْغَفُورُ الرَّحِيمُ"];
+        const ayahs = ["أَلَيْسَ اللَّهُ بِكَافٍ عَبْدَهُ", "فَإِنِّي قَرِيبٌ", "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا", "وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ"];
         const overlay = document.getElementById('khalwaOverlay');
         const text = document.getElementById('khalwaAyah');
         overlay.style.display = 'flex';
@@ -326,34 +306,23 @@
             text.style.opacity = 0;
             setTimeout(() => {
                 text.innerText = ayahs[i % ayahs.length];
-                text.style.opacity = 1;
-                i++;
+                text.style.opacity = 1; i++;
             }, 1000);
         }, 5000);
-        text.innerText = "تهيأ للقاء الله بقلب حاضر..";
-        text.style.opacity = 1;
+        text.innerText = "تهيأ للقاء الله بقلب حاضر.."; text.style.opacity = 1;
     }
 
-    function closeKhalwa() {
-        clearInterval(window.khalwaTimer);
-        document.getElementById('khalwaOverlay').style.display = 'none';
-    }
+    function closeKhalwa() { clearInterval(window.khalwaTimer); document.getElementById('khalwaOverlay').style.display = 'none'; }
 
     function toggleFavorite(btn, text) {
         const index = myFavs.indexOf(text);
-        if(index > -1) {
-            myFavs.splice(index, 1);
-            btn.classList.remove('active');
-        } else {
-            myFavs.push(text);
-            btn.classList.add('active');
-        }
+        if(index > -1) { myFavs.splice(index, 1); btn.classList.remove('active'); }
+        else { myFavs.push(text); btn.classList.add('active'); }
         localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
     }
 
     function renderFavorites() {
         const list = document.getElementById('favList'); list.innerHTML = "";
-        if(myFavs.length === 0) { list.innerHTML = "<p style='padding:20px; opacity:0.6;'>خزانتك فارغة حالياً.. املأها بالرسائل التي تلمس قلبك.</p>"; return; }
         myFavs.forEach(text => {
             const card = document.createElement('div'); card.className = "card";
             card.innerHTML = `<p>${text}</p>`;
@@ -361,10 +330,30 @@
         });
     }
 
+    function updateHijri() {
+        const opt = { day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('hijriDisplay').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', opt).format(new Date());
+    }
+
+    function sendMunajat() {
+        const input = document.getElementById('munajatInput'); if(!input.value) return;
+        alert("الله يسمعك.. طِب نفساً ✨"); input.value = ""; showSection('home');
+    }
+    
+    function submitUserStory() {
+        const text = document.getElementById('userStoryText').value; if(!text) return;
+        db.ref('stories/' + currentActiveName).push(text);
+        document.getElementById('userStoryText').value = "";
+    }
+
+    function shareArticle() {
+        const text = `✨ اسم الله: ${document.getElementById('detTitle').innerText}\n\n${document.getElementById('detContent').innerText}\n\n📖 من تطبيق: الله أولاً`;
+        navigator.clipboard.writeText(text).then(() => alert("تم نسخ المقال.. انشره لتنال الأجر ✨"));
+    }
+
     updateHijri();
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) document.getElementById('adminPanel').style.display = 'block';
-    tg.ready();
-    tg.expand();
+    tg.ready(); tg.expand();
 </script>
 </body>
 </html>
