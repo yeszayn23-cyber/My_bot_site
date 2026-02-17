@@ -21,7 +21,7 @@
             --silver: linear-gradient(45deg, #bfc0c0, #ffffff, #8d99ae, #ffffff, #bfc0c0);
         }
 
-        body { font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; text-align: center; transition: all 0.3s ease; min-height: 100vh; position: relative; }
+        body { font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; text-align: center; transition: background 0.5s ease; min-height: 100vh; position: relative; overflow-x: hidden; }
         .dark-mode { --bg-color: #1a0f00; --text-color: #fcf9f2; --card-bg: #2d1b0a; }
         .ramadan-mode { 
             --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #d4af37; --gold: var(--silver);
@@ -29,41 +29,42 @@
             background-size: 50px 50px;
         }
 
-        .ramadan-mode::before { content: '🏮'; position: fixed; top: 10px; right: 10px; font-size: 25px; opacity: 0.6; z-index: 1; }
-        .ramadan-mode::after { content: '🌙'; position: fixed; top: 40px; right: 15px; font-size: 20px; opacity: 0.4; z-index: 1; }
+        .container { max-width: 500px; margin: auto; position: relative; z-index: 2; animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .container { max-width: 500px; margin: auto; position: relative; z-index: 2; }
-        .hijri-container { position: absolute; top: -5px; left: 0; padding: 5px 10px; background: var(--card-bg); border: 1px solid var(--dark-gold); border-radius: 10px; font-size: 0.75em; color: var(--dark-gold); font-weight: bold; z-index: 10; }
+        .hijri-container { position: absolute; top: -5px; left: 0; padding: 5px 12px; background: var(--card-bg); border: 1.5px solid var(--dark-gold); border-radius: 12px; font-size: 0.8em; color: var(--dark-gold); font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        .header { padding: 30px 0 15px 0; position: relative; }
-        .logo { font-family: 'Aref Ruqaa', serif; font-size: 3.8em; font-weight: 700; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; line-height: 1.2; }
-        .slogan { font-size: 1em; color: var(--dark-gold); font-style: italic; margin-top: 5px; font-weight: bold; opacity: 0.9; }
+        .header { padding: 35px 0 20px 0; }
+        .logo { font-family: 'Aref Ruqaa', serif; font-size: 4em; font-weight: 700; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+        .slogan { font-size: 1.05em; color: var(--dark-gold); font-style: italic; margin-top: 8px; font-weight: bold; opacity: 0.9; }
 
-        .global-tasbih { background: var(--card-bg); padding: 20px; border-radius: 25px; border: 2px solid var(--dark-gold); margin: 15px 0; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .tasbih-count { font-size: 2.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
-        .birr-text { color: var(--dark-gold); font-size: 0.95em; margin-top: 10px; font-weight: bold; }
+        .global-tasbih { background: var(--card-bg); padding: 25px; border-radius: 30px; border: 2.5px solid var(--dark-gold); margin: 20px 0; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .global-tasbih:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .tasbih-count { font-size: 3em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
 
-        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .mood-btn { padding: 12px; border-radius: 12px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); cursor: pointer; font-family: 'Amiri'; font-weight: bold; }
+        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .mood-btn { padding: 14px; border-radius: 15px; border: 1.5px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 3px 6px rgba(0,0,0,0.05); }
+        .mood-btn:hover { background: var(--gold); color: #1a0f00; border-color: transparent; }
 
-        .name-btn { background: var(--card-bg); border: 1.5px solid var(--dark-gold); padding: 16px; border-radius: 18px; cursor: pointer; color: var(--text-color); font-weight: bold; width: 100%; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; font-family: 'Amiri'; }
-        .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.1em; justify-content: center !important; }
+        .name-btn { background: var(--card-bg); border: 2px solid var(--dark-gold); padding: 18px; border-radius: 20px; cursor: pointer; color: var(--text-color); font-weight: bold; width: 100%; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .name-btn:active { transform: translateY(2px); }
+        .main-action-btn { background: var(--gold) !important; color: #1a0f00 !important; border: none !important; font-size: 1.15em; justify-content: center !important; }
 
-        .share-btn { background: var(--card-bg); border: 1px dashed var(--dark-gold); color: var(--dark-gold); padding: 8px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-bottom: 15px; width: 100%; font-family: 'Amiri'; }
-
-        .top-left-controls { position: fixed; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
-        .theme-toggle { background: var(--gold); border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-
-        .section { display: none; }
+        .section { display: none; animation: fadeIn 0.4s ease-out; }
         .active { display: block; }
 
-        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; margin-bottom: 15px; border-right: 6px solid var(--dark-gold); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .item-list { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding-bottom: 8px; border-bottom: 1px dashed #ccc; }
-        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; }
+        .card { background: var(--card-bg); padding: 22px; border-radius: 22px; margin-bottom: 18px; border-right: 8px solid var(--dark-gold); text-align: right; box-shadow: 0 6px 15px rgba(0,0,0,0.08); line-height: 1.8; }
+        .item-list { background: rgba(191, 149, 63, 0.05); padding: 12px; border-radius: 12px; margin: 10px 0; border-right: 3px solid var(--dark-gold); display: flex; justify-content: space-between; align-items: center; }
+        
+        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.3em; transition: 0.2s; }
+        .tool-btn:hover { transform: scale(1.2); }
 
-        #adminPanel { display: none; margin-top: 25px; padding: 20px; border: 2px solid var(--dark-gold); border-radius: 20px; background: var(--card-bg); text-align: right; }
-        .admin-input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
-        .user-story-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--dark-gold); margin-bottom: 10px; font-family: 'Amiri'; background: var(--bg-color); color: var(--text-color); }
+        #adminPanel { display: none; margin-top: 30px; padding: 25px; border: 2px solid var(--dark-gold); border-radius: 25px; background: var(--card-bg); box-shadow: inset 0 0 10px rgba(139, 107, 35, 0.1); }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1.5px solid var(--dark-gold); background: var(--bg-color); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; outline: none; }
+
+        .top-left-controls { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .theme-toggle { background: var(--gold); border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; }
+        .theme-toggle:hover { transform: rotate(30deg); scale: 1.1; }
     </style>
 </head>
 <body>
@@ -81,9 +82,9 @@
             <div class="slogan">سيروا إلى الله عرجى و مكاسير فإن انتظار الصحة بطالة</div>
         </div>
         <div class="global-tasbih" onclick="incrementGlobal()">
-            <div style="color: var(--dark-gold); font-weight: bold;">السبحة الجماعية</div>
+            <div style="color: var(--dark-gold); font-weight: bold; letter-spacing: 1px;">السبحة الجماعية</div>
             <div id="globalCount" class="tasbih-count">0</div>
-            <div class="birr-text">﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ ﴾</div>
+            <div style="color: var(--dark-gold); font-size: 0.95em; margin-top: 10px; font-weight: bold;">﴿ وَتَعَاوَنُوا عَلَى الْبِرِّ ﴾</div>
         </div>
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMood('مكسور')">💔 مكسور</button>
@@ -94,10 +95,10 @@
             <button class="mood-btn" onclick="openMood('سعيد')">😇 سعيد</button>
         </div>
         <button class="name-btn main-action-btn" onclick="showSection('namesList')">📖 رحلة المعرفة بالأسماء</button>
-        <button class="name-btn main-action-btn" style="margin-top:5px" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
+        <button class="name-btn main-action-btn" style="margin-top:8px" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
         
         <div id="adminPanel">
-            <h4 style="color:var(--dark-gold); margin:0;">🛠 لوحة تحكم المالكة</h4>
+            <h4 style="color:var(--dark-gold); margin-bottom:15px; border-bottom: 1px solid var(--dark-gold); padding-bottom: 5px;">🛠 لوحة تحكم المالكة</h4>
             <select id="adminActionType" class="admin-input">
                 <option value="names">إضافة/تعديل اسم ومقاله</option>
                 <option value="tasks">إضافة نقطة عملية لاسم</option>
@@ -105,7 +106,7 @@
                 <option value="moods">تعديل نصوص الحالات</option>
             </select>
             <input type="text" id="targetName" class="admin-input" placeholder="اسم الله / العنوان">
-            <textarea id="mainContent" class="admin-input" style="height:80px" placeholder="النص..."></textarea>
+            <textarea id="mainContent" class="admin-input" style="height:100px" placeholder="النص..."></textarea>
             <button class="name-btn main-action-btn" style="width:100%" onclick="saveToFirebase()">حفظ في السحابة ✓</button>
         </div>
     </div>
@@ -113,26 +114,29 @@
     <div id="namesList" class="section">
         <h2 style="color:var(--dark-gold)">أسماء الله الحسنى</h2>
         <div id="namesGrid"></div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center; margin-top:20px;" onclick="showSection('home')">رجوع</button>
+        <button class="name-btn" style="background:#444; color:white; justify-content:center; margin-top:25px;" onclick="showSection('home')">رجوع للمجمعة</button>
     </div>
 
     <div id="nameDetailsPage" class="section">
-        <h2 id="detTitle" style="color:var(--dark-gold)"></h2>
-        <div class="card" id="detContent" style="white-space: pre-wrap; line-height: 1.7;"></div>
-        <button class="share-btn" onclick="shareArticle()">🔗 شارك المقال ( أدعو إلى سبيل ربك )</button>
-        <h3 style="color:var(--dark-gold)">📍 نقاط عملية</h3>
+        <h2 id="detTitle" style="color:var(--dark-gold); font-size: 2.2em;"></h2>
+        <div class="card" id="detContent" style="white-space: pre-wrap;"></div>
+        <button class="name-btn" style="border: 1px dashed var(--dark-gold); color: var(--dark-gold); justify-content: center; margin-bottom: 20px;" onclick="shareArticle()">🔗 شارك هذا النور</button>
+        
+        <h3 style="color:var(--dark-gold)">📍 نقاط عملية للعمل بالاسم</h3>
         <div id="detTasks"></div>
-        <h3 style="color:var(--dark-gold)">💬 شاركنا موقفك</h3>
-        <div class="card">
-            <textarea id="userStoryText" class="user-story-input" placeholder="اكتب موقفك هنا..."></textarea>
-            <button class="name-btn main-action-btn" style="padding:10px" onclick="submitUserStory()">إرسال الموقف ✨</button>
-            <div id="detStories" style="margin-top:15px"></div>
+
+        <h3 style="color:var(--dark-gold); margin-top: 30px;">💬 شاركنا أثر الاسم في حياتك</h3>
+        <div class="card" style="border-right: 6px solid #8d99ae;">
+            <textarea id="userStoryText" class="user-story-input" style="width:100%; height:80px; border-radius:12px; border:1px solid #ccc; padding:10px; font-family:'Amiri'; outline:none;" placeholder="اكتب موقفك هنا بصمت..."></textarea>
+            <button class="name-btn main-action-btn" style="padding:10px; margin-top:10px" onclick="submitUserStory()">إرسال الموقف ✨</button>
+            <div id="detStories" style="margin-top:20px"></div>
         </div>
-        <div class="global-tasbih" onclick="incrementLocal()">
-            <div style="color: var(--dark-gold)">سبحة الورد</div>
-            <div id="localCount" class="tasbih-count">0</div>
+
+        <div class="global-tasbih" onclick="incrementLocal()" style="background: var(--gold); border: none;">
+            <div style="color: #1a0f00; font-weight: bold">سبحة الورد الخاص</div>
+            <div id="localCount" class="tasbih-count" style="-webkit-text-fill-color: #1a0f00;">0</div>
         </div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center;" onclick="showSection('namesList')">رجوع</button>
+        <button class="name-btn" style="background:#444; color:white; justify-content:center;" onclick="showSection('namesList')">رجوع للقائمة</button>
     </div>
 
     <div id="thoughtsSection" class="section">
@@ -143,7 +147,7 @@
 
     <div id="moodViewPage" class="section">
         <h2 id="moodViewTitle" style="color:var(--dark-gold)"></h2>
-        <div class="card" id="moodViewContent" style="white-space: pre-wrap; line-height: 1.8;"></div>
+        <div class="card" id="moodViewContent" style="white-space: pre-wrap;"></div>
         <button class="name-btn" style="background:#444; color:white; justify-content:center;" onclick="showSection('home')">رجوع</button>
     </div>
 </div>
@@ -153,7 +157,6 @@
     const ADMIN_ID = 8421694319;
     let currentActiveName = "";
 
-    // Firebase Setup
     const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -168,33 +171,29 @@
         document.getElementById(id).classList.add('active');
         if(id === 'namesList') loadNames();
         if(id === 'thoughtsSection') loadThoughts();
-        window.scrollTo(0,0);
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // Global Counter with Firebase
     function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
-    db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = s.val() || 0; });
+    db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
 
     let lCnt = 0;
     function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; }
 
     function shareArticle() {
-        const fullText = `✨ اسم الله: ${document.getElementById('detTitle').innerText}\n\n${document.getElementById('detContent').innerText}\n\n📖 من تطبيق: الله أولاً`;
-        navigator.clipboard.writeText(fullText).then(() => alert("تم نسخ المقال بنجاح ✨"));
+        const text = `✨ اسم الله: ${document.getElementById('detTitle').innerText}\n\n${document.getElementById('detContent').innerText}\n\n📖 من تطبيق: الله أولاً`;
+        navigator.clipboard.writeText(text).then(() => alert("تم نسخ المقال.. انشره لتنال الأجر ✨"));
     }
 
-    // Admin Save to Firebase
     function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
         const text = document.getElementById('mainContent').value;
         if(!text || !target) return;
-
         if(type === 'thoughts') db.ref('thoughts').push({ text: text });
         else if(type === 'tasks') db.ref('tasks/' + target).push(text);
         else db.ref(type + '/' + target).set(text);
-        
-        alert("تم الحفظ في السحابة ✓");
+        alert("تم الحفظ بنجاح ✓");
     }
 
     function submitUserStory() {
@@ -235,7 +234,7 @@
             Object.keys(data).forEach(k => {
                 const item = document.createElement('div'); item.className = "item-list";
                 item.innerHTML = `<span>• ${data[k]}</span>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) item.innerHTML += `<button class="tool-btn" onclick="db.ref('${path}/${k}').remove()" style="margin-right:auto">🗑️</button>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) item.innerHTML += `<button class="tool-btn" onclick="db.ref('${path}/${k}').remove()" style="color:red">🗑️</button>`;
                 container.appendChild(item);
             });
         });
@@ -257,7 +256,7 @@
     function openMood(m) {
         db.ref('moods/' + m).once('value', s => {
             document.getElementById('moodViewTitle').innerText = "لأنك " + m;
-            document.getElementById('moodViewContent').innerText = s.val() || "لا يوجد نص.";
+            document.getElementById('moodViewContent').innerText = s.val() || "سيتم إضافة رسالة لك قريباً..";
             showSection('moodViewPage');
         });
     }
