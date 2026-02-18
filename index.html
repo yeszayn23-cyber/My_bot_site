@@ -11,16 +11,16 @@
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap');
         
         :root {
-            --gold: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
-            --dark-gold: #8a6d3b;
-            --bg-color: #fdfaf1;
-            --text-color: #3e2723;
-            --card-bg: rgba(255, 255, 255, 0.9);
+            --royal-gold: linear-gradient(135deg, #a67c00 0%, #bf953f 25%, #fcf6ba 50%, #bf953f 75%, #a67c00 100%);
+            --deep-gold: #856404;
+            --bg-color: #f8f5ee;
+            --text-color: #2c1e11;
+            --card-bg: rgba(255, 255, 255, 0.95);
             --pattern: url("https://www.transparenttextures.com/patterns/islamic-art.png");
         }
 
-        /* سرعة خارقة */
-        * { transition: none !important; box-sizing: border-box; }
+        /* سرعة استجابة فورية */
+        * { transition: none !important; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body { 
             font-family: 'Amiri', serif; background-color: var(--bg-color); color: var(--text-color); 
@@ -28,64 +28,83 @@
             background-image: var(--pattern); background-attachment: fixed;
         }
 
-        /* الوضع الليلي بنقوش */
-        .dark-mode { 
-            --bg-color: #121212; --text-color: #e0e0e0; --card-bg: rgba(30, 30, 30, 0.9);
-            --pattern: url("https://www.transparenttextures.com/patterns/black-paper.png");
-        }
-
-        /* الوضع الرمضاني: مدينة مضيئة وفوانيس */
+        /* الوضع الرمضاني: مدينة وفوانيس وهيبة */
         .ramadan-mode { 
-            --bg-color: #050b18; --text-color: #f1f5f9; --card-bg: rgba(15, 23, 42, 0.85);
-            --gold: linear-gradient(135deg, #e2e8f0, #ffffff, #94a3b8);
+            --bg-color: #04091a; --text-color: #e2e8f0; --card-bg: rgba(15, 23, 42, 0.9);
+            --royal-gold: linear-gradient(135deg, #c0c0c0 0%, #ffffff 50%, #c0c0c0 100%); /* فضة ملكية */
             background-image: 
-                url("https://www.transparenttextures.com/patterns/stardust.png"), 
-                linear-gradient(to bottom, rgba(5,11,24,0.4), #050b18),
-                url("https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&w=1000&q=80"); /* خلفية مدينة إسلامية */
-            background-size: cover; background-position: center;
+                url("https://www.transparenttextures.com/patterns/stardust.png"),
+                linear-gradient(to bottom, rgba(4,9,26,0.7), #04091a),
+                url("https://www.transparenttextures.com/patterns/shattered.png"); /* إيحاء بالرخام والنجوم */
         }
 
-        .container { max-width: 450px; margin: auto; padding-bottom: 50px; }
-        .logo { font-family: 'Aref Ruqaa', serif; font-size: 4em; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
-
-        /* أزرار فخمة وشفافة قليلًا */
-        .name-btn { 
-            background: var(--card-bg); border: 1.5px solid var(--dark-gold); color: var(--text-color);
-            padding: 18px; border-radius: 20px; cursor: pointer; font-weight: bold; width: 100%; 
-            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .container { max-width: 450px; margin: auto; padding-bottom: 60px; }
+        
+        .logo { 
+            font-family: 'Aref Ruqaa', serif; font-size: 4.2em; 
+            background: var(--royal-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            margin: 15px 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
-        .main-action { background: var(--gold) !important; color: #000 !important; border: none !important; font-size: 1.2em; justify-content: center !important; }
 
         .global-tasbih { 
-            background: var(--card-bg); padding: 25px; border-radius: 30px; border: 2px solid var(--dark-gold);
-            margin: 20px 0; cursor: pointer; backdrop-filter: blur(10px);
+            background: var(--card-bg); padding: 25px; border-radius: 35px; border: 3px double var(--deep-gold);
+            margin: 20px 0; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .tasbih-count { font-size: 3.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .mood-btn { padding: 15px; border-radius: 15px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-weight: bold; position: relative; }
+        .tasbih-count { 
+            font-size: 4em; font-weight: bold; background: var(--royal-gold); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;
+        }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border-right: 8px solid var(--dark-gold); text-align: right; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .mood-btn { 
+            padding: 16px; border-radius: 20px; border: 1.5px solid var(--deep-gold); 
+            background: var(--card-bg); color: var(--text-color); font-weight: bold; font-size: 1.1em;
+            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
 
-        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-family: 'Amiri'; }
+        .name-btn { 
+            background: var(--royal-gold); color: #000; border: none; 
+            padding: 22px; border-radius: 25px; cursor: pointer; font-weight: 900; 
+            width: 100%; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
+            font-size: 1.25em; font-family: 'Aref Ruqaa'; box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
 
-        .top-controls { position: fixed; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
-        .theme-btn { background: var(--gold); border: 2px solid #fff; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .card { 
+            background: var(--card-bg); padding: 25px; border-radius: 25px; 
+            margin-bottom: 20px; border-right: 10px solid var(--deep-gold); 
+            text-align: right; line-height: 2; font-size: 1.15em; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
 
-        #khalwaOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:#fff; }
+        .admin-input { 
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; 
+            border: 2px solid var(--deep-gold); background: var(--card-bg); 
+            color: var(--text-color); font-family: 'Amiri'; outline: none; font-size: 1.1em;
+        }
+
+        .top-controls { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
+        .theme-btn { 
+            background: var(--royal-gold); border: 2px solid #fff; width: 55px; height: 55px; 
+            border-radius: 50%; cursor: pointer; font-size: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        #khalwaOverlay { 
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:#04091a; z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:#fff;
+            background-image: url("https://www.transparenttextures.com/patterns/islamic-art.png");
+        }
 
         .section { display: none; }
         .active { display: block; }
 
-        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.2em; color: red; }
+        .tool-btn { background: none; border: none; cursor: pointer; font-size: 1.4em; color: #ff4d4d; padding: 5px; }
     </style>
 </head>
 <body>
 
 <div id="khalwaOverlay">
-    <div id="khalwaAyah" style="font-size: 2.5em; text-align:center; padding:20px;"></div>
-    <button class="name-btn" style="width:auto; margin-top:50px; background:none; border:1px solid #fff; color:#fff;" onclick="closeKhalwa()">إنهاء الخلوة</button>
+    <div id="khalwaAyah" style="font-size: 2.8em; text-align:center; padding:30px; line-height:1.6;"></div>
+    <button class="name-btn" style="width:auto; margin-top:60px; background:none; border:2px solid #fff; color:#fff;" onclick="closeKhalwa()">خروج من الخلوة</button>
 </div>
 
 <div class="top-controls">
@@ -96,71 +115,75 @@
 <div class="container">
     <div id="home" class="section active">
         <h1 class="logo">الله أولاً</h1>
-        <div style="font-size: 1.2em; color: var(--dark-gold); margin-bottom: 20px;">🏮 ليلة القدر خير من ألف شهر 🏮</div>
+        <p style="color: var(--deep-gold); font-weight: bold; font-size: 1.2em; margin-top: -10px;">رمضان كريم 🌙</p>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="name-btn main-action" onclick="startKhalwa()">🧘‍♂️ خلوة</button>
-            <button class="name-btn main-action" onclick="showSection('munajatPage')">🤲 مناجاة</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 25px 0;">
+            <button class="mood-btn" style="border-width: 2px;" onclick="startKhalwa()">🧘‍♂️ الخلوة</button>
+            <button class="mood-btn" style="border-width: 2px;" onclick="showSection('munajatPage')">🤲 المناجاة</button>
         </div>
 
         <div class="global-tasbih" onclick="incrementGlobal()">
             <div id="globalCount" class="tasbih-count">0</div>
-            <p style="margin:0; font-weight:bold;">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</p>
+            <p style="margin:10px 0 0; font-weight:bold; color: var(--deep-gold);">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</p>
         </div>
 
         <div id="moodContainer" class="mood-grid"></div>
 
-        <button class="name-btn main-action" onclick="showSection('namesList')">📖 رحلة المعرفة بالأسماء</button>
-        <button class="name-btn main-action" style="margin-top:10px" onclick="showSection('thoughtsSection')">✨ خواطر ورسائل ربانية</button>
+        <button class="name-btn" onclick="showSection('namesList')"><span>📖 رحلة الأسماء</span><span>⬅️</span></button>
+        <button class="name-btn" onclick="showSection('thoughtsSection')"><span>✨ خواطر ربانية</span><span>⬅️</span></button>
         
-        <div id="adminPanel" style="display:none; margin-top:30px; border-top: 2px dashed var(--dark-gold); padding-top:20px;">
+        <div id="adminPanel" style="display:none; margin-top:40px; border-top: 3px double var(--deep-gold); padding-top:20px;">
+            <p style="font-weight: bold; font-family: 'Aref Ruqaa';">🛠 إدارة المحتوى</p>
             <select id="adminAction" class="admin-input">
-                <option value="thoughts">خاطرة</option>
-                <option value="names">اسم الله</option>
+                <option value="thoughts">إضافة خاطرة</option>
+                <option value="names">إضافة اسم الله</option>
                 <option value="moods">إضافة حالة (Emoji)</option>
-                <option value="khalwa">آية خلوة</option>
+                <option value="khalwa">إضافة آية خلوة</option>
             </select>
-            <input type="text" id="target" class="admin-input" placeholder="العنوان أو الإيموجي">
-            <textarea id="content" class="admin-input" placeholder="المحتوى"></textarea>
-            <button class="name-btn main-action" onclick="saveData()">حفظ في السحابة</button>
+            <input type="text" id="target" class="admin-input" placeholder="العنوان / الإيموجي">
+            <textarea id="content" class="admin-input" style="height:100px" placeholder="نص المحتوى"></textarea>
+            <button class="name-btn" style="justify-content:center" onclick="saveData()">نشر الآن ✓</button>
         </div>
     </div>
 
     <div id="namesList" class="section">
-        <h2 style="color:var(--dark-gold)">أسماء الله الحسنى</h2>
+        <h2 style="color:var(--deep-gold); font-family: 'Aref Ruqaa'; font-size: 2.5em;">الأسماء الحسنى</h2>
         <div id="namesGrid"></div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center" onclick="showSection('home')">رجوع</button>
+        <button class="name-btn" style="background:#333; color:white; justify-content:center" onclick="showSection('home')">الرجوع للرئيسية</button>
     </div>
 
     <div id="nameDetailsPage" class="section">
-        <h2 id="detTitle" style="color:var(--dark-gold); font-size: 3em;"></h2>
+        <h2 id="detTitle" style="color:var(--deep-gold); font-size: 3.5em; font-family: 'Aref Ruqaa';"></h2>
         <div class="card" id="detContent"></div>
         <div id="detTasks"></div>
-        <div class="card" style="border-right: 6px solid #607d8b;">
-            <textarea id="storyInput" class="admin-input" placeholder="ماذا حدث لك مع هذا الاسم؟"></textarea>
-            <button class="name-btn main-action" style="padding:10px" onclick="addStory()">تخليد الموقف</button>
-            <div id="detStories"></div>
+        
+        <h3 style="color:var(--deep-gold)">💬 أثر الاسم في حياتك</h3>
+        <div class="card" style="border-right-color: #7f8c8d;">
+            <textarea id="storyInput" class="admin-input" placeholder="اكتب موقفك هنا بصمت..."></textarea>
+            <button class="name-btn" style="justify-content:center; padding:12px;" onclick="addStory()">إرسال الموقف ✨</button>
+            <div id="detStories" style="margin-top:20px"></div>
         </div>
-        <div class="global-tasbih" onclick="incrementLocal()" style="background:var(--gold)">
-            <div id="localCount" style="font-size: 3em; color:#000;">0</div>
-            <div style="color:#000; font-weight:bold;">وِرْدُكَ الخَاص</div>
+
+        <div class="global-tasbih" onclick="incrementLocal()" style="background:var(--royal-gold); border:none;">
+            <div id="localCount" style="font-size: 3.5em; color:#000;">0</div>
+            <div style="color:#000; font-weight:bold;">سَبِّحْ بِاسْمِ رَبِّكَ</div>
         </div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center" onclick="showSection('namesList')">رجوع</button>
+        <button class="name-btn" style="background:#333; color:white; justify-content:center" onclick="showSection('namesList')">العودة للأسماء</button>
     </div>
 
     <div id="thoughtsSection" class="section">
-        <h2 style="color:var(--dark-gold)">رسائل من الله</h2>
+        <h2 style="color:var(--deep-gold); font-family: 'Aref Ruqaa';">خواطر إيمانية</h2>
         <div id="thoughtsList"></div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center" onclick="showSection('home')">رجوع</button>
+        <button class="name-btn" style="background:#333; color:white; justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="munajatPage" class="section">
-        <h2 style="color:var(--dark-gold)">بثُّ الشكوى</h2>
+        <h2 style="color:var(--deep-gold)">مناجاة</h2>
         <div class="card">
-            <textarea id="munajatInput" class="admin-input" style="height:200px" placeholder="تكلم.. الله يسمعك"></textarea>
-            <button class="name-btn main-action" onclick="alert('استودعنا شكواك عند من لا تضيع عنده الودائع'); showSection('home')">أرسل لرب السماء</button>
+            <textarea id="munajatInput" class="admin-input" style="height:200px" placeholder="قل كل ما في قلبك لله.."></textarea>
+            <button class="name-btn" style="justify-content:center" onclick="alert('الله لا يرد من دعاه.. استبشر خيراً'); showSection('home')">بث الشكوى</button>
         </div>
-        <button class="name-btn" style="background:#444; color:white; justify-content:center" onclick="showSection('home')">رجوع</button>
+        <button class="name-btn" style="background:#333; color:white; justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 </div>
 
@@ -180,8 +203,6 @@
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'home') loadMoods();
-        if(id === 'namesList') loadNames();
-        if(id === 'thoughtsSection') loadThoughts();
         window.scrollTo(0,0);
     }
 
@@ -199,7 +220,7 @@
         else if(type === 'names') db.ref('names/' + target).set(text);
         else if(type === 'thoughts') db.ref('thoughts').push({ text: text });
         else if(type === 'khalwa') db.ref('khalwa_list').push(text);
-        alert("تم النشر بنجاح!");
+        alert("تم الحفظ بنجاح ✨");
     }
 
     function loadMoods() {
@@ -221,8 +242,8 @@
             const data = s.val() || {};
             Object.keys(data).forEach(n => {
                 const b = document.createElement('div'); b.className = "name-btn";
-                b.innerHTML = `<span style="flex:1" onclick="openName('${n}')">${n}</span>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) b.innerHTML += `<button class="tool-btn" onclick="db.ref('names/${n}').remove()">🗑️</button>`;
+                b.innerHTML = `<span style="flex:1; text-align:right" onclick="openName('${n}')">${n}</span>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) b.innerHTML += `<button class="tool-btn" onclick="db.ref('names/${n}').remove()" style="color:#fff">🗑️</button>`;
                 grid.appendChild(b);
             });
         });
@@ -233,19 +254,19 @@
         db.ref('names/' + n).once('value', s => {
             document.getElementById('detTitle').innerText = n;
             document.getElementById('detContent').innerText = s.val();
-            loadSub('stories/' + n, 'detStories');
+            loadStories('stories/' + n, 'detStories');
             showSection('nameDetailsPage');
         });
     }
 
-    function loadSub(path, id) {
+    function loadStories(path, id) {
         db.ref(path).on('value', s => {
             const div = document.getElementById(id); div.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(k => {
-                const item = document.createElement('div'); item.className = "card";
-                item.innerHTML = `<p>${data[k]}</p>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) item.innerHTML += `<button class="tool-btn" onclick="db.ref('${path}/${k}').remove()">🗑️ حذف الموقف</button>`;
+                const item = document.createElement('div'); item.style = "background:rgba(0,0,0,0.03); padding:15px; border-radius:15px; margin-bottom:10px; position:relative;";
+                item.innerHTML = `<p style="margin:0">${data[k]}</p>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) item.innerHTML += `<button class="tool-btn" style="font-size:1em;" onclick="db.ref('${path}/${k}').remove()">🗑️</button>`;
                 div.appendChild(item);
             });
         });
@@ -264,7 +285,7 @@
             Object.keys(data).reverse().forEach(k => {
                 const card = document.createElement('div'); card.className = "card";
                 card.innerHTML = `<p>${data[k].text}</p>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<button class="tool-btn" onclick="db.ref('thoughts/${k}').remove()">🗑️</button>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<button class="tool-btn" onclick="db.ref('thoughts/${k}').remove()">🗑️ حذف الخاطرة</button>`;
                 list.appendChild(card);
             });
         });
@@ -281,7 +302,7 @@
     function closeKhalwa() { document.getElementById('khalwaOverlay').style.display = 'none'; }
 
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) document.getElementById('adminPanel').style.display = 'block';
-    loadMoods();
+    loadMoods(); loadNames(); loadThoughts();
     tg.ready(); tg.expand();
 </script>
 </body>
