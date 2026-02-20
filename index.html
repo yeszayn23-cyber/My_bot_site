@@ -21,17 +21,20 @@
             --shadow: 5px 5px 15px #1a1108, -2px -2px 10px #4a342e;
         }
 
-        /* الوضع الرمضاني الليلي بالفوانيس المضيئة */
-        body.ramadan-mode {
-            background-color: #050a1d !important;
+        /* الوضع الرمضاني المطور: فوانيس ونجوم مضيئة */
+        .ramadan-mode {
+            --bg: #0a1128; 
+            --text: #fceabb; 
+            --accent: #ffcc33; 
+            --card: rgba(20, 30, 70, 0.8);
             background-image: 
-                linear-gradient(rgba(5, 10, 29, 0.8), rgba(5, 10, 29, 0.8)),
+                url('https://www.transparenttextures.com/patterns/stardust.png'), 
+                linear-gradient(rgba(10, 17, 40, 0.7), rgba(10, 17, 40, 0.7)),
                 url('https://cdn.pixabay.com/photo/2017/05/20/20/19/ramadan-2329713_1280.png') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
-            --text: #fceabb; --accent: #ffcc33; --card: rgba(20, 30, 60, 0.8);
-            --shadow: 0 0 20px rgba(255, 204, 51, 0.4);
+            background-size: auto, cover, cover;
+            background-position: center;
+            background-attachment: fixed;
+            --shadow: 0 0 15px rgba(255, 204, 51, 0.3);
         }
 
         body {
@@ -46,112 +49,156 @@
             margin: 0; display: inline-block; filter: drop-shadow(2px 2px 0px #8b6b23);
             -webkit-text-stroke: 1px #8b6b23; font-weight: 700;
         }
+        .slogan { font-size: 1.1em; font-style: italic; opacity: 0.9; margin-top: 5px; }
+
+        .hijri-top { position: absolute; top: 15px; right: 15px; font-weight: bold; color: var(--accent); }
 
         .btn-3d {
             background: var(--card); border: none; border-radius: 20px; box-shadow: var(--shadow);
             color: var(--text); padding: 15px; margin: 10px 0; width: 100%; font-weight: bold;
             cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
-            position: relative;
         }
-        
-        /* أزرار الحذف الحمراء للمالكة */
-        .del-btn {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: #ff4d4d; font-size: 1.2em;
-            cursor: pointer; display: none; z-index: 10;
-        }
-
         .ramadan-mode .btn-3d {
             background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 204, 51, 0.3); color: #fceabb;
         }
+        .btn-3d:active { transform: scale(0.97); }
+        .btn-gold { background: var(--gold); color: #1a0f00 !important; border: 1px solid #8b6b23; }
+
+        .circle-tasbih {
+            width: 180px; height: 180px; border-radius: 50%; margin: 25px auto;
+            background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; border: 4px solid var(--accent); position: relative;
+        }
+        .count-num { font-size: 3.2em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .tasks-table {
             width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--card);
             border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--accent);
         }
-        .tasks-table th { background: var(--gold); color: #4a342e; padding: 12px; }
-        .tasks-table td { padding: 15px; border-bottom: 1px solid rgba(139, 107, 35, 0.2); position: relative; }
+        .tasks-table th { background: var(--gold); color: #4a342e; padding: 12px; font-weight: bold; }
+        .tasks-table td { padding: 15px; border-bottom: 1px solid rgba(139, 107, 35, 0.2); text-align: right; }
 
         .section { display: none; animation: fadeIn 0.4s ease; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .admin-panel { border: 2px solid var(--accent); padding: 20px; border-radius: 25px; margin-top: 40px; display: none; background: rgba(139, 107, 35, 0.1); }
-        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--accent); background: var(--bg); color: var(--text); }
-        .theme-btn { position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer; z-index: 100; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--accent); background: var(--bg); color: var(--text); box-sizing: border-box; }
+        
+        .top-left-controls { position: fixed; bottom: 20px; left: 20px; z-index: 100; }
+        .theme-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--gold); cursor: pointer; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card { background: var(--card); padding: 20px; border-radius: 25px; box-shadow: var(--shadow); margin-bottom: 15px; border-right: 8px solid var(--accent); }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-<button class="theme-btn" onclick="toggleTheme()">🌓</button>
+<div class="hijri-top" id="hijriDate"></div>
+
+<div class="top-left-controls">
+    <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+</div>
 
 <div class="container">
     <div id="home" class="section active">
         <div class="header">
             <h1 class="logo">الله أولاً</h1>
-            <div class="slogan" style="text-align:center">سيروا إلى الله عرجى ومكاسير</div>
+            <div class="slogan">سيروا إلى الله عرجى ومكاسير فإن انتظار الصحة بطالة</div>
         </div>
-        
+
+        <div class="circle-tasbih" onclick="incrementGlobal()">
+            <small>﴿ وتعاونوا على البر ﴾</small>
+            <div id="globalCount" class="count-num">0</div>
+            <button id="adminReset" style="display:none; position:absolute; bottom:10px; background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); resetGlobal()">🔄</button>
+        </div>
+
         <button class="btn-3d" onclick="showSection('moodPage')">❤️ كيف حال قلبك؟</button>
-        <button class="btn-3d" style="background:var(--gold); color:#000" onclick="showSection('namesList')">📖 رحلة معرفة الأسماء</button>
-        <button class="btn-3d" onclick="showSection('thoughtsPage')">✨ خواطر ورسائل</button>
+        <button class="btn-3d btn-gold" onclick="showSection('namesList')">📖 رحلة معرفة الأسماء</button>
+        <button class="btn-3d" onclick="startKhalwa()">🧘‍♂️ خلوة</button>
+        <button class="btn-3d" onclick="showSection('munajatPage')">🤲 مناجاة</button>
+        <button class="btn-3d" onclick="showSection('thoughtsPage')">✨ رسائل ربانية وخواطر</button>
 
         <div id="adminPanel" class="admin-panel">
-            <h3 style="text-align:center">🛠 لوحة تحكم المالكة</h3>
+            <h3 style="color:var(--accent); text-align:center;">🛠 لوحة تحكم المالكة</h3>
             <select id="type" class="admin-input">
-                <option value="names">إضافة اسم جديد (مقالة)</option>
+                <option value="names">إضافة/تعديل اسم (مقالة)</option>
                 <option value="thoughts">إضافة خاطرة</option>
                 <option value="tasks">نقطة عملية لاسم</option>
+                <option value="moods">إضافة رسالة لحال القلب</option>
             </select>
-            <input type="text" id="title" class="admin-input" placeholder="اسم الله أو عنوان الخاطرة">
+            <input type="text" id="title" class="admin-input" placeholder="العنوان (مثلاً: الودود أو خائف)">
             <textarea id="content" class="admin-input" rows="4" placeholder="المحتوى..."></textarea>
-            <button class="btn-3d" style="background:var(--gold)" onclick="saveData()">نشر الآن ✓</button>
+            <button class="btn-3d btn-gold" onclick="saveData()">نشر في السحابة ✓</button>
         </div>
     </div>
 
     <div id="namesList" class="section">
-        <h2 style="text-align:center">أسماء الله الحسنى</h2>
+        <h2 style="text-align:center; color:var(--accent)">أسماء الله الحسنى</h2>
         <div id="namesContainer"></div>
         <button class="btn-3d" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="nameDetails" class="section">
-        <h1 id="detTitle" class="logo" style="font-size:3em; display:block; text-align:center"></h1>
-        <div id="detContent" style="background:var(--card); padding:20px; border-radius:20px; white-space:pre-wrap; margin-bottom:20px; position:relative"></div>
+        <div style="text-align:center"><h1 id="detTitle" class="logo" style="font-size:3em"></h1></div>
+        <div class="card" id="detContent" style="white-space:pre-wrap"></div>
         <div id="detTasks"></div>
+        <div class="circle-tasbih" onclick="incrementLocal()" style="width:130px; height:130px">
+            <div id="localCount" class="count-num" style="font-size:2em">0</div>
+            <button style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); resetLocal()">🔄</button>
+        </div>
         <button class="btn-3d" onclick="showSection('namesList')">رجوع</button>
     </div>
 
+    <div id="moodPage" class="section">
+        <h2 style="text-align:center; color:var(--accent)">كيف حال قلبك؟</h2>
+        <div class="mood-grid">
+            <script>
+                const moods = ['خائف', 'سعيد', 'مكسور', 'تائه', 'مشتاق', 'مقبل', 'مدبر', 'قلق', 'مطمئن', 'وحيد', 'غريب', 'راضٍ'];
+                moods.forEach(m => {
+                    document.write(`<button class="btn-3d" style="font-size:0.8em" onclick="openMood('${m}')">${m}</button>`);
+                });
+            </script>
+        </div>
+        <button class="btn-3d" onclick="showSection('home')">رجوع</button>
+    </div>
+
     <div id="thoughtsPage" class="section">
-        <h2 style="text-align:center">خواطر إيمانية</h2>
+        <h2 style="text-align:center; color:var(--accent)">خواطر إيمانية</h2>
         <div id="thoughtsList"></div>
         <button class="btn-3d" onclick="showSection('home')">رجوع</button>
     </div>
 
-    <div id="moodPage" class="section">
-        <h2 style="text-align:center">كيف حال قلبك؟</h2>
-        <div id="moodGrid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px"></div>
+    <div id="munajatPage" class="section">
+        <div class="card">
+            <h3>ناجِ ربك..</h3>
+            <textarea id="munajatInput" class="admin-input" rows="8" placeholder="تحدث مع الله..."></textarea>
+            <button class="btn-3d btn-gold" onclick="sendMunajat()">أستودع الله قلبي ✨</button>
+        </div>
         <button class="btn-3d" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="khalwaPage" class="section" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:1000; display:none;">
+        <div id="khalwaText" style="height:100%; display:flex; align-items:center; justify-content:center; padding:30px; font-size:2em; text-align:center; transition:2s"></div>
+        <button class="btn-3d" style="position:absolute; bottom:20px; width:80%; left:10%;" onclick="stopKhalwa()">إنهاء الخلوة</button>
     </div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; // معرفكِ الخاص
+    const ADMIN_ID = 8421694319;
     let currentName = "";
 
     const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const is_admin = tg.initDataUnsafe.user?.id === ADMIN_ID;
+    document.getElementById('hijriDate').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {day:'numeric', month:'long', year:'numeric'}).format(new Date());
 
     function toggleTheme() {
-        const b = document.getElementById('mainBody');
-        if (b.classList.contains('dark-mode')) { b.classList.remove('dark-mode'); b.classList.add('ramadan-mode'); }
-        else if (b.classList.contains('ramadan-mode')) { b.classList.remove('ramadan-mode'); }
-        else { b.classList.add('dark-mode'); }
+        const body = document.body;
+        if (body.classList.contains('dark-mode')) { body.classList.replace('dark-mode', 'ramadan-mode'); }
+        else if (body.classList.contains('ramadan-mode')) { body.classList.remove('ramadan-mode'); }
+        else { body.classList.add('dark-mode'); }
     }
 
     function showSection(id) {
@@ -159,10 +206,20 @@
         document.getElementById(id).style.display = 'block';
         if(id === 'namesList') loadNames();
         if(id === 'thoughtsPage') loadThoughts();
-        if(id === 'moodPage') loadMoods();
     }
 
-    if(is_admin) document.getElementById('adminPanel').style.display = 'block';
+    function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
+    db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = s.val() || 0; });
+    function resetGlobal() { if(confirm("تصفير السبحة الجماعية؟")) db.ref('global_count').set(0); }
+
+    let localCount = 0;
+    function incrementLocal() { localCount++; document.getElementById('localCount').innerText = localCount; }
+    function resetLocal() { localCount = 0; document.getElementById('localCount').innerText = 0; }
+
+    if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
+        document.getElementById('adminPanel').style.display = 'block';
+        document.getElementById('adminReset').style.display = 'block';
+    }
 
     function saveData() {
         const type = document.getElementById('type').value;
@@ -170,35 +227,37 @@
         const text = document.getElementById('content').value;
         if(!title || !text) return;
 
-        if(type === 'names') db.ref('names/' + title).set({ article: text });
-        else db.ref(type + '/' + title).push(text);
-        
-        alert("تم الحفظ بنجاح ✓");
+        if(type === 'names') {
+            db.ref('names/' + title).set({ article: text }); // حفظ المقال بشكل محمي
+        } else {
+            db.ref(type + '/' + title).push(text);
+        }
+        alert("تم الحفظ في السحابة ✓");
         document.getElementById('content').value = "";
     }
 
     function loadNames() {
         db.ref('names').on('value', s => {
-            const container = document.getElementById('namesContainer'); container.innerHTML = "";
+            const container = document.getElementById('namesContainer');
+            container.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(name => {
-                const div = document.createElement('div');
-                div.className = "btn-3d";
-                div.innerHTML = `<span>${name}</span> 
-                    ${is_admin ? `<button class="del-btn" style="display:block" onclick="event.stopPropagation(); deleteItem('names/${name}')">🗑️</button>` : ''}`;
-                div.onclick = () => {
+                const btn = document.createElement('div');
+                btn.className = "btn-3d";
+                btn.innerHTML = `<span>${name}</span>`;
+                btn.onclick = () => {
                     currentName = name;
                     document.getElementById('detTitle').innerText = name;
-                    document.getElementById('detContent').innerText = data[name].article || "";
+                    document.getElementById('detContent').innerText = data[name].article || "لا يوجد مقال";
                     showSection('nameDetails');
-                    loadTasks();
+                    loadSubData();
                 };
-                container.appendChild(div);
+                container.appendChild(btn);
             });
         });
     }
 
-    function loadTasks() {
+    function loadSubData() {
         db.ref('tasks/' + currentName).on('value', s => {
             const container = document.getElementById('detTasks'); container.innerHTML = "";
             const data = s.val() || {};
@@ -206,7 +265,7 @@
             if(keys.length > 0) {
                 let html = '<table class="tasks-table"><tr><th>#</th><th>المهمة</th></tr>';
                 keys.forEach((k, i) => {
-                    html += `<tr><td>${i+1}</td><td>${data[k]} ${is_admin ? `<button onclick="deleteItem('tasks/${currentName}/${k}')" style="color:red; background:none; border:none; float:left; cursor:pointer">🗑️</button>` : ''}</td></tr>`;
+                    html += `<tr><td>${i+1}</td><td>${data[k]} ${tg.initDataUnsafe.user?.id === ADMIN_ID ? `<button onclick="db.ref('tasks/${currentName}/${k}').remove()" style="color:red; background:none; border:none; float:left;">🗑️</button>` : ''}</td></tr>`;
                 });
                 html += '</table>';
                 container.innerHTML = html;
@@ -214,39 +273,39 @@
         });
     }
 
+    function openMood(m) {
+        db.ref('moods/' + m).once('value', s => {
+            const data = s.val() || {};
+            const msg = Object.values(data)[0] || "قريباً رسالة لهذا الشعور ✨";
+            alert(msg);
+        });
+    }
+
     function loadThoughts() {
         db.ref('thoughts').on('value', s => {
             const container = document.getElementById('thoughtsList'); container.innerHTML = "";
             const data = s.val() || {};
-            Object.keys(data).forEach(title => {
-                const subData = data[title];
-                Object.keys(subData).forEach(k => {
-                    container.innerHTML += `<div class="btn-3d" style="flex-direction:column; align-items:start; padding:20px">
-                        <small style="color:var(--accent)">${title}</small>
-                        <p style="margin:5px 0">${subData[k]}</p>
-                        ${is_admin ? `<button class="del-btn" style="display:block" onclick="deleteItem('thoughts/${title}/${k}')">🗑️</button>` : ''}
-                    </div>`;
-                });
+            Object.keys(data).forEach(k => {
+                const thought = Object.values(data[k])[0];
+                container.innerHTML += `<div class="card"><h3>${k}</h3><p>${thought}</p></div>`;
             });
         });
     }
 
-    function loadMoods() {
-        const moods = ['خائف', 'سعيد', 'مكسور', 'تائه', 'مشتاق', 'راضٍ'];
-        const grid = document.getElementById('moodGrid'); grid.innerHTML = "";
-        moods.forEach(m => {
-            const btn = document.createElement('button');
-            btn.className = "btn-3d"; btn.innerText = m;
-            btn.onclick = () => alert("رسائل حال القلب قريباً");
-            grid.appendChild(btn);
-        });
+    function startKhalwa() {
+        const ayahs = ["أَلَيْسَ اللَّهُ بِكَافٍ عَبْدَهُ", "فَإِنِّي قَرِيبٌ", "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"];
+        document.getElementById('khalwaPage').style.display = 'block';
+        const t = document.getElementById('khalwaText');
+        let i = 0;
+        window.kInt = setInterval(() => {
+            t.style.opacity = 0;
+            setTimeout(() => { t.innerText = ayahs[i % ayahs.length]; t.style.opacity = 1; i++; }, 1000);
+        }, 5000);
+        t.innerText = "أغلق عينيك واستشعر المعية..";
     }
 
-    function deleteItem(path) {
-        if(confirm("هل أنتِ متأكدة؟")) {
-            db.ref(path).remove().then(() => alert("تم الحذف"));
-        }
-    }
+    function stopKhalwa() { clearInterval(window.kInt); document.getElementById('khalwaPage').style.display = 'none'; }
+    function sendMunajat() { alert("تم استيداع رسالتك في ملكوت الله.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
 
     tg.ready(); tg.expand();
 </script>
