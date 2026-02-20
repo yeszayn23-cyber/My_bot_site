@@ -21,9 +21,14 @@
             --shadow: 5px 5px 15px #1a1108, -2px -2px 10px #4a342e;
         }
 
+        /* تعديل الوضع الرمضاني بالخلفية الجديدة */
         .ramadan-mode {
-            --bg: #050505; --text: #f1d592; --accent: #ffcc33; --card: #121212;
-            --shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            background-image: url('https://images.unsplash.com/photo-1552391081-9f760a3773d7?q=80&w=1000&auto=format&fit=crop') !important;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            --text: #f1d592; --accent: #ffcc33; --card: rgba(18, 18, 18, 0.85);
+            --shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         body {
@@ -32,7 +37,6 @@
             background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
         }
 
-        /* الشعار المعدل */
         .header { text-align: center; margin-top: 50px; margin-bottom: 30px; }
         .logo { 
             font-family: 'Reem Kufi', sans-serif; 
@@ -42,30 +46,46 @@
             -webkit-text-fill-color: transparent; 
             margin: 0; 
             display: inline-block;
-            filter: drop-shadow(2px 2px 0px #8b6b23); /* تحديد خارجي */
-            -webkit-text-stroke: 1px #8b6b23; /* تحديد أدق */
+            filter: drop-shadow(2px 2px 0px #8b6b23);
+            -webkit-text-stroke: 1px #8b6b23;
             font-weight: 700;
         }
         .slogan { font-size: 1.1em; font-style: italic; opacity: 0.9; margin-top: 5px; }
 
         .hijri-top { position: absolute; top: 15px; right: 15px; font-weight: bold; color: var(--accent); }
 
-        /* الأزرار 3D */
         .btn-3d {
             background: var(--card); border: none; border-radius: 20px; box-shadow: var(--shadow);
             color: var(--text); padding: 15px; margin: 10px 0; width: 100%; font-weight: bold;
             cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
         }
+        
+        /* تأثير زجاجي للأزرار في وضع رمضان */
+        .ramadan-mode .btn-3d {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #f1d592;
+        }
+
         .btn-3d:active { transform: scale(0.97); }
         .btn-gold { background: var(--gold); color: #1a0f00 !important; border: 1px solid #8b6b23; }
 
-        /* السبحة */
         .circle-tasbih {
             width: 180px; height: 180px; border-radius: 50%; margin: 25px auto;
             background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column;
             align-items: center; justify-content: center; border: 4px solid var(--accent); position: relative;
         }
         .count-num { font-size: 3.2em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* ستايل الجدول المنظم */
+        .tasks-table {
+            width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--card);
+            border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--accent);
+        }
+        .tasks-table th { background: var(--gold); color: #4a342e; padding: 12px; font-weight: bold; }
+        .tasks-table td { padding: 15px; border-bottom: 1px solid rgba(139, 107, 35, 0.2); text-align: right; }
+        .tasks-table tr:nth-child(even) { background: rgba(139, 107, 35, 0.05); }
 
         .mood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
         .section { display: none; animation: fadeIn 0.4s ease; }
@@ -144,6 +164,7 @@
         <div style="text-align:center"><h1 id="detTitle" class="logo" style="font-size:3em"></h1></div>
         <div class="card" id="detContent" style="white-space:pre-wrap"></div>
         <button class="btn-3d btn-gold" onclick="shareName()">🔗 مشاركة النور</button>
+        
         <div id="detTasks"></div>
         
         <div class="circle-tasbih" onclick="incrementLocal()" style="width:130px; height:130px">
@@ -166,7 +187,7 @@
     <div id="munajatPage" class="section">
         <div class="card">
             <h3>ناجِ ربك..</h3>
-            <textarea id="munajatInput" class="admin-input" rows="8" placeholder="تحدث مع الله، الكلمات ستمحى من الشاشة وتبقى في السماء..."></textarea>
+            <textarea id="munajatInput" class="admin-input" rows="8" placeholder="تحدث مع الله..."></textarea>
             <button class="btn-3d btn-gold" onclick="sendMunajat()">أستودع الله قلبي ✨</button>
         </div>
         <button class="btn-3d" onclick="showSection('home')">رجوع</button>
@@ -187,7 +208,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // التوقيت الهجري
     document.getElementById('hijriDate').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {day:'numeric', month:'long', year:'numeric'}).format(new Date());
 
     function toggleTheme() {
@@ -222,8 +242,8 @@
         const title = document.getElementById('title').value;
         const text = document.getElementById('content').value;
         if(!title || !text) return;
-        db.ref(type + '/' + title).set(text);
-        alert("تم الحفظ ونشر التعديل ✓");
+        db.ref(type + '/' + title).push(text);
+        alert("تم النشر بنجاح ✓");
         document.getElementById('content').value = "";
     }
 
@@ -236,13 +256,11 @@
                 const btn = document.createElement('div');
                 btn.className = "btn-3d";
                 btn.innerHTML = `<span>${name}</span>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
-                    btn.innerHTML += ` <button onclick="event.stopPropagation(); db.ref('names/${name}').remove()" style="color:red; margin-right:10px; background:none; border:none;">🗑️</button>`;
-                }
                 btn.onclick = () => {
                     currentName = name;
+                    const content = Object.values(data[name])[0];
                     document.getElementById('detTitle').innerText = name;
-                    document.getElementById('detContent').innerText = data[name];
+                    document.getElementById('detContent').innerText = content;
                     showSection('nameDetails');
                     loadSubData();
                 };
@@ -255,21 +273,40 @@
         db.ref('tasks/' + currentName).on('value', s => {
             const container = document.getElementById('detTasks'); container.innerHTML = "";
             const data = s.val() || {};
-            Object.keys(data).forEach(k => {
-                container.innerHTML += `<div class="card">${data[k]}</div>`;
-            });
+            const keys = Object.keys(data);
+            if(keys.length > 0) {
+                let html = '<h3 style="color:var(--accent)">📍 الخطة العملية</h3><table class="tasks-table"><tr><th>#</th><th>المهمة</th></tr>';
+                keys.forEach((k, i) => {
+                    html += `<tr><td>${i+1}</td><td>${data[k]} ${tg.initDataUnsafe.user?.id === ADMIN_ID ? `<button onclick="db.ref('tasks/${currentName}/${k}').remove()" style="color:red; background:none; border:none; float:left;">🗑️</button>` : ''}</td></tr>`;
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            }
         });
     }
 
     function openMood(m) {
         db.ref('moods/' + m).once('value', s => {
-            alert(s.val() || "قريباً ستضع المالكة رسالة لهذا الشعور ✨");
+            const data = s.val() || {};
+            const msg = Object.values(data)[0] || "قريباً ستضع المالكة رسالة لهذا الشعور ✨";
+            alert(msg);
+        });
+    }
+
+    function loadThoughts() {
+        db.ref('thoughts').on('value', s => {
+            const container = document.getElementById('thoughtsList'); container.innerHTML = "";
+            const data = s.val() || {};
+            Object.keys(data).forEach(k => {
+                const thought = Object.values(data[k])[0];
+                container.innerHTML += `<div class="card"><h3>${k}</h3><p>${thought}</p></div>`;
+            });
         });
     }
 
     function startKhalwa() {
         const ayahs = ["أَلَيْسَ اللَّهُ بِكَافٍ عَبْدَهُ", "فَإِنِّي قَرِيبٌ", "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا", "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"];
-        const p = document.getElementById('khalwaPage'); p.style.display = 'block';
+        document.getElementById('khalwaPage').style.display = 'block';
         const t = document.getElementById('khalwaText');
         let i = 0;
         window.kInt = setInterval(() => {
@@ -280,8 +317,9 @@
     }
 
     function stopKhalwa() { clearInterval(window.kInt); document.getElementById('khalwaPage').style.display = 'none'; }
-
-    function sendMunajat() { alert("سمع الله نداءك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
+    function sendMunajat() { alert("تم استيداع رسالتك في ملكوت الله.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
+    function addStory() { if(document.getElementById('storyInput').value) { db.ref('stories/'+currentName).push(document.getElementById('storyInput').value); document.getElementById('storyInput').value=""; } }
+    function shareName() { const t = `✨ اسم الله: ${currentName}\n${document.getElementById('detContent').innerText}`; navigator.clipboard.writeText(t).then(()=>alert("تم النسخ!"));}
 
     tg.ready(); tg.expand();
 </script>
