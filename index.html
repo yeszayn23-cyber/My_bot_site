@@ -8,300 +8,218 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap');
+        /* استيراد خطوط عربية فخمة */
+        @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&display=swap');
         
         :root {
-            --bg: #fdfaf1; --text: #4a342e; --accent: #8b6b23; --card: #ffffff;
-            --gold: linear-gradient(145deg, #bf953f, #fcf6ba, #b38728);
-            --shadow: 6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff;
-            --pattern: url('https://www.transparenttextures.com/patterns/arabesque.png');
-        }
-
-        .dark-mode {
-            --bg: #2d1b0a; --text: #fcf6ba; --accent: #d4af37; --card: #3d2b1f;
-            --shadow: 5px 5px 15px #1a1108, -2px -2px 10px #4a342e;
-        }
-
-        .ramadan-mode {
-            --bg: #0a0a0a; --text: #f1d592; --accent: #ffcc33; --card: #1a1a1a;
-            --shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-            --pattern: url('https://www.transparenttextures.com/patterns/black-paper.png');
+            --bg: #f5f4ef; /* لون كريمي نفس الصورة */
+            --text: #4a342e;
+            --gold-gradient: linear-gradient(180deg, #d4af37 0%, #fcf6ba 50%, #b38728 100%);
+            --shadow-3d: 0 4px 8px rgba(0,0,0,0.1), inset 0 2px 2px rgba(255,255,255,0.5);
         }
 
         body {
-            font-family: 'Amiri', serif; background-color: var(--bg); color: var(--text);
-            margin: 0; padding: 15px; transition: all 0.5s ease; direction: rtl;
-            background-image: var(--pattern);
+            font-family: 'Amiri', serif;
+            background-color: var(--bg);
+            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png'); /* نقش خفيف */
+            margin: 0; padding: 20px; direction: rtl; color: var(--text);
         }
 
-        .hijri-top { position: absolute; top: 15px; right: 15px; font-weight: bold; color: var(--accent); font-size: 0.9em; }
-
-        .header { text-align: center; margin-top: 40px; }
-        .logo { 
-            font-family: 'Reem Kufi', sans-serif; font-size: 5em; 
-            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            margin: 0; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        .hijri-date {
+            text-align: right; font-size: 0.9em; color: #8b6b23; font-weight: bold; margin-bottom: 10px;
         }
-        .slogan { font-size: 1.2em; color: var(--accent); margin-top: -10px; font-family: 'Aref Ruqaa', serif; }
 
+        /* تنسيق الخط ليحاكي الصورة */
+        .fakhma-font {
+            font-family: 'Reem Kufi', sans-serif;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 1px rgba(139, 107, 35, 0.5));
+            font-weight: 700;
+            text-align: center;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .main-logo { font-size: 4.5em; line-height: 1.2; margin-bottom: 5px; }
+        .sub-logo { font-size: 1.8em; margin-top: -15px; margin-bottom: 20px; }
+
+        .slogan {
+            text-align: center; font-size: 1.1em; color: #5a4a42;
+            margin-bottom: 30px; font-family: 'Amiri', serif;
+        }
+
+        /* السبحة الدائرية كما في الصورة */
+        .tasbih-circle {
+            width: 220px; height: 220px;
+            border-radius: 50%;
+            border: 4px solid #b38728;
+            background: #ffffff;
+            margin: 0 auto 30px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            box-shadow: var(--shadow-3d);
+            cursor: pointer;
+        }
+        .tasbih-circle span { font-size: 0.8em; color: #8b6b23; margin-bottom: 10px; }
+        .tasbih-count { font-size: 4em; font-weight: bold; color: #d4af37; }
+
+        /* الأزرار 3D */
         .btn-3d {
-            background: var(--card); border: none; border-radius: 15px; box-shadow: var(--shadow);
-            color: var(--text); padding: 18px; margin: 12px 0; width: 100%; font-weight: bold;
-            cursor: pointer; transition: 0.2s; font-size: 1.1em; border: 1px solid rgba(139, 107, 35, 0.1);
+            background: #ffffff;
+            border: none; border-radius: 15px;
+            padding: 18px; margin: 12px 0;
+            width: 100%; font-size: 1.1em; font-weight: bold;
+            color: #4a342e; cursor: pointer;
+            box-shadow: 0 4px 0px #dcdbd5;
+            transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Amiri', serif;
         }
-        .btn-3d:active { transform: translateY(3px); box-shadow: 2px 2px 5px #d1d1d1; }
-        .btn-gold { background: var(--gold); color: #2d1b0a; border: none; }
-
-        .circle-tasbih {
-            width: 200px; height: 200px; border-radius: 50%; margin: 30px auto;
-            background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; border: 3px solid var(--accent); position: relative;
+        .btn-3d:active { transform: translateY(3px); box-shadow: none; }
+        .btn-active-gold {
+            background: var(--gold-gradient);
+            box-shadow: 0 4px 0px #b38728;
         }
-        .count-num { font-size: 3.5em; font-weight: bold; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .mood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 15px; }
-        
-        .section { display: none; animation: fadeIn 0.5s ease; }
-        .active { display: block; }
+        .section { display: none; }
+        .active { display: block; animation: fadeIn 0.5s; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .admin-box { border: 2px dashed var(--accent); padding: 15px; border-radius: 20px; margin-top: 30px; display: none; }
-        .admin-input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; border: 1px solid var(--accent); background: var(--card); color: var(--text); box-sizing: border-box; }
-
-        .fanoos { display: none; position: fixed; width: 100px; opacity: 0.5; pointer-events: none; }
-        .ramadan-mode .fanoos { display: block; }
+        /* لوحة التحكم */
+        .admin-box {
+            border: 2px dashed #b38728; padding: 15px; border-radius: 20px;
+            margin-top: 40px; display: none; background: #fffcf0;
+        }
+        .admin-input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<img src="https://cdn-icons-png.flaticon.com/512/2210/2210298.png" class="fanoos" style="top:10px; left:10px;">
-<img src="https://cdn-icons-png.flaticon.com/512/2210/2210298.png" class="fanoos" style="top:10px; right:10px;">
-
-<div class="hijri-top" id="hijriDate"></div>
+<div class="hijri-date" id="hijriDate"></div>
 
 <div id="home" class="section active">
-    <div class="header">
-        <h1 class="logo">الله</h1>
-        <div class="slogan">أولاً</div>
-        <p style="font-style: italic; opacity: 0.8;">سيروا إلى الله عرجى ومكاسير</p>
+    <div class="main-logo fakhma-font">الله</div>
+    <div class="sub-logo fakhma-font">أولاً</div>
+    
+    <div class="slogan">سيروا إلى الله عرجى ومكاسير فإن انتظار الصحة بطالة</div>
+
+    <div class="tasbih-circle" onclick="incGlobal()">
+        <span>﴿ وتعاونوا على البر ﴾</span>
+        <div id="gCount" class="tasbih-count">0</div>
+        <button id="resetG" style="display:none; background:none; border:none; font-size:1.5em; cursor:pointer;" onclick="event.stopPropagation(); resetGlobal()">🔄</button>
     </div>
 
-    <div class="circle-tasbih" onclick="incrementGlobal()">
-        <span style="font-size: 0.7em;">﴿ وتعاونوا على البر ﴾</span>
-        <div id="globalCount" class="count-num">0</div>
-        <button id="adminReset" style="display:none; position:absolute; bottom:15px; background:none; border:none; font-size:1.5em; cursor:pointer;" onclick="event.stopPropagation(); resetGlobal()">🔄</button>
-    </div>
-
-    <button class="btn-3d" onclick="showSection('moodPage')">❤️ كيف حال قلبك؟</button>
-    <button class="btn-3d btn-gold" onclick="showSection('namesPage')">✨ رحلة معرفة الأسماء</button>
+    <button class="btn-3d" onclick="showSec('moodPage')">❤️ كيف حال قلبك؟</button>
+    <button class="btn-3d btn-active-gold" onclick="showSec('namesPage')">📖 رحلة معرفة الأسماء</button>
     <button class="btn-3d" onclick="startKhalwa()">🧘‍♂️ خلوة</button>
-    <button class="btn-3d" onclick="showSection('munajatPage')">🤲 مناجاة</button>
-    <button class="btn-3d" onclick="showSection('thoughtsPage')">📜 رسائل ربانية وخواطر</button>
-    <button class="btn-3d" onclick="toggleTheme()" style="width: 60px; margin: 10px auto; display: block;">🌓</button>
+    <button class="btn-3d" onclick="showSec('munajatPage')">🤲 مناجاة</button>
 
     <div id="adminPanel" class="admin-box">
-        <h4 style="text-align:center; margin:0 0 10px 0;">🛠 لوحة التحكم (للمالكة فقط)</h4>
-        <select id="dataType" class="admin-input">
+        <h3 style="text-align:center;">🛠 لوحة تحكم المالكة</h3>
+        <select id="admType" class="admin-input" onchange="checkType()">
             <option value="names">إضافة اسم جديد</option>
-            <option value="thoughts">إضافة خاطرة</option>
-            <option value="moodMsg">رسالة لحالة قلب</option>
+            <option value="tasks">إضافة نقطة عملية لاسم</option>
         </select>
-        <input type="text" id="dataTitle" class="admin-input" placeholder="العنوان">
-        <textarea id="dataContent" class="admin-input" placeholder="المحتوى (أو النقاط العملية مفصولة بـ | )"></textarea>
-        <button class="btn-3d btn-gold" onclick="saveData()">نشر الآن</button>
+        <input type="text" id="admTitle" class="admin-input" placeholder="اسم الله (مثلاً: الودود)">
+        <textarea id="admContent" class="admin-input" rows="4" placeholder="المحتوى..."></textarea>
+        <button class="btn-3d btn-active-gold" onclick="saveToCloud()">حفظ في السحابة</button>
     </div>
-</div>
-
-<div id="moodPage" class="section">
-    <h2 style="text-align:center;">كيف حال قلبك؟</h2>
-    <div class="mood-grid" id="moodGrid">
-        <script>
-            const moodList = ['خائف', 'سعيد', 'حزين', 'تائه', 'مشتاق', 'قلق', 'مطمئن', 'مكسور', 'راضٍ', 'وحيد', 'مقبل', 'متعب'];
-            moodList.forEach(m => {
-                document.write(`<button class="btn-3d" onclick="viewMood('${m}')">${m}</button>`);
-            });
-        </script>
-    </div>
-    <button class="btn-3d" onclick="showSection('home')">رجوع</button>
-</div>
-
-<div id="namesPage" class="section">
-    <h2 style="text-align:center;">أسماء الله الحسنى</h2>
-    <div id="namesListContainer"></div>
-    <button class="btn-3d" onclick="showSection('home')">رجوع</button>
 </div>
 
 <div id="nameDetail" class="section">
-    <h1 id="theName" class="logo" style="font-size:3.5em; text-align:center;"></h1>
-    <div id="theContent" style="background:var(--card); padding:20px; border-radius:15px; line-height:1.8; margin-bottom:15px;"></div>
-    <button class="btn-3d btn-gold" onclick="shareContent()">🔗 مشاركة الرابط</button>
+    <div id="detName" class="fakhma-font" style="font-size:3.5em; margin-top:20px;"></div>
     
-    <div id="theTasks" style="margin-top:20px;"></div>
+    <div id="detContent" style="background:white; padding:20px; border-radius:15px; margin:20px 0; line-height:1.8; box-shadow: var(--shadow-3d);"></div>
+    
+    <div id="detTasks"></div>
 
-    <div class="circle-tasbih" onclick="incrementLocal()" style="width:120px; height:120px;">
-        <div id="localCount" class="count-num" style="font-size:2.2em">0</div>
-        <button style="background:none; border:none; font-size:1.2em; cursor:pointer;" onclick="event.stopPropagation(); resetLocal()">🔄</button>
-    </div>
-
-    <h3 style="margin-top:30px;">مواقف المستخدمين:</h3>
-    <div id="storiesList" style="max-height:200px; overflow-y:auto; margin-bottom:10px;"></div>
-    <textarea id="userStory" class="admin-input" placeholder="اكتب موقفك هنا..."></textarea>
-    <button class="btn-3d btn-gold" onclick="postStory()">إرسال الموقف</button>
-    <button class="btn-3d" onclick="showSection('namesPage')">رجوع</button>
+    <button class="btn-3d" onclick="showSec('namesPage')">رجوع للأسماء</button>
 </div>
 
-<div id="khalwaPage" class="section" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:9999; display:none;">
-    <div id="khalwaText" style="height:100%; display:flex; align-items:center; justify-content:center; font-size:2.5em; text-align:center; padding:20px; transition: 2s opacity;"></div>
-    <button class="btn-3d" style="position:absolute; bottom:30px; width:80%; left:10%;" onclick="stopKhalwa()">إنهاء الخلوة</button>
-</div>
-
-<div id="munajatPage" class="section">
-    <h2 style="text-align:center;">ناجِ ربك</h2>
-    <textarea id="munajatInput" class="admin-input" rows="10" placeholder="اكتب ما في قلبك هنا.. لن يراه أحد غير الله"></textarea>
-    <button class="btn-3d btn-gold" onclick="sendMunajat()">إرسال إلى ملكوت الله ✨</button>
-    <button class="btn-3d" onclick="showSection('home')">رجوع</button>
-</div>
-
-<div id="thoughtsPage" class="section">
-    <h2 style="text-align:center;">رسائل ربانية</h2>
-    <div id="thoughtsList"></div>
-    <button class="btn-3d" onclick="showSection('home')">رجوع</button>
+<div id="namesPage" class="section">
+    <h2 style="text-align:center; color:#8b6b23;">أسماء الله الحسنى</h2>
+    <div id="namesList"></div>
+    <button class="btn-3d" onclick="showSec('home')">رجوع للرئيسية</button>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; 
-    let activeName = "";
+    const MY_ID = 8421694319; // آيدي المالكة
 
-    // تهيئة Firebase (يرجى وضع بياناتك هنا)
+    // بيانات Firebase
     const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     // التاريخ الهجري
-    document.getElementById('hijriDate').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {day:'numeric', month:'long', year:'numeric'}).format(new Date());
+    document.getElementById('hijriDate').innerText = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {day:'numeric', month:'long', year:'numeric'}).format(new Date()) + " هـ";
 
     // التحقق من المالكة
-    if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
+    if(tg.initDataUnsafe.user?.id === MY_ID) {
         document.getElementById('adminPanel').style.display = 'block';
-        document.getElementById('adminReset').style.display = 'block';
+        document.getElementById('resetG').style.display = 'block';
     }
 
-    function showSection(id) {
+    function showSec(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'namesPage') loadNames();
-        if(id === 'thoughtsPage') loadThoughts();
     }
 
-    // الأوضاع
-    function toggleTheme() {
-        const b = document.body;
-        if(b.classList.contains('dark-mode')) { b.classList.replace('dark-mode', 'ramadan-mode'); }
-        else if(b.classList.contains('ramadan-mode')) { b.classList.remove('ramadan-mode'); }
-        else { b.classList.add('dark-mode'); }
-    }
-
-    // وظائف السبحة
-    function incrementGlobal() { db.ref('g_count').transaction(c => (c || 0) + 1); }
-    db.ref('g_count').on('value', s => { document.getElementById('globalCount').innerText = s.val() || 0; });
-    function resetGlobal() { db.ref('g_count').set(0); }
-
-    let lCount = 0;
-    function incrementLocal() { lCount++; document.getElementById('localCount').innerText = lCount; }
-    function resetLocal() { lCount = 0; document.getElementById('localCount').innerText = 0; }
-
-    // إدارة البيانات
-    function saveData() {
-        const type = document.getElementById('dataType').value;
-        const title = document.getElementById('dataTitle').value;
-        const content = document.getElementById('dataContent').value;
-        if(title && content) {
-            db.ref(type + '/' + title).set({ content: content, timestamp: Date.now() });
-            alert("تم الحفظ بنجاح");
-            document.getElementById('dataContent').value = "";
+    // وظائف السحابة
+    function saveToCloud() {
+        const type = document.getElementById('admType').value;
+        const title = document.getElementById('admTitle').value;
+        const text = document.getElementById('admContent').value;
+        if(title && text) {
+            if(type === 'names') db.ref('names/'+title).set({content: text});
+            if(type === 'tasks') db.ref('tasks/'+title).push(text);
+            alert("تم الحفظ بنجاح!");
+            document.getElementById('admContent').value = "";
         }
     }
 
     function loadNames() {
         db.ref('names').on('value', s => {
-            const container = document.getElementById('namesListContainer');
-            container.innerHTML = "";
+            const list = document.getElementById('namesList');
+            list.innerHTML = "";
             const data = s.val();
             for(let n in data) {
-                container.innerHTML += `<div class="btn-3d" onclick="openName('${n}')">${n} ${tg.initDataUnsafe.user?.id === ADMIN_ID ? `<span onclick="deleteItem('names','${n}')">🗑️</span>` : ''}</div>`;
+                list.innerHTML += `<div class="btn-3d" onclick="openName('${n}')">${n} ${isAdmin() ? `<span onclick="deleteItem('names/${n}')" style="color:red; margin-right:15px;">🗑️</span>` : ''}</div>`;
             }
         });
     }
 
     function openName(n) {
-        activeName = n;
         db.ref('names/'+n).once('value', s => {
-            const data = s.val();
-            document.getElementById('theName').innerText = n;
-            const parts = data.content.split('|');
-            document.getElementById('theContent').innerText = parts[0];
-            
-            let taskHtml = "<h4>📍 نقاط عملية:</h4><ul>";
-            for(let i=1; i<parts.length; i++) taskHtml += `<li>${parts[i]}</li>`;
-            document.getElementById('theTasks').innerHTML = taskHtml + "</ul>";
-            
-            showSection('nameDetail');
-            loadStories(n);
+            document.getElementById('detName').innerText = n; // يظهر بالخط الفخم
+            document.getElementById('detContent').innerText = s.val().content;
+            showSec('nameDetail');
+            loadTasks(n);
         });
     }
 
-    function loadStories(n) {
-        db.ref('stories/'+n).on('value', s => {
-            const container = document.getElementById('storiesList');
-            container.innerHTML = "";
+    function loadTasks(n) {
+        db.ref('tasks/'+n).on('value', s => {
+            const container = document.getElementById('detTasks');
+            container.innerHTML = "<h4 style='color:#8b6b23;'>📍 نقاط عملية:</h4>";
             const data = s.val();
             for(let id in data) {
-                container.innerHTML += `<div style="font-size:0.9em; border-bottom:1px solid #ccc; padding:5px;">${data[id]}</div>`;
+                container.innerHTML += `<div style='background:#fff; padding:10px; border-radius:10px; margin-bottom:5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'>• ${data[id]}</div>`;
             }
         });
     }
 
-    function postStory() {
-        const txt = document.getElementById('userStory').value;
-        if(txt) { db.ref('stories/'+activeName).push(txt); document.getElementById('userStory').value = ""; }
-    }
-
-    // الخلوة
-    let kInterval;
-    function startKhalwa() {
-        const ayahs = ["أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", "فَإِنِّي قَرِيبٌ", "وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ", "إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ"];
-        const div = document.getElementById('khalwaPage');
-        const text = document.getElementById('khalwaText');
-        div.style.display = 'block';
-        let i = 0;
-        kInterval = setInterval(() => {
-            text.style.opacity = 0;
-            setTimeout(() => {
-                text.innerText = ayahs[i % ayahs.length];
-                text.style.opacity = 1;
-                i++;
-            }, 1000);
-        }, 5000);
-        text.innerText = "استشعر معية الله..";
-    }
-    function stopKhalwa() { clearInterval(kInterval); document.getElementById('khalwaPage').style.display = 'none'; }
-
-    // المناجاة
-    function sendMunajat() {
-        alert("أُرسلت مناجاتك إلى السماء.. الله يسمعك.");
-        document.getElementById('munajatInput').value = "";
-        showSection('home');
-    }
-
-    function shareContent() {
-        const text = `رحلة مع اسم الله ${activeName} \n تطبيق الله أولاً`;
-        window.open(`https://t.me/share/url?url=${encodeURIComponent(text)}`);
-    }
-
-    function deleteItem(path, id) {
-        if(confirm("هل أنتِ متأكدة من الحذف؟")) db.ref(path+'/'+id).remove();
-    }
+    function isAdmin() { return tg.initDataUnsafe.user?.id === MY_ID; }
+    function deleteItem(path) { if(confirm("حذف نهائي؟")) db.ref(path).remove(); }
+    
+    // السبحة
+    function incGlobal() { db.ref('g_tasbih').transaction(c => (c || 0) + 1); }
+    db.ref('g_tasbih').on('value', s => { document.getElementById('gCount').innerText = s.val() || 0; });
+    function resetGlobal() { db.ref('g_tasbih').set(0); }
 
     tg.ready();
     tg.expand();
