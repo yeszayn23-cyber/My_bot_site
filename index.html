@@ -26,6 +26,8 @@
             font-family: 'Amiri', serif; 
             background-color: var(--bg-color); 
             background-image: var(--pattern);
+            background-size: auto;
+            background-attachment: fixed;
             color: var(--text-color); 
             margin: 0; padding: 15px; 
             transition: all 0.4s ease; 
@@ -128,6 +130,13 @@
             <input type="text" id="targetName" class="admin-input" placeholder="الاسم / نوع الحالة">
             <textarea id="mainContent" class="admin-input" rows="3" placeholder="المحتوى..."></textarea>
             <button class="main-btn-3d" style="background:var(--dark-gold); color:#fff; justify-content:center;" onclick="saveToFirebase()">حفظ في السحابة</button>
+            
+            <div style="border-top: 2px solid var(--dark-gold); margin-top:15px; padding-top:10px;">
+                <p style="font-size:0.9em; color:var(--dark-gold); font-weight:bold;">🖼 تغيير خلفية التطبيق للكل:</p>
+                <input type="file" id="bgUploader" accept="image/*" style="display:none" onchange="uploadBackground(this)">
+                <button class="main-btn-3d" style="background:#f0f0f0; color:#333; justify-content:center; font-size:0.9em;" onclick="document.getElementById('bgUploader').click()">📸 اختر صورة من هاتفك</button>
+                <button class="main-btn-3d" style="background:#ff4d4d; color:#fff; justify-content:center; font-size:0.9em;" onclick="deleteBackground()">🗑️ حذف الصورة المخصصة</button>
+            </div>
         </div>
     </div>
 
@@ -140,20 +149,16 @@
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" class="logo"></h2>
         <div class="card" id="detContent"></div>
-        
         <h3 style="color:var(--dark-gold)">📍 العمل بهذا الاسم:</h3>
         <div id="detTasks"></div>
-
         <div class="global-tasbih-circle" onclick="incrementLocal()">
             <span style="font-size: 0.7em;">ورد الاسم</span>
             <div id="localCount" style="font-size: 2.2em; color:var(--dark-gold);">0</div>
         </div>
-
         <h3 style="color:var(--dark-gold)">💬 مواقف النور (مشاركاتكم):</h3>
         <div id="detStories"></div>
         <textarea id="userStoryText" class="admin-input" placeholder="شاركنا موقفاً حدث لك مع هذا الاسم..."></textarea>
         <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="submitUserStory()">إرسال الموقف للجميع ✨</button>
-        
         <button class="main-btn-3d" style="justify-content:center; margin-top:20px;" onclick="showSection('namesList')">رجوع للقائمة</button>
     </div>
 
@@ -195,6 +200,39 @@
     let currentActiveName = "";
     let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
 
+    // --- مراقبة خلفية التطبيق السحابية ---
+    db.ref('app_settings/custom_bg').on('value', s => {
+        const bgData = s.val();
+        if (bgData) {
+            document.body.style.backgroundImage = `url(${bgData})`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+        } else {
+            // العودة للنمط الافتراضي في حال لم توجد صورة مرفوعة
+            document.body.style.backgroundImage = "var(--pattern)";
+            document.body.style.backgroundSize = "auto";
+        }
+    });
+
+    function uploadBackground(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                db.ref('app_settings/custom_bg').set(base64Image)
+                    .then(() => alert("تم تحديث الخلفية عند الجميع! ✨"))
+                    .catch(err => alert("حجم الصورة كبير جداً، حاول اختيار صورة أصغر."));
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function deleteBackground() {
+        if(confirm('هل تريد حذف الخلفية المخصصة والعودة للأصل؟')) {
+            db.ref('app_settings/custom_bg').remove();
+        }
+    }
+
     function toggleMode(m) {
         document.body.classList.remove('dark-mode', 'ramadan-mode');
         if(m === 'dark') document.body.classList.add('dark-mode');
@@ -211,7 +249,6 @@
         window.scrollTo(0,0);
     }
 
-    // --- نظام السبحة ---
     function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
     db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
     function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير العداد؟')) db.ref('global_count').set(0); }
@@ -219,7 +256,6 @@
     let lCnt = 0;
     function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; }
 
-    // --- تحميل البيانات من Firebase ---
     function loadNames() {
         db.ref('names').on('value', s => {
             const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
@@ -270,7 +306,6 @@
         });
     }
 
-    // --- الخلوة المتغيرة ---
     function startKhalwa() {
         db.ref('khalwa').once('value', s => {
             const data = s.val() || ["تهيأ للقاء الله بقلب حاضر.."];
@@ -292,7 +327,6 @@
     }
     function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display = 'none'; }
 
-    // --- وظائف التحكم للمالكة ---
     function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
@@ -321,7 +355,6 @@
         document.getElementById('userStoryText').value = "";
     }
 
-    // خزانة الرسائل (LocalStorage)
     function toggleFavorite(text) {
         const index = myFavs.indexOf(text);
         if(index > -1) myFavs.splice(index, 1);
