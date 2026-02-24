@@ -84,7 +84,6 @@
         .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
         .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-        /* ستايل قفل القناة - يغطي الشاشة */
         #subGuard {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
@@ -98,7 +97,7 @@
 <div id="subGuard">
     <h1 class="logo" style="font-size: 2.5em;">محبة في الله..</h1>
     <div class="card" style="width: 90%; border-right: none; border-bottom: 6px solid var(--dark-gold); text-align: center;">
-        للاستمرار في تطبيق <b>"الله أولاً"</b>، يرجى الانضمام لقناتنا الرسمية لتصلك الخواطر والرسائل الإيمانية.
+        للاستمرار في تطبيق <b>"الله أولاً"</b>، يرجى الانضمام لقناتنا الرسمية.
     </div>
     <a href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="text-decoration: none; background: var(--gold-gradient); color: #000; justify-content: center; width: 220px; margin-top: 20px;">انضم للقناة الآن</a>
     <button class="main-btn-3d" style="width: 220px; justify-content: center; margin-top: 10px;" onclick="verifySubscription()">لقد اشتركت، دخول ✨</button>
@@ -147,12 +146,10 @@
             <input type="text" id="targetName" class="admin-input" placeholder="الاسم / نوع الحالة">
             <textarea id="mainContent" class="admin-input" rows="3" placeholder="المحتوى..."></textarea>
             <button class="main-btn-3d" style="background:var(--dark-gold); color:#fff; justify-content:center;" onclick="saveToFirebase()">حفظ في السحابة</button>
-            
             <div style="border-top: 2px solid var(--dark-gold); margin-top:15px; padding-top:10px;">
-                <p style="font-size:0.9em; color:var(--dark-gold); font-weight:bold;">🖼 تغيير خلفية التطبيق للكل:</p>
                 <input type="file" id="bgUploader" accept="image/*" style="display:none" onchange="uploadBackground(this)">
-                <button class="main-btn-3d" style="background:#f0f0f0; color:#333; justify-content:center; font-size:0.9em;" onclick="document.getElementById('bgUploader').click()">📸 اختر صورة من هاتفك</button>
-                <button class="main-btn-3d" style="background:#ff4d4d; color:#fff; justify-content:center; font-size:0.9em;" onclick="deleteBackground()">🗑️ حذف الصورة المخصصة</button>
+                <button class="main-btn-3d" style="background:#f0f0f0; color:#333; justify-content:center; font-size:0.9em;" onclick="document.getElementById('bgUploader').click()">📸 تغيير الخلفية</button>
+                <button class="main-btn-3d" style="background:#ff4d4d; color:#fff; justify-content:center; font-size:0.9em;" onclick="deleteBackground()">🗑️ حذف الخلفية</button>
             </div>
         </div>
     </div>
@@ -172,10 +169,10 @@
             <span style="font-size: 0.7em;">ورد الاسم</span>
             <div id="localCount" style="font-size: 2.2em; color:var(--dark-gold);">0</div>
         </div>
-        <h3 style="color:var(--dark-gold)">💬 مواقف النور (مشاركاتكم):</h3>
+        <h3 style="color:var(--dark-gold)">💬 مواقف النور:</h3>
         <div id="detStories"></div>
-        <textarea id="userStoryText" class="admin-input" placeholder="شاركنا موقفاً حدث لك مع هذا الاسم..."></textarea>
-        <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="submitUserStory()">إرسال الموقف للجميع ✨</button>
+        <textarea id="userStoryText" class="admin-input" placeholder="شاركنا موقفاً..."></textarea>
+        <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="submitUserStory()">إرسال الموقف ✨</button>
         <button class="main-btn-3d" style="justify-content:center; margin-top:20px;" onclick="showSection('namesList')">رجوع للقائمة</button>
     </div>
 
@@ -200,7 +197,7 @@
     <div id="munajatPage" class="section">
         <h2 class="logo" style="font-size: 2.5em;">مناجاة</h2>
         <div class="card">
-            <textarea id="munajatInput" class="admin-input" style="height:150px" placeholder="تحدث مع خالقك.. الكلمات ترفع للسماء فوراً"></textarea>
+            <textarea id="munajatInput" class="admin-input" style="height:150px" placeholder="تحدث مع خالقك.."></textarea>
             <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="sendMunajat()">أستودع الله قلبي</button>
         </div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
@@ -214,11 +211,9 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // إعدادات التحقق (بياناتك)
     const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
     const CHANNEL_ID = '@fi9ha'; 
 
-    // دالة التحقق اللحظي
     async function verifySubscription() {
         const uId = tg.initDataUnsafe.user?.id;
         if (uId === ADMIN_ID) {
@@ -226,25 +221,18 @@
             document.getElementById('mainAppContent').style.display = 'block';
             return;
         }
-
         try {
             const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${uId}`);
             const data = await res.json();
-
             if (data.ok && ['member', 'administrator', 'creator'].includes(data.result.status)) {
                 document.getElementById('subGuard').style.display = 'none';
                 document.getElementById('mainAppContent').style.display = 'block';
             } else {
-                document.getElementById('subGuard').style.display = 'flex';
-                document.getElementById('mainAppContent').style.display = 'none';
+                alert("يرجى الاشتراك في القناة أولاً ❤️");
             }
-        } catch(e) {
-            // في حالة فشل الاتصال، نسمح بالدخول لضمان عدم توقف التطبيق
-            document.getElementById('mainAppContent').style.display = 'block';
-        }
+        } catch(e) { document.getElementById('mainAppContent').style.display = 'block'; }
     }
 
-    // فحص الاشتراك فور فتح الصفحة
     verifySubscription();
 
     let currentActiveName = "";
@@ -255,29 +243,20 @@
         if (bgData) {
             document.body.style.backgroundImage = `url(${bgData})`;
             document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundPosition = "center";
         } else {
             document.body.style.backgroundImage = "var(--pattern)";
-            document.body.style.backgroundSize = "auto";
         }
     });
 
     function uploadBackground(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Image = e.target.result;
-                db.ref('app_settings/custom_bg').set(base64Image)
-                    .then(() => alert("تم تحديث الخلفية عند الجميع! ✨"))
-                    .catch(err => alert("حجم الصورة كبير جداً."));
-            };
+            reader.onload = e => db.ref('app_settings/custom_bg').set(e.target.result);
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    function deleteBackground() {
-        if(confirm('حذف الخلفية؟')) db.ref('app_settings/custom_bg').remove();
-    }
+    function deleteBackground() { if(confirm('حذف؟')) db.ref('app_settings/custom_bg').remove(); }
 
     function toggleMode(m) {
         document.body.classList.remove('dark-mode', 'ramadan-mode');
@@ -297,7 +276,7 @@
 
     function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
     db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
-    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير العداد؟')) db.ref('global_count').set(0); }
+    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
     
     let lCnt = 0;
     function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; }
@@ -319,7 +298,7 @@
         currentActiveName = n; lCnt = 0; document.getElementById('localCount').innerText = 0;
         db.ref('names/' + n).once('value', s => {
             document.getElementById('detTitle').innerText = n;
-            document.getElementById('detContent').innerText = s.val() || "لا يوجد وصف حالياً.";
+            document.getElementById('detContent').innerText = s.val() || "لا يوجد وصف.";
             loadList('tasks/' + n, 'detTasks', false);
             loadList('stories/' + n, 'detStories', true);
             showSection('nameDetailsPage');
@@ -333,7 +312,7 @@
             Object.keys(data).forEach(k => {
                 const div = document.createElement('div'); div.className = "card";
                 div.innerHTML = `<p>${isStories ? data[k] : '• ' + data[k]}</p>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) div.innerHTML += `<span style="cursor:pointer" onclick="deleteItem('${path}/${k}')">🗑️ حذف</span>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) div.innerHTML += `<span onclick="deleteItem('${path}/${k}')">🗑️ حذف</span>`;
                 container.appendChild(div);
             });
         });
@@ -345,7 +324,8 @@
             const data = s.val() || {};
             Object.keys(data).forEach(m => {
                 const btn = document.createElement('div'); btn.className = "main-btn-3d";
-                btn.innerHTML = `<span style="flex:1" onclick="alert('${data[m]}')">${m}</span>`;
+                // إصلاح حالات القلب: الآن يظهر المحتوى المخزن
+                btn.innerHTML = `<span style="flex:1" onclick="alert(\`${data[m]}\`)">${m}</span>`;
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) btn.innerHTML += `<span onclick="deleteItem('moods/${m}')">🗑️</span>`;
                 grid.appendChild(btn);
             });
@@ -354,20 +334,14 @@
 
     function startKhalwa() {
         db.ref('khalwa').once('value', s => {
-            const data = s.val() || ["تهيأ للقاء الله بقلب حاضر.."];
-            const phrases = Object.values(data);
+            const phrases = Object.values(s.val() || ["تهيأ للقاء الله.."]);
             const overlay = document.getElementById('khalwaOverlay');
-            const textElem = document.getElementById('khalwaAyah');
             overlay.style.display = 'flex';
             let i = 0;
-            textElem.innerText = phrases[0];
+            document.getElementById('khalwaAyah').innerText = phrases[0];
             window.kTimer = setInterval(() => {
-                textElem.style.opacity = 0;
-                setTimeout(() => {
-                    i = (i + 1) % phrases.length;
-                    textElem.innerText = phrases[i];
-                    textElem.style.opacity = 1;
-                }, 1000);
+                i = (i + 1) % phrases.length;
+                document.getElementById('khalwaAyah').innerText = phrases[i];
             }, 6000);
         });
     }
@@ -378,42 +352,45 @@
         const target = document.getElementById('targetName').value;
         const content = document.getElementById('mainContent').value;
         if(!content) return;
-        if(type === 'thoughts' || type === 'khalwa') {
-            db.ref(type).push(content);
-        } else if(type === 'tasks') {
-            if(!target) return alert("اكتب الاسم أولاً!");
-            db.ref('tasks/' + target).push(content);
-        } else {
-            if(!target) return alert("اكتب الاسم أو نوع الحالة!");
-            db.ref(type + '/' + target).set(content);
-        }
-        alert("تم الحفظ بنجاح ✓");
+        if(type === 'thoughts' || type === 'khalwa') db.ref(type).push(content);
+        else if(type === 'tasks') db.ref('tasks/' + target).push(content);
+        else db.ref(type + '/' + target).set(content);
+        alert("تم الحفظ ✓");
         document.getElementById('mainContent').value = "";
     }
 
-    function deleteItem(path) { if(confirm('حذف نهائي؟')) db.ref(path).remove(); }
+    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
+    
     function submitUserStory() {
         const text = document.getElementById('userStoryText').value;
-        if(!text) return;
-        db.ref('stories/' + currentActiveName).push(text);
+        if(text) db.ref('stories/' + currentActiveName).push(text);
         document.getElementById('userStoryText').value = "";
     }
 
+    // إصلاح خزانة الرسائل (الحفظ)
     function toggleFavorite(text) {
-        const index = myFavs.indexOf(text);
-        if(index > -1) myFavs.splice(index, 1);
-        else myFavs.push(text);
-        localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
-        alert("تم التحديث ❤️");
+        if(!myFavs.includes(text)) {
+            myFavs.push(text);
+            localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
+            alert("تم الحفظ في الخزانة ❤️");
+        } else {
+            alert("موجود بالفعل في خزانتك");
+        }
     }
 
     function renderFavorites() {
         const list = document.getElementById('favList'); list.innerHTML = "";
-        myFavs.forEach(text => {
+        myFavs.forEach((text, index) => {
             const div = document.createElement('div'); div.className = "card";
-            div.innerHTML = `<p>${text}</p>`;
+            div.innerHTML = `<p>${text}</p><button onclick="removeFavorite(${index})" style="color:red; border:none; background:none;">🗑️ حذف</button>`;
             list.appendChild(div);
         });
+    }
+
+    function removeFavorite(index) {
+        myFavs.splice(index, 1);
+        localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
+        renderFavorites();
     }
 
     function loadThoughts() {
@@ -423,7 +400,9 @@
             Object.keys(data).reverse().forEach(k => {
                 const text = data[k];
                 const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>`;
+                // إصلاح تمرير النص في زر الحفظ
+                card.innerHTML = `<p>${text}</p><button class="fav-btn" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>`;
+                card.querySelector('.fav-btn').onclick = () => toggleFavorite(text);
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`;
                 list.appendChild(card);
             });
