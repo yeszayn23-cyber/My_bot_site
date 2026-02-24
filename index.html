@@ -8,30 +8,71 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@700&display=swap');
-        :root { --gold: #b38728; --creamy: #fdfaf1; --brown: #4a342e; }
-        body { font-family: 'Amiri', serif; background-color: var(--creamy); color: var(--brown); margin: 0; padding: 15px; direction: rtl; }
-        .logo { font-family: 'Reem Kufi', sans-serif; font-size: 3em; text-align: center; color: var(--gold); margin: 20px 0; }
-        .main-btn-3d { background: #fff; border: 2px solid var(--gold); padding: 15px; border-radius: 15px; margin-bottom: 10px; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-family: 'Amiri'; }
-        .card { background: #fff; padding: 15px; border-radius: 15px; border-right: 5px solid var(--gold); margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@700&display=swap');
+        
+        :root {
+            --gold-gradient: linear-gradient(145deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --dark-gold: #8b6b23;
+            --creamy: #fdfaf1;
+            --brown: #4a342e;
+            --bg-color: var(--creamy);
+            --text-color: var(--brown);
+            --card-bg: #ffffff;
+            --btn-shadow: 4px 4px 10px #d1cfc7, -4px -4px 10px #ffffff;
+            --pattern: url('https://www.transparenttextures.com/patterns/arabesque.png');
+        }
+
+        body { 
+            font-family: 'Amiri', serif; background-color: var(--bg-color); 
+            background-image: var(--pattern); background-attachment: fixed;
+            color: var(--text-color); margin: 0; padding: 15px; min-height: 100vh;
+        }
+
+        .dark-mode { --bg-color: #2b1d0e; --text-color: #fcf9f2; --card-bg: #3d2b1a; }
+        .ramadan-mode { --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #ffd700; }
+
+        .container { max-width: 500px; margin: auto; }
+        .logo { font-family: 'Reem Kufi', sans-serif; font-size: 3.5em; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin: 10px 0; }
+
+        .main-btn-3d {
+            background: var(--card-bg); border: 2px solid var(--dark-gold);
+            padding: 16px; border-radius: 18px; margin-bottom: 12px;
+            color: var(--text-color); font-weight: bold; width: 100%;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--btn-shadow); box-sizing: border-box;
+        }
+
         .section { display: none; }
-        .active { display: block; }
-        .admin-input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        #subGuard { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--creamy); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; box-shadow: var(--btn-shadow); border-right: 6px solid var(--dark-gold); margin-bottom: 15px; text-align: right; }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
+
+        #subGuard {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;
+        }
+        .global-tasbih-circle { width: 160px; height: 160px; margin: 20px auto; border-radius: 50%; border: 5px double var(--dark-gold); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="subGuard">
-    <h2 style="color:var(--gold)">نورنا في القناة.. ✨</h2>
-    <p>للدخول، يرجى الاشتراك في قناة التطبيق أولاً</p>
-    <a href="https://t.me/fi9ha" target="_blank" style="text-decoration:none; color:#fff; background:var(--gold); padding:10px 30px; border-radius:10px;">انضمام</a>
-    <button onclick="verifySubscription()" style="margin-top:20px; border:none; background:none; cursor:pointer; color:var(--gold); font-weight:bold;">لقد اشتركت، دخول</button>
+    <h1 class="logo" style="font-size: 2em;">انضمام للقناة</h1>
+    <p>للاستمتاع بالتطبيق، يرجى الاشتراك في القناة أولاً.</p>
+    <a href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="text-decoration:none; justify-content:center; background:var(--gold-gradient); color:#000;">انضم الآن</a>
+    <button class="main-btn-3d" style="justify-content:center; margin-top:10px;" onclick="verifySubscription()">دخول ✨</button>
 </div>
 
-<div class="container">
+<div class="container" id="mainAppContent">
     <div id="home" class="section active">
         <h1 class="logo">الله أولاً</h1>
+        <div class="global-tasbih-circle" onclick="incrementGlobal()">
+            <span style="font-size: 0.8em;">سبحة جماعية</span>
+            <div id="globalCount" style="font-size: 2em; color: var(--dark-gold);">0</div>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="main-btn-3d" onclick="showSection('namesList')">الأسماء الحسنى</button>
             <button class="main-btn-3d" onclick="showSection('thoughtsSection')">خواطر</button>
@@ -39,39 +80,39 @@
             <button class="main-btn-3d" onclick="showSection('favoritesPage')">خزانتي ❤️</button>
         </div>
 
-        <div id="adminPanel" style="display:none; margin-top:30px; padding:15px; border:2px dashed var(--gold); border-radius:15px;">
-            <h3 style="margin-top:0">🛠 لوحة التحكم</h3>
+        <div id="adminPanel" style="display:none; margin-top:20px; border:1px dashed var(--dark-gold); padding:10px; border-radius:15px;">
+            <h3 style="text-align:center">🛠 لوحة الإدارة</h3>
             <select id="adminActionType" class="admin-input">
-                <option value="thoughts">خاطرة جديدة</option>
-                <option value="moods">حالة قلب جديدة</option>
-                <option value="names">اسم الله جديد</option>
+                <option value="thoughts">إضافة خاطرة</option>
+                <option value="moods">إضافة حالة قلب</option>
+                <option value="names">إضافة اسم</option>
             </select>
-            <input type="text" id="targetName" class="admin-input" placeholder="العنوان (للحالات والأسماء)">
-            <textarea id="mainContent" class="admin-input" rows="3" placeholder="اكتب النص هنا..."></textarea>
-            <button class="main-btn-3d" style="background:var(--gold); color:#fff; justify-content:center;" onclick="saveData()">حفظ في السحابة</button>
+            <input type="text" id="targetName" class="admin-input" placeholder="العنوان أو الاسم">
+            <textarea id="mainContent" class="admin-input" rows="3" placeholder="المحتوى"></textarea>
+            <button class="main-btn-3d" style="justify-content:center; background:var(--dark-gold); color:#fff;" onclick="saveToFirebase()">حفظ في السحابة</button>
         </div>
     </div>
 
     <div id="namesList" class="section">
-        <h2 class="logo" style="font-size:2em">الأسماء الحسنى</h2>
+        <h2 class="logo" style="font-size: 2em;">الأسماء الحسنى</h2>
         <div id="namesGrid"></div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="thoughtsSection" class="section">
-        <h2 class="logo" style="font-size:2em">خواطر</h2>
+        <h2 class="logo" style="font-size: 2em;">خواطر إيمانية</h2>
         <div id="thoughtsList"></div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="moodPage" class="section">
-        <h2 class="logo" style="font-size:2em">كيف حال قلبك؟</h2>
+        <h2 class="logo" style="font-size: 2em;">كيف حال قلبك؟</h2>
         <div id="moodGrid"></div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 
     <div id="favoritesPage" class="section">
-        <h2 class="logo" style="font-size:2em">خزانتي</h2>
+        <h2 class="logo" style="font-size: 2em;">خزانتي</h2>
         <div id="favList"></div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
@@ -80,158 +121,135 @@
 <script>
     const tg = window.Telegram.WebApp;
     const ADMIN_ID = 8421694319;
-    const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw';
-    const CHANNEL_ID = '@fi9ha';
-    
-    firebase.initializeApp({ databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" });
+    const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
+    const CHANNEL_ID = '@fi9ha'; 
+
+    // --- التحقق من الاشتراك ---
+    async function verifySubscription() {
+        const uId = tg.initDataUnsafe.user?.id;
+        if (uId === ADMIN_ID) { 
+            document.getElementById('subGuard').style.display = 'none';
+            return;
+        }
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${uId}`);
+            const data = await res.json();
+            if (data.ok && ['member', 'administrator', 'creator'].includes(data.result.status)) {
+                document.getElementById('subGuard').style.display = 'none';
+            } else {
+                document.getElementById('subGuard').style.display = 'flex';
+                alert("انضم للقناة أولاً ❤️");
+            }
+        } catch(e) { document.getElementById('subGuard').style.display = 'none'; }
+    }
+    verifySubscription();
+
+    // --- التنقل ---
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'thoughtsSection') loadThoughts();
         if(id === 'moodPage') loadMoods();
         if(id === 'namesList') loadNames();
-        if(id === 'favoritesPage') renderFavs();
-        window.scrollTo(0,0);
+        if(id === 'favoritesPage') renderFavorites();
     }
 
-    async function verifySubscription() {
-        const uId = tg.initDataUnsafe.user?.id;
-        if (uId === ADMIN_ID) return;
-        try {
-            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${uId}`);
-            const d = await res.json();
-            if (d.ok && ['member','administrator','creator'].includes(d.result.status)) {
-                document.getElementById('subGuard').style.display = 'none';
-            } else {
-                document.getElementById('subGuard').style.display = 'flex';
-                alert("يرجى الاشتراك أولاً");
-            }
-        } catch(e) { document.getElementById('subGuard').style.display = 'none'; }
-    }
-    verifySubscription();
+    // --- السبحة الجماعية ---
+    function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
+    db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = s.val() || 0; });
 
-    function saveData() {
+    // --- الحفظ في السحابة (الإصلاح الجذري) ---
+    function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
-        const head = document.getElementById('targetName').value.trim();
-        const body = document.getElementById('mainContent').value.trim();
-        if(!body) return alert("اكتب النص!");
+        const target = document.getElementById('targetName').value.trim();
+        const content = document.getElementById('mainContent').value.trim();
+        if(!content) return alert("اكتب المحتوى!");
 
         if(type === 'thoughts') {
-            db.ref('thoughts').push(body).then(() => alert("تم الحفظ ✓"));
-        } else {
-            if(!head) return alert("اكتب العنوان!");
-            db.ref(type + '/' + head).set(body).then(() => alert("تم الحفظ ✓"));
+            db.ref('thoughts').push(content).then(() => alert("تم حفظ الخاطرة ✓"));
+        } else if(type === 'moods') {
+            if(!target) return alert("اكتب نوع الحالة (مثلاً: حزين)");
+            db.ref('moods/' + target).set(content).then(() => alert("تم حفظ الحالة ✓"));
+        } else if(type === 'names') {
+            if(!target) return alert("اكتب الاسم");
+            db.ref('names/' + target).set(content).then(() => alert("تم حفظ الاسم ✓"));
         }
         document.getElementById('mainContent').value = "";
     }
 
-    function del(path) {
+    // --- الحذف ---
+    function deleteItem(path) {
         if(confirm('حذف نهائي؟')) db.ref(path).remove().then(() => alert("تم الحذف"));
     }
 
+    // --- تحميل الخواطر ---
     function loadThoughts() {
         db.ref('thoughts').on('value', s => {
-            const container = document.getElementById('thoughtsList');
-            container.innerHTML = "";
+            const list = document.getElementById('thoughtsList'); list.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).reverse().forEach(k => {
                 const text = data[k];
-                const card = document.createElement('div');
-                card.className = "card";
-                card.innerHTML = `<p>${text}</p>`;
-                
-                const btnFav = document.createElement('button');
-                btnFav.innerText = "❤️ حفظ في خزانتي";
-                btnFav.style = "border:none; background:none; color:red; cursor:pointer;";
-                btnFav.onclick = () => saveToLocal(text);
-                card.appendChild(btnFav);
-
+                const card = document.createElement('div'); card.className = "card";
+                card.innerHTML = `<p>${text}</p>
+                    <button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="color:red; border:none; background:none; cursor:pointer">❤️ حفظ</button>`;
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
-                    const btnDel = document.createElement('button');
-                    btnDel.innerText = " 🗑️ حذف";
-                    btnDel.onclick = () => del('thoughts/'+k);
-                    card.appendChild(btnDel);
+                    card.innerHTML += `<button onclick="deleteItem('thoughts/${k}')" style="margin-right:10px">🗑️ حذف</button>`;
                 }
-                container.appendChild(card);
+                list.appendChild(card);
             });
         });
     }
 
+    // --- تحميل حالات القلب ---
     function loadMoods() {
         db.ref('moods').on('value', s => {
-            const container = document.getElementById('moodGrid');
-            container.innerHTML = "";
+            const grid = document.getElementById('moodGrid'); grid.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(m => {
-                const btn = document.createElement('div');
-                btn.className = "main-btn-3d";
-                const span = document.createElement('span');
-                span.innerText = m;
-                span.style.flex = "1";
-                span.onclick = () => alert(data[m]);
-                btn.appendChild(span);
-
+                const btn = document.createElement('div'); btn.className = "main-btn-3d";
+                btn.innerHTML = `<span style="flex:1" onclick="alert(\`${data[m].replace(/`/g, "'")}\`)">${m}</span>`;
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
-                    const dBtn = document.createElement('span');
-                    dBtn.innerText = " 🗑️";
-                    dBtn.onclick = () => del('moods/'+m);
-                    btn.appendChild(dBtn);
+                    btn.innerHTML += `<span onclick="deleteItem('moods/${m}')">🗑️</span>`;
                 }
-                container.appendChild(btn);
+                grid.appendChild(btn);
             });
+        });
+    }
+
+    // --- الخزانة المحلية ---
+    let myFavs = JSON.parse(localStorage.getItem('my_favs') || '[]');
+    function toggleFavorite(text) {
+        if(!myFavs.includes(text)) {
+            myFavs.push(text);
+            localStorage.setItem('my_favs', JSON.stringify(myFavs));
+            alert("تم الحفظ في خزانتك ❤️");
+        }
+    }
+    function renderFavorites() {
+        const list = document.getElementById('favList'); list.innerHTML = "";
+        myFavs.forEach((t, i) => {
+            const d = document.createElement('div'); d.className = "card";
+            d.innerHTML = `<p>${t}</p><button onclick="myFavs.splice(${i},1); localStorage.setItem('my_favs',JSON.stringify(myFavs)); renderFavorites();" style="color:red">حذف</button>`;
+            list.appendChild(d);
         });
     }
 
     function loadNames() {
         db.ref('names').on('value', s => {
-            const container = document.getElementById('namesGrid');
-            container.innerHTML = "";
+            const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(n => {
-                const b = document.createElement('div');
-                b.className = "main-btn-3d";
-                const s1 = document.createElement('span');
-                s1.innerText = n; s1.style.flex="1";
-                s1.onclick = () => alert(data[n]);
-                b.appendChild(s1);
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
-                    const s2 = document.createElement('span');
-                    s2.innerText = " 🗑️"; s2.onclick = () => del('names/'+n);
-                    b.appendChild(s2);
-                }
-                container.appendChild(b);
+                const b = document.createElement('div'); b.className = "main-btn-3d";
+                b.innerHTML = `<span style="flex:1" onclick="alert(\`${data[n]}\`)">${n}</span>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) b.innerHTML += `<span onclick="deleteItem('names/${n}')">🗑️</span>`;
+                grid.appendChild(b);
             });
         });
     }
-
-    // الخزانة المحلية
-    function saveToLocal(txt) {
-        let favs = JSON.parse(localStorage.getItem('myFavs') || '[]');
-        if(!favs.includes(txt)) {
-            favs.push(txt);
-            localStorage.setItem('myFavs', JSON.stringify(favs));
-            alert("تم الحفظ ❤️");
-        }
-    }
-    function renderFavs() {
-        const container = document.getElementById('favList');
-        container.innerHTML = "";
-        const favs = JSON.parse(localStorage.getItem('myFavs') || '[]');
-        favs.forEach((t, i) => {
-            const d = document.createElement('div');
-            d.className = "card";
-            d.innerHTML = `<p>${t}</p><button onclick="removeItem(${i})" style="color:red">حذف</button>`;
-            container.appendChild(d);
-        });
-    }
-    window.removeItem = (i) => {
-        let favs = JSON.parse(localStorage.getItem('myFavs') || '[]');
-        favs.splice(i, 1);
-        localStorage.setItem('myFavs', JSON.stringify(favs));
-        renderFavs();
-    };
 
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) document.getElementById('adminPanel').style.display = 'block';
     tg.expand();
