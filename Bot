@@ -1,0 +1,83 @@
+import telebot
+from telebot import types
+
+# --- الإعدادات الخاصة بك ---
+API_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'
+ADMIN_ID = 8421694319 
+CHANNEL_ID = '@fi9ha'
+bot = telebot.TeleBot(API_TOKEN)
+
+# إعدادات افتراضية قابلة للتعديل من لوحة التحكم
+config = {
+    "site_url": "https://www.google.com", # غيره برابط موقعك لاحقاً
+    "welcome_msg": "أهلاً بك! تم التحقق من اشتراكك بنجاح. ✅",
+    "sub_required_msg": "يا خويا العزيز، لازم تشترك في قناة البوت أولاً باش تقدر تدخل للموقع! 👇"
+}
+
+# --- دالة فحص الاشتراك ---
+def is_subscribed(user_id):
+    try:
+        status = bot.get_chat_member(CHANNEL_ID, user_id).status
+        if status in ['member', 'administrator', 'creator']:
+            return True
+        return False
+    except Exception as e:
+        print(f"Error checking sub: {e}")
+        return False
+
+# --- معالج أمر /start ---
+@bot.message_handler(commands=['start'])
+def start(message):
+    user_id = message.from_user.id
+    
+    # 1. التحقق من الاشتراك أولاً
+    if is_subscribed(user_id):
+        # إذا مشترك: نبعثولو رسالة الترحيب وزر الموقع
+        markup = types.InlineKeyboardMarkup()
+        web_btn = types.InlineKeyboardButton("دخول الموقع الآن 🌐", url=config["site_url"])
+        markup.add(web_btn)
+        
+        bot.send_message(user_id, f"{config['welcome_msg']}\n\nتفضل رابط الموقع أدناه:", reply_markup=markup)
+    else:
+        # إذا مش مشترك: نطلعولو رابط القناة وزر التحقق
+        markup = types.InlineKeyboardMarkup()
+        join_btn = types.InlineKeyboardButton("اشترك في القناة من هنا 📢", url=f"https://t.me/{CHANNEL_ID[1:]}")
+        verify_btn = types.InlineKeyboardButton("تم الاشتراك، دخول ✅", callback_data="check_sub")
+        markup.add(join_btn)
+        markup.add(verify_btn)
+        
+        bot.send_message(user_id, config["sub_required_msg"], reply_markup=markup)
+
+# --- معالج زر "تم الاشتراك" ---
+@bot.callback_query_handler(func=lambda call: call.data == "check_sub")
+def verify_callback(call):
+    if is_subscribed(call.from_user.id):
+        bot.answer_callback_query(call.id, "تم التحقق! تفضل بالدخول. 🎉")
+        # نحذف رسالة الاشتراك ونبعث رسالة الموقع
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        start(call.message) 
+    else:
+        bot.answer_callback_query(call.id, "لم تشترك بعد! ❌ يرجى الاشتراك في القناة أولاً.", show_alert=True)
+
+# --- لوحة تحكم الأدمن (أنت فقط) ---
+@bot.message_handler(commands=['admin'])
+def admin_panel(message):
+    if message.from_user.id == ADMIN_ID:
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("تعديل رابط الموقع 🔗", callback_data="edit_url"))
+        
+        msg = f"🛠 **لوحة تحكم الأدمن**\n\nالقناة: {CHANNEL_ID}\nالموقع الحالي: {config['site_url']}"
+        bot.send_message(ADMIN_ID, msg, reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "edit_url")
+def edit_url_step(call):
+    msg = bot.send_message(ADMIN_ID, "أرسل رابط الموقع الجديد (مثال: https://example.com):")
+    bot.register_next_step_handler(msg, save_new_url)
+
+def save_new_url(message):
+    config["site_url"] = message.text
+    bot.send_message(ADMIN_ID, "✅ تم تحديث رابط الموقع بنجاح!")
+
+# تشغيل البوت
+print("البوت شغال الآن...")
+bot.polling(none_stop=True)
