@@ -60,7 +60,7 @@
             padding: 16px; border-radius: 18px; margin-bottom: 12px;
             color: var(--text-color); font-weight: bold; width: 100%;
             cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: var(--btn-shadow); transition: 0.2s; border-box: box-sizing;
+            box-shadow: var(--btn-shadow); transition: 0.2s; box-sizing: border-box;
         }
         .main-btn-3d:active { transform: scale(0.97); }
 
@@ -83,9 +83,26 @@
         
         .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
         .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+        /* ستايل بوابة الاشتراك */
+        #subGuard {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
+
+<div id="subGuard">
+    <h1 class="logo" style="font-size: 2.5em;">محبة في الله..</h1>
+    <div class="card" style="width: 90%; border-right: none; border-bottom: 6px solid var(--dark-gold); text-align: center;">
+        للاستمرار في تطبيق <b>"الله أولاً"</b>، يرجى الانضمام لقناتنا الرسمية لتصلك الخواطر والرسائل الإيمانية.
+    </div>
+    <a href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="text-decoration: none; background: var(--gold-gradient); color: #000; justify-content: center; width: 220px; margin-top: 20px;">انضم للقناة الآن</a>
+    <button class="main-btn-3d" style="width: 220px; justify-content: center; margin-top: 10px;" onclick="verifySubscription()">لقد اشتركت، دخول ✨</button>
+</div>
 
 <div id="khalwaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center;">
     <div id="khalwaAyah" style="font-size: 1.8em; padding: 30px; line-height: 1.6;"></div>
@@ -197,10 +214,38 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // إعدادات التحقق من القناة الخاصة بك
+    const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
+    const CHANNEL_ID = '@fi9ha'; 
+
+    async function verifySubscription() {
+        const userId = tg.initDataUnsafe.user?.id;
+        if (userId === ADMIN_ID) {
+            document.getElementById('subGuard').style.display = 'none';
+            return;
+        }
+        if (!userId) return alert("يرجى الفتح من تيليجرام");
+
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${userId}`);
+            const data = await res.json();
+            if (data.ok && ['member', 'administrator', 'creator'].includes(data.result.status)) {
+                document.getElementById('subGuard').style.display = 'none';
+                localStorage.setItem('isSubbed', 'true');
+            } else {
+                alert("يجب الاشتراك في القناة أولاً ❤️");
+            }
+        } catch(e) { alert("خطأ في الاتصال"); }
+    }
+
+    // فحص الاشتراك عند البداية
+    if (localStorage.getItem('isSubbed') !== 'true' && tg.initDataUnsafe.user?.id !== ADMIN_ID) {
+        document.getElementById('subGuard').style.display = 'flex';
+    }
+
     let currentActiveName = "";
     let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
 
-    // --- مراقبة خلفية التطبيق السحابية ---
     db.ref('app_settings/custom_bg').on('value', s => {
         const bgData = s.val();
         if (bgData) {
@@ -208,7 +253,6 @@
             document.body.style.backgroundSize = "cover";
             document.body.style.backgroundPosition = "center";
         } else {
-            // العودة للنمط الافتراضي في حال لم توجد صورة مرفوعة
             document.body.style.backgroundImage = "var(--pattern)";
             document.body.style.backgroundSize = "auto";
         }
@@ -332,7 +376,6 @@
         const target = document.getElementById('targetName').value;
         const content = document.getElementById('mainContent').value;
         if(!content) return;
-
         if(type === 'thoughts' || type === 'khalwa') {
             db.ref(type).push(content);
         } else if(type === 'tasks') {
@@ -347,7 +390,6 @@
     }
 
     function deleteItem(path) { if(confirm('حذف نهائي؟')) db.ref(path).remove(); }
-
     function submitUserStory() {
         const text = document.getElementById('userStoryText').value;
         if(!text) return;
@@ -379,8 +421,7 @@
             Object.keys(data).reverse().forEach(k => {
                 const text = data[k];
                 const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<p>${text}</p>
-                    <button onclick="toggleFavorite(\`${text.replace(/'/g, "")}\`)" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>`;
+                card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>`;
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`;
                 list.appendChild(card);
             });
