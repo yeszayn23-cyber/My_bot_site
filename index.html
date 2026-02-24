@@ -84,7 +84,7 @@
         .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
         .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-        /* ستايل قفل القناة - يغطي الشاشة */
+        /* ستايل بوابة الاشتراك */
         #subGuard {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
@@ -115,7 +115,7 @@
     <button class="theme-btn" style="background: #050a18;" onclick="toggleMode('ramadan')"></button>
 </div>
 
-<div class="container" id="mainAppContent" style="display:none;">
+<div class="container">
     <div id="home" class="section active">
         <h1 class="logo">الله أولاً</h1>
         <p style="text-align:center; font-style:italic; color:var(--dark-gold); margin-top:-10px;">سيروا إلى الله عرجى ومكاسير</p>
@@ -214,38 +214,34 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // إعدادات التحقق (بياناتك)
+    // إعدادات التحقق من القناة الخاصة بك
     const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
     const CHANNEL_ID = '@fi9ha'; 
 
-    // دالة التحقق اللحظي
     async function verifySubscription() {
-        const uId = tg.initDataUnsafe.user?.id;
-        if (uId === ADMIN_ID) {
+        const userId = tg.initDataUnsafe.user?.id;
+        if (userId === ADMIN_ID) {
             document.getElementById('subGuard').style.display = 'none';
-            document.getElementById('mainAppContent').style.display = 'block';
             return;
         }
+        if (!userId) return alert("يرجى الفتح من تيليجرام");
 
         try {
-            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${uId}`);
+            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${userId}`);
             const data = await res.json();
-
             if (data.ok && ['member', 'administrator', 'creator'].includes(data.result.status)) {
                 document.getElementById('subGuard').style.display = 'none';
-                document.getElementById('mainAppContent').style.display = 'block';
+                localStorage.setItem('isSubbed', 'true');
             } else {
-                document.getElementById('subGuard').style.display = 'flex';
-                document.getElementById('mainAppContent').style.display = 'none';
+                alert("يجب الاشتراك في القناة أولاً ❤️");
             }
-        } catch(e) {
-            // في حالة فشل الاتصال، نسمح بالدخول لضمان عدم توقف التطبيق
-            document.getElementById('mainAppContent').style.display = 'block';
-        }
+        } catch(e) { alert("خطأ في الاتصال"); }
     }
 
-    // فحص الاشتراك فور فتح الصفحة
-    verifySubscription();
+    // فحص الاشتراك عند البداية
+    if (localStorage.getItem('isSubbed') !== 'true' && tg.initDataUnsafe.user?.id !== ADMIN_ID) {
+        document.getElementById('subGuard').style.display = 'flex';
+    }
 
     let currentActiveName = "";
     let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
@@ -269,14 +265,16 @@
                 const base64Image = e.target.result;
                 db.ref('app_settings/custom_bg').set(base64Image)
                     .then(() => alert("تم تحديث الخلفية عند الجميع! ✨"))
-                    .catch(err => alert("حجم الصورة كبير جداً."));
+                    .catch(err => alert("حجم الصورة كبير جداً، حاول اختيار صورة أصغر."));
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
     function deleteBackground() {
-        if(confirm('حذف الخلفية؟')) db.ref('app_settings/custom_bg').remove();
+        if(confirm('هل تريد حذف الخلفية المخصصة والعودة للأصل؟')) {
+            db.ref('app_settings/custom_bg').remove();
+        }
     }
 
     function toggleMode(m) {
@@ -381,7 +379,7 @@
         if(type === 'thoughts' || type === 'khalwa') {
             db.ref(type).push(content);
         } else if(type === 'tasks') {
-            if(!target) return alert("اكتب الاسم أولاً!");
+            if(!target) return alert("اكتب اسم الله في الخانة الأولى!");
             db.ref('tasks/' + target).push(content);
         } else {
             if(!target) return alert("اكتب الاسم أو نوع الحالة!");
@@ -404,7 +402,7 @@
         if(index > -1) myFavs.splice(index, 1);
         else myFavs.push(text);
         localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
-        alert("تم التحديث ❤️");
+        alert("تم التحديث في خزانتي ❤️");
     }
 
     function renderFavorites() {
@@ -431,7 +429,7 @@
     }
 
     function sendMunajat() {
-        alert("الله يسمعك.. ✨");
+        alert("الله يسمعك.. طِب نفساً ✨");
         document.getElementById('munajatInput').value = "";
         showSection('home');
     }
