@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@700&display=swap');
         
         :root {
             --gold-gradient: linear-gradient(145deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -19,61 +19,76 @@
             --text-color: var(--brown);
             --card-bg: #ffffff;
             --btn-shadow: 4px 4px 10px #d1cfc7, -4px -4px 10px #ffffff;
+            --pattern: url('https://www.transparenttextures.com/patterns/arabesque.png');
         }
 
         body { 
             font-family: 'Amiri', serif; 
             background-color: var(--bg-color); 
-            background-image: url('https://www.transparenttextures.com/patterns/arabesque.png');
+            background-image: var(--pattern);
+            background-size: auto;
             background-attachment: fixed;
             color: var(--text-color); 
             margin: 0; padding: 15px; 
-            transition: background 0.3s ease;
+            transition: all 0.4s ease; 
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
         }
 
-        .dark-mode { --bg-color: #2b1d0e; --text-color: #fcf9f2; --card-bg: #3d2b1a; --btn-shadow: 5px 5px 12px #1a1209, -2px -2px 8px #4d3621; }
-        .ramadan-mode { --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #ffd700; --btn-shadow: 5px 5px 15px #02050d; }
+        .dark-mode { 
+            --bg-color: #2b1d0e; --text-color: #fcf9f2; --card-bg: #3d2b1a;
+            --btn-shadow: 5px 5px 12px #1a1209, -2px -2px 8px #4d3621;
+        }
+        
+        .ramadan-mode { 
+            --bg-color: #050a18; --text-color: #e0e0e0; --card-bg: #0d1b3e; --dark-gold: #ffd700;
+            background-image: radial-gradient(circle at top, #1a2a4e, #050a18), url('https://www.transparenttextures.com/patterns/black-paper.png');
+            --btn-shadow: 5px 5px 15px #02050d;
+        }
 
-        .container { max-width: 500px; margin: auto; will-change: transform; }
+        .container { max-width: 500px; margin: auto; }
 
         .logo { 
-            font-family: 'Reem Kufi', sans-serif; font-size: 3.5em; 
+            font-family: 'Reem Kufi', sans-serif; font-size: 3.8em; 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            margin: 10px 0; text-align: center;
+            margin: 0; filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.2));
+            text-align: center;
         }
 
         .main-btn-3d {
             background: var(--card-bg); border: 2px solid var(--dark-gold);
-            padding: 14px; border-radius: 15px; margin-bottom: 10px;
+            padding: 16px; border-radius: 18px; margin-bottom: 12px;
             color: var(--text-color); font-weight: bold; width: 100%;
             cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: var(--btn-shadow); transition: transform 0.1s; box-sizing: border-box;
+            box-shadow: var(--btn-shadow); transition: 0.2s; box-sizing: border-box;
         }
-        .main-btn-3d:active { transform: scale(0.96); }
+        .main-btn-3d:active { transform: scale(0.97); }
 
         .global-tasbih-circle {
-            width: 160px; height: 160px; margin: 20px auto;
+            width: 170px; height: 170px; margin: 25px auto;
             border-radius: 50%; background: var(--card-bg);
-            border: 5px double var(--dark-gold); display: flex; flex-direction: column;
+            border: 6px double var(--dark-gold); display: flex; flex-direction: column;
             justify-content: center; align-items: center; box-shadow: var(--btn-shadow);
             cursor: pointer; position: relative;
         }
 
-        .section { display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .active { display: block; opacity: 1; }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card-bg); padding: 15px; border-radius: 15px; box-shadow: var(--btn-shadow); border-right: 5px solid var(--dark-gold); margin-bottom: 12px; text-align: right; }
+        #adminPanel { background: rgba(184, 134, 11, 0.12); border: 2px dashed var(--dark-gold); padding: 15px; border-radius: 20px; margin-top: 30px; text-align: right; }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; }
+
+        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; box-shadow: var(--btn-shadow); border-right: 6px solid var(--dark-gold); margin-bottom: 15px; text-align: right; line-height: 1.7; }
         
-        .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 8px; z-index: 1000; }
-        .theme-btn { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; }
+        .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
+        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
         #subGuard {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 99999;
-            flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+            background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
         }
     </style>
 </head>
@@ -81,57 +96,75 @@
 
 <div id="subGuard">
     <h1 class="logo" style="font-size: 2.5em;">محبة في الله..</h1>
-    <div class="card" style="border-right:none; border-bottom:5px solid var(--dark-gold);">يُرجى الانضمام لقناتنا للاستمرار في التطبيق ❤️</div>
-    <a href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="text-decoration:none; background:var(--gold-gradient); color:#000; justify-content:center; width:200px;">انضم الآن</a>
-    <button class="main-btn-3d" style="width:200px; justify-content:center;" onclick="verifySubscription()">تم الاشتراك ✨</button>
+    <div class="card" style="width: 90%; border-right: none; border-bottom: 6px solid var(--dark-gold); text-align: center;">
+        للاستمرار في تطبيق <b>"الله أولاً"</b>، يرجى الانضمام لقناتنا الرسمية لتصلك الخواطر والرسائل الإيمانية.
+    </div>
+    <a href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="text-decoration: none; background: var(--gold-gradient); color: #000; justify-content: center; width: 220px; margin-top: 20px;">انضم للقناة الآن</a>
+    <button class="main-btn-3d" style="width: 220px; justify-content: center; margin-top: 10px;" onclick="verifySubscription()">لقد اشتركت، دخول ✨</button>
 </div>
 
 <div id="khalwaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center;">
-    <div id="khalwaAyah" style="font-size: 1.5em; padding: 25px;"></div>
-    <button class="main-btn-3d" style="width:auto; background:none; color:white;" onclick="closeKhalwa()">إنهاء الخلوة</button>
+    <div id="khalwaAyah" style="font-size: 1.8em; padding: 30px; line-height: 1.6;"></div>
+    <button class="main-btn-3d" style="width:auto; background:none; color:white; border-color:white;" onclick="closeKhalwa()">إنهاء الخلوة</button>
 </div>
 
 <div class="theme-nav">
-    <div class="theme-btn" style="background:#fdfaf1;" onclick="toggleMode('light')"></div>
-    <div class="theme-btn" style="background:#2b1d0e;" onclick="toggleMode('dark')"></div>
-    <div class="theme-btn" style="background:#050a18;" onclick="toggleMode('ramadan')"></div>
+    <button class="theme-btn" style="background: #fdfaf1;" onclick="toggleMode('light')"></button>
+    <button class="theme-btn" style="background: #2b1d0e;" onclick="toggleMode('dark')"></button>
+    <button class="theme-btn" style="background: #050a18;" onclick="toggleMode('ramadan')"></button>
 </div>
 
 <div class="container">
     <div id="home" class="section active">
         <h1 class="logo">الله أولاً</h1>
-        <p style="text-align:center; color:var(--dark-gold); margin-top:-10px;">سيروا إلى الله عرجى ومكاسير</p>
+        <p style="text-align:center; font-style:italic; color:var(--dark-gold); margin-top:-10px;">سيروا إلى الله عرجى ومكاسير</p>
 
         <div class="global-tasbih-circle" onclick="incrementGlobal()">
-            <span style="font-size:0.8em;">السبحة الجماعية</span>
-            <div id="globalCount" style="font-size:2.2em; font-family:'Reem Kufi';">0</div>
-            <button id="resetBtn" style="display:none; position:absolute; bottom:5px; background:none; border:none;" onclick="resetGlobal(event)">🔄</button>
+            <span style="font-size: 0.8em; color: var(--dark-gold);">السبحة الجماعية</span>
+            <div id="globalCount" style="font-size: 2.5em; font-family:'Reem Kufi'; color: var(--dark-gold);">0</div>
+            <button id="resetBtn" style="display:none; position:absolute; bottom:5px; background:none; border:none; cursor:pointer;" onclick="resetGlobal(event)">🔄</button>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="main-btn-3d" onclick="showSection('namesList')">رحلة الأسماء 📖</button>
             <button class="main-btn-3d" onclick="startKhalwa()">الخلوة 🧘‍♂️</button>
             <button class="main-btn-3d" onclick="showSection('munajatPage')">المناجاة 🤲</button>
             <button class="main-btn-3d" onclick="showSection('thoughtsSection')">خواطر ✨</button>
-            <button class="main-btn-3d" style="grid-column:span 2;" onclick="showSection('moodPage')">كيف حال قلبك؟ ❤️</button>
-            <button class="main-btn-3d" style="grid-column:span 2; background:var(--gold-gradient); color:#000;" onclick="showSection('favoritesPage')">خزانة رسائلي</button>
+            <button class="main-btn-3d" style="grid-column: span 2;" onclick="showSection('moodPage')">كيف حال قلبك؟ ❤️</button>
+            <button class="main-btn-3d" style="grid-column: span 2; background:var(--gold-gradient); color:#000; border:none;" onclick="showSection('favoritesPage')">خزانة رسائلي</button>
         </div>
 
-        <div id="adminPanel" style="display:none; margin-top:20px; border:1px dashed var(--dark-gold); padding:10px; border-radius:15px;">
-            <select id="adminActionType" style="width:100%; padding:10px; margin-bottom:5px;">
-                <option value="names">أسماء الله</option>
-                <option value="thoughts">خاطرة</option>
-                <option value="moods">حالة قلب</option>
-                <option value="khalwa">عبارة خلوة</option>
+        <div id="adminPanel" style="display:none;">
+            <h3 style="color:var(--dark-gold); margin:0 0 10px 0;">🛠 التحكم (للمالكة فقط)</h3>
+            <select id="adminActionType" class="admin-input">
+                <option value="names">إضافة/تعديل اسم ومقاله</option>
+                <option value="tasks">إضافة نقطة عمل لاسم</option>
+                <option value="thoughts">إضافة خاطرة</option>
+                <option value="moods">إضافة حالة قلب (مكسور، سعيد..)</option>
+                <option value="khalwa">إضافة عبارة للخلوة</option>
             </select>
-            <input type="text" id="targetName" placeholder="العنوان" style="width:100%; padding:10px; margin-bottom:5px;">
-            <textarea id="mainContent" placeholder="المحتوى" style="width:100%; padding:10px;"></textarea>
-            <button class="main-btn-3d" style="justify-content:center; background:#4a342e; color:#fff;" onclick="saveToFirebase()">حفظ</button>
+            <input type="text" id="targetName" class="admin-input" placeholder="الاسم / نوع الحالة">
+            <textarea id="mainContent" class="admin-input" rows="3" placeholder="المحتوى..."></textarea>
+            <button class="main-btn-3d" style="background:var(--dark-gold); color:#fff; justify-content:center;" onclick="saveToFirebase()">حفظ في السحابة</button>
+            
+            <div style="border-top: 2px solid var(--dark-gold); margin-top:15px; padding-top:10px;">
+                <p style="font-size:0.9em; color:var(--dark-gold); font-weight:bold;">🖼 تغيير خلفية التطبيق للكل:</p>
+                <input type="file" id="bgUploader" accept="image/*" style="display:none" onchange="uploadBackground(this)">
+                <button class="main-btn-3d" style="background:#f0f0f0; color:#333; justify-content:center; font-size:0.9em;" onclick="document.getElementById('bgUploader').click()">📸 اختر صورة من هاتفك</button>
+                <button class="main-btn-3d" style="background:#ff4d4d; color:#fff; justify-content:center; font-size:0.9em;" onclick="deleteBackground()">🗑️ حذف الصورة المخصصة</button>
+            </div>
+
+            <div style="border-top: 2px solid var(--dark-gold); margin-top:15px; padding-top:10px;">
+                <button class="main-btn-3d" style="background:#4a342e; color:#fff; justify-content:center;" onclick="showUserLogs()">📊 رؤية سجل الزوار</button>
+                <div id="logsDisplay" style="display:none; max-height:200px; overflow-y:auto; background:rgba(255,255,255,0.5); border-radius:10px; padding:10px; margin-top:10px; font-size:0.8em; text-align:right; color:#000;">
+                    جاري تحميل السجل...
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="namesList" class="section">
-        <h2 class="logo" style="font-size:2em;">الأسماء الحسنى</h2>
+        <h2 class="logo" style="font-size: 2.5em;">الأسماء الحسنى</h2>
         <div id="namesGrid"></div>
         <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
@@ -139,151 +172,284 @@
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" class="logo"></h2>
         <div class="card" id="detContent"></div>
+        <h3 style="color:var(--dark-gold)">📍 العمل بهذا الاسم:</h3>
+        <div id="detTasks"></div>
         <div class="global-tasbih-circle" onclick="incrementLocal()">
-            <div id="localCount" style="font-size: 2em;">0</div>
+            <span style="font-size: 0.7em;">ورد الاسم</span>
+            <div id="localCount" style="font-size: 2.2em; color:var(--dark-gold);">0</div>
         </div>
-        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('namesList')">رجوع</button>
+        <h3 style="color:var(--dark-gold)">💬 مواقف النور (مشاركاتكم):</h3>
+        <div id="detStories"></div>
+        <textarea id="userStoryText" class="admin-input" placeholder="شاركنا موقفاً حدث لك مع هذا الاسم..."></textarea>
+        <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="submitUserStory()">إرسال الموقف للجميع ✨</button>
+        <button class="main-btn-3d" style="justify-content:center; margin-top:20px;" onclick="showSection('namesList')">رجوع للقائمة</button>
     </div>
 
-    <div id="thoughtsSection" class="section"><div id="thoughtsList"></div><button class="main-btn-3d" onclick="showSection('home')">رجوع</button></div>
-    <div id="moodPage" class="section"><div id="moodGrid"></div><button class="main-btn-3d" onclick="showSection('home')">رجوع</button></div>
-    <div id="favoritesPage" class="section"><div id="favList"></div><button class="main-btn-3d" onclick="showSection('home')">رجوع</button></div>
+    <div id="thoughtsSection" class="section">
+        <h2 class="logo" style="font-size: 2.5em;">خواطر</h2>
+        <div id="thoughtsList"></div>
+        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="moodPage" class="section">
+        <h2 class="logo" style="font-size: 2.5em;">حال قلبك</h2>
+        <div id="moodGrid"></div>
+        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
+    </div>
+
+    <div id="favoritesPage" class="section">
+        <h2 class="logo" style="font-size: 2.5em;">خزانتي</h2>
+        <div id="favList"></div>
+        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
+    </div>
+
     <div id="munajatPage" class="section">
-        <textarea id="munajatInput" placeholder="تحدث مع خالقك.." style="width:100%; height:150px; border-radius:15px; padding:10px;"></textarea>
-        <button class="main-btn-3d" style="background:var(--gold-gradient); justify-content:center" onclick="sendMunajat()">أستودع الله قلبي</button>
+        <h2 class="logo" style="font-size: 2.5em;">مناجاة</h2>
+        <div class="card">
+            <textarea id="munajatInput" class="admin-input" style="height:150px" placeholder="تحدث مع خالقك.. الكلمات ترفع للسماء فوراً"></textarea>
+            <button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; border:none; justify-content:center;" onclick="sendMunajat()">أستودع الله قلبي</button>
+        </div>
+        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
     </div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; // معرفك محفوظ
-    firebase.initializeApp({ databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" });
+    const ADMIN_ID = 8421694319;
+    const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     tg.expand();
+    tg.enableClosingConfirmation();
 
-    // التحقق من الاشتراك (محسن)
+    const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
+    const CHANNEL_ID = '@fi9ha'; 
+
+    let currentActiveName = "";
+    let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
+
     async function verifySubscription() {
-        const uId = tg.initDataUnsafe.user?.id;
-        if (uId === ADMIN_ID) { document.getElementById('subGuard').style.display='none'; return; }
+        const userId = tg.initDataUnsafe.user?.id;
+        if (userId === ADMIN_ID) {
+            document.getElementById('subGuard').style.display = 'none';
+            return;
+        }
+        if (!userId) return alert("يرجى الفتح من تيليجرام");
+
         try {
-            const r = await fetch(`https://api.telegram.org/bot8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw/getChatMember?chat_id=@fi9ha&user_id=${uId}`);
-            const d = await r.json();
-            if (d.ok && ['member', 'administrator', 'creator'].includes(d.result.status)) {
-                document.getElementById('subGuard').style.display='none';
+            const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${userId}`);
+            const data = await res.json();
+            if (data.ok && ['member', 'administrator', 'creator'].includes(data.result.status)) {
+                document.getElementById('subGuard').style.display = 'none';
                 localStorage.setItem('isSubbed', 'true');
-            } else { alert("يجب الاشتراك بالقناة أولاً ❤️"); }
-        } catch(e) { alert("عذراً، تأكد من الاتصال"); }
+            } else {
+                alert("يجب الاشتراك في القناة أولاً ❤️");
+            }
+        } catch(e) { alert("خطأ في الاتصال"); }
     }
 
     if (localStorage.getItem('isSubbed') !== 'true' && tg.initDataUnsafe.user?.id !== ADMIN_ID) {
         document.getElementById('subGuard').style.display = 'flex';
     }
 
-    // إدارة التنقل (أسرع)
+    function trackUser() {
+        const user = tg.initDataUnsafe.user;
+        if (user) {
+            const now = new Date();
+            db.ref('user_logs/' + user.id).set({
+                name: (user.first_name || "") + " " + (user.last_name || ""),
+                username: user.username || "بدون يوزر",
+                last_seen: now.toLocaleDateString('ar-EG') + " | " + now.toLocaleTimeString('ar-EG')
+            });
+        }
+    }
+    trackUser();
+
+    db.ref('app_settings/custom_bg').on('value', s => {
+        const bgData = s.val();
+        if (bgData) {
+            document.body.style.backgroundImage = `url(${bgData})`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+        } else {
+            document.body.style.backgroundImage = "var(--pattern)";
+            document.body.style.backgroundSize = "auto";
+        }
+    });
+
+    tg.BackButton.onClick(() => { showSection('home'); });
+
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(id);
-        target.classList.add('active');
-        if(id === 'home') tg.BackButton.hide(); else tg.BackButton.show();
-        
-        // تحميل البيانات عند الحاجة فقط (On Demand)
+        document.getElementById(id).classList.add('active');
+        id === 'home' ? tg.BackButton.hide() : tg.BackButton.show();
         if(id === 'namesList') loadNames();
-        if(id === 'thoughtsSection') loadData('thoughts', 'thoughtsList');
-        if(id === 'moodPage') loadData('moods', 'moodGrid', true);
+        if(id === 'thoughtsSection') loadThoughts();
+        if(id === 'moodPage') loadMoods();
         if(id === 'favoritesPage') renderFavorites();
         window.scrollTo(0,0);
     }
 
-    tg.BackButton.onClick(() => showSection('home'));
-
-    // تسبيح جماعي (مباشر)
     function incrementGlobal() { 
         db.ref('global_count').transaction(c => (c || 0) + 1); 
         tg.HapticFeedback.impactOccurred('medium');
     }
-    db.ref('global_count').on('value', s => { 
-        document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); 
-    });
+    db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
+    
+    let lCnt = 0;
+    function incrementLocal() { 
+        lCnt++; 
+        document.getElementById('localCount').innerText = lCnt; 
+        tg.HapticFeedback.impactOccurred('light');
+    }
 
-    // تحميل الأسماء (محسن)
     function loadNames() {
-        db.ref('names').once('value', s => {
-            const grid = document.getElementById('namesGrid');
-            grid.innerHTML = "";
+        db.ref('names').on('value', s => {
+            const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(n => {
-                const b = document.createElement('div'); b.className = "main-btn-3d";
-                b.innerHTML = `<span onclick="openNamePage('${n}')">${n}</span>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) b.innerHTML += `<span onclick="deleteItem('names/${n}')">🗑️</span>`;
-                grid.appendChild(b);
+                const btn = document.createElement('div'); btn.className = "main-btn-3d";
+                btn.innerHTML = `<span style="flex:1" onclick="openNamePage('${n}')">${n}</span>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) btn.innerHTML += `<span onclick="deleteItem('names/${n}')">🗑️</span>`;
+                grid.appendChild(btn);
             });
         });
     }
 
     function openNamePage(n) {
-        db.ref('names/'+n).once('value', s => {
+        currentActiveName = n; lCnt = 0; document.getElementById('localCount').innerText = 0;
+        db.ref('names/' + n).once('value', s => {
             document.getElementById('detTitle').innerText = n;
-            document.getElementById('detContent').innerText = s.val();
-            document.getElementById('localCount').innerText = 0;
+            document.getElementById('detContent').innerText = s.val() || "لا يوجد وصف حالياً.";
+            loadList('tasks/' + n, 'detTasks', false);
+            loadList('stories/' + n, 'detStories', true);
             showSection('nameDetailsPage');
         });
     }
 
-    let lCnt = 0;
-    function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; tg.HapticFeedback.impactOccurred('light'); }
-
-    // وظيفة عامة لتحميل البيانات لتقليل تكرار الكود
-    function loadData(path, containerId, isMood = false) {
-        db.ref(path).once('value', s => {
-            const cont = document.getElementById(containerId);
-            cont.innerHTML = "";
+    function loadList(path, containerId, isStories) {
+        db.ref(path).on('value', s => {
+            const container = document.getElementById(containerId); container.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(k => {
-                const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<p>${isMood ? '<b>'+k+'</b><br>'+data[k] : data[k]}</p>`;
-                cont.appendChild(card);
+                const div = document.createElement('div'); div.className = "card";
+                div.innerHTML = `<p>${isStories ? data[k] : '• ' + data[k]}</p>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) div.innerHTML += `<span style="cursor:pointer" onclick="deleteItem('${path}/${k}')">🗑️</span>`;
+                container.appendChild(div);
             });
         });
     }
 
-    function toggleMode(m) {
-        document.body.classList.remove('dark-mode', 'ramadan-mode');
-        if(m !== 'light') document.body.classList.add(m + '-mode');
+    function loadMoods() {
+        db.ref('moods').on('value', s => {
+            const grid = document.getElementById('moodGrid'); grid.innerHTML = "";
+            const data = s.val() || {};
+            Object.keys(data).forEach(m => {
+                const moodContent = data[m];
+                const card = document.createElement('div'); card.className = "card";
+                card.innerHTML = `<h3 style="color:var(--dark-gold)">${m}</h3><p>${moodContent}</p>`;
+                const fBtn = document.createElement('button'); fBtn.className = "main-btn-3d";
+                fBtn.style = "padding:8px; font-size:0.85em; justify-content:center;";
+                fBtn.innerText = "❤️ حفظ في خزانتي";
+                fBtn.onclick = () => toggleFavorite(`نصيحة (${m}): ${moodContent}`);
+                card.appendChild(fBtn);
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<div onclick="deleteItem('moods/${m}')" style="color:red; cursor:pointer; font-size:0.8em; margin-top:10px;">🗑️ حذف</div>`;
+                grid.appendChild(card);
+            });
+        });
     }
+
+    function loadThoughts() {
+        db.ref('thoughts').on('value', s => {
+            const list = document.getElementById('thoughtsList'); list.innerHTML = "";
+            const data = s.val() || {};
+            Object.keys(data).reverse().forEach(k => {
+                const text = data[k];
+                const card = document.createElement('div'); card.className = "card";
+                card.innerHTML = `<p>${text}</p>`;
+                const fBtn = document.createElement('button'); fBtn.style = "border:none; background:none; color:red; cursor:pointer;";
+                fBtn.innerText = "❤️ حفظ";
+                fBtn.onclick = () => toggleFavorite(text);
+                card.appendChild(fBtn);
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`;
+                list.appendChild(card);
+            });
+        });
+    }
+
+    function toggleFavorite(text) {
+        const clean = text.trim();
+        const i = myFavs.indexOf(clean);
+        if(i > -1) { myFavs.splice(i, 1); alert("تمت الإزالة"); }
+        else { myFavs.push(clean); alert("تم الحفظ ❤️"); }
+        localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
+    }
+
+    function renderFavorites() {
+        const list = document.getElementById('favList'); list.innerHTML = "";
+        const favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
+        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; }
+        favs.forEach((t, idx) => {
+            const d = document.createElement('div'); d.className = "card";
+            d.innerHTML = `<p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button>`;
+            list.appendChild(d);
+        });
+    }
+    function removeFav(i) { myFavs.splice(i, 1); localStorage.setItem('allah_first_favs', JSON.stringify(myFavs)); renderFavorites(); }
+
+    function showUserLogs() {
+        const d = document.getElementById('logsDisplay');
+        if(d.style.display === 'block') { d.style.display = 'none'; return; }
+        d.style.display = 'block';
+        db.ref('user_logs').once('value', s => {
+            let h = "<b>السجل:</b><br>";
+            const logs = s.val() || {};
+            Object.keys(logs).forEach(id => { h += `👤 ${logs[id].name}<br>🕒 ${logs[id].last_seen}<hr>`; });
+            d.innerHTML = h;
+        });
+    }
+
+    function startKhalwa() {
+        db.ref('khalwa').once('value', s => {
+            const phrases = Object.values(s.val() || ["تهيأ للقاء الله.."]);
+            const overlay = document.getElementById('khalwaOverlay');
+            overlay.style.display = 'flex';
+            let i = 0;
+            document.getElementById('khalwaAyah').innerText = phrases[0];
+            window.kTimer = setInterval(() => {
+                i = (i + 1) % phrases.length;
+                document.getElementById('khalwaAyah').innerText = phrases[i];
+            }, 6000);
+        });
+    }
+    function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display = 'none'; }
 
     function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
         const content = document.getElementById('mainContent').value;
         if(!content) return;
-        if(type === 'names' || type === 'moods') db.ref(type+'/'+target).set(content);
-        else db.ref(type).push(content);
+        if(type === 'thoughts' || type === 'khalwa') db.ref(type).push(content);
+        else if(type === 'tasks') db.ref('tasks/' + target).push(content);
+        else db.ref(type + '/' + target).set(content);
         alert("تم الحفظ ✓");
+        document.getElementById('mainContent').value = "";
     }
 
-    function startKhalwa() {
-        db.ref('khalwa').once('value', s => {
-            const arr = Object.values(s.val() || ["استشعر قرب الله.."]);
-            const over = document.getElementById('khalwaOverlay');
-            over.style.display = 'flex';
-            let i = 0;
-            document.getElementById('khalwaAyah').innerText = arr[0];
-            window.kInt = setInterval(() => {
-                i = (i + 1) % arr.length;
-                document.getElementById('khalwaAyah').innerText = arr[i];
-            }, 5000);
-        });
+    function toggleMode(m) {
+        document.body.classList.remove('dark-mode', 'ramadan-mode');
+        if(m === 'dark') document.body.classList.add('dark-mode');
+        if(m === 'ramadan') document.body.classList.add('ramadan-mode');
     }
 
-    function closeKhalwa() { clearInterval(window.kInt); document.getElementById('khalwaOverlay').style.display='none'; }
-
-    function sendMunajat() { 
-        if(!document.getElementById('munajatInput').value) return;
-        alert("الله يسمعك.. رُفعت للسماء"); 
-        document.getElementById('munajatInput').value = ""; 
-        showSection('home'); 
+    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
+    function submitUserStory() {
+        const t = document.getElementById('userStoryText').value;
+        if(t) { db.ref('stories/' + currentActiveName).push(t); document.getElementById('userStoryText').value = ""; }
     }
+    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
+    function sendMunajat() { alert("الله يسمعك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
 
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
