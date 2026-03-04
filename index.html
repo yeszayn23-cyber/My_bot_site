@@ -84,7 +84,6 @@
         .theme-nav { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
         .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-        /* ستايل بوابة الاشتراك */
         #subGuard {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
@@ -154,6 +153,13 @@
                 <button class="main-btn-3d" style="background:#f0f0f0; color:#333; justify-content:center; font-size:0.9em;" onclick="document.getElementById('bgUploader').click()">📸 اختر صورة من هاتفك</button>
                 <button class="main-btn-3d" style="background:#ff4d4d; color:#fff; justify-content:center; font-size:0.9em;" onclick="deleteBackground()">🗑️ حذف الصورة المخصصة</button>
             </div>
+
+            <div style="border-top: 2px solid var(--dark-gold); margin-top:15px; padding-top:10px;">
+                <button class="main-btn-3d" style="background:#4a342e; color:#fff; justify-content:center;" onclick="showUserLogs()">📊 رؤية سجل الزوار</button>
+                <div id="logsDisplay" style="display:none; max-height:200px; overflow-y:auto; background:rgba(255,255,255,0.5); border-radius:10px; padding:10px; margin-top:10px; font-size:0.8em; text-align:right; color:#000;">
+                    جاري تحميل السجل...
+                </div>
+            </div>
         </div>
     </div>
 
@@ -214,9 +220,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // إعدادات التحقق من القناة الخاصة بك
+    tg.expand();
+    tg.enableClosingConfirmation();
+
     const BOT_TOKEN = '8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw'; 
     const CHANNEL_ID = '@fi9ha'; 
+
+    let currentActiveName = "";
+    let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
 
     async function verifySubscription() {
         const userId = tg.initDataUnsafe.user?.id;
@@ -238,13 +249,22 @@
         } catch(e) { alert("خطأ في الاتصال"); }
     }
 
-    // فحص الاشتراك عند البداية
     if (localStorage.getItem('isSubbed') !== 'true' && tg.initDataUnsafe.user?.id !== ADMIN_ID) {
         document.getElementById('subGuard').style.display = 'flex';
     }
 
-    let currentActiveName = "";
-    let myFavs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
+    function trackUser() {
+        const user = tg.initDataUnsafe.user;
+        if (user) {
+            const now = new Date();
+            db.ref('user_logs/' + user.id).set({
+                name: (user.first_name || "") + " " + (user.last_name || ""),
+                username: user.username || "بدون يوزر",
+                last_seen: now.toLocaleDateString('ar-EG') + " | " + now.toLocaleTimeString('ar-EG')
+            });
+        }
+    }
+    trackUser();
 
     db.ref('app_settings/custom_bg').on('value', s => {
         const bgData = s.val();
@@ -258,34 +278,12 @@
         }
     });
 
-    function uploadBackground(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Image = e.target.result;
-                db.ref('app_settings/custom_bg').set(base64Image)
-                    .then(() => alert("تم تحديث الخلفية عند الجميع! ✨"))
-                    .catch(err => alert("حجم الصورة كبير جداً، حاول اختيار صورة أصغر."));
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function deleteBackground() {
-        if(confirm('هل تريد حذف الخلفية المخصصة والعودة للأصل؟')) {
-            db.ref('app_settings/custom_bg').remove();
-        }
-    }
-
-    function toggleMode(m) {
-        document.body.classList.remove('dark-mode', 'ramadan-mode');
-        if(m === 'dark') document.body.classList.add('dark-mode');
-        if(m === 'ramadan') document.body.classList.add('ramadan-mode');
-    }
+    tg.BackButton.onClick(() => { showSection('home'); });
 
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        id === 'home' ? tg.BackButton.hide() : tg.BackButton.show();
         if(id === 'namesList') loadNames();
         if(id === 'thoughtsSection') loadThoughts();
         if(id === 'moodPage') loadMoods();
@@ -293,12 +291,18 @@
         window.scrollTo(0,0);
     }
 
-    function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
+    function incrementGlobal() { 
+        db.ref('global_count').transaction(c => (c || 0) + 1); 
+        tg.HapticFeedback.impactOccurred('medium');
+    }
     db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
-    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير العداد؟')) db.ref('global_count').set(0); }
     
     let lCnt = 0;
-    function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; }
+    function incrementLocal() { 
+        lCnt++; 
+        document.getElementById('localCount').innerText = lCnt; 
+        tg.HapticFeedback.impactOccurred('light');
+    }
 
     function loadNames() {
         db.ref('names').on('value', s => {
@@ -331,7 +335,7 @@
             Object.keys(data).forEach(k => {
                 const div = document.createElement('div'); div.className = "card";
                 div.innerHTML = `<p>${isStories ? data[k] : '• ' + data[k]}</p>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) div.innerHTML += `<span style="cursor:pointer" onclick="deleteItem('${path}/${k}')">🗑️ حذف</span>`;
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) div.innerHTML += `<span style="cursor:pointer" onclick="deleteItem('${path}/${k}')">🗑️</span>`;
                 container.appendChild(div);
             });
         });
@@ -342,75 +346,17 @@
             const grid = document.getElementById('moodGrid'); grid.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(m => {
-                const btn = document.createElement('div'); btn.className = "main-btn-3d";
-                btn.innerHTML = `<span style="flex:1" onclick="alert('${data[m]}')">${m}</span>`;
-                if(tg.initDataUnsafe.user?.id === ADMIN_ID) btn.innerHTML += `<span onclick="deleteItem('moods/${m}')">🗑️</span>`;
-                grid.appendChild(btn);
+                const moodContent = data[m];
+                const card = document.createElement('div'); card.className = "card";
+                card.innerHTML = `<h3 style="color:var(--dark-gold)">${m}</h3><p>${moodContent}</p>`;
+                const fBtn = document.createElement('button'); fBtn.className = "main-btn-3d";
+                fBtn.style = "padding:8px; font-size:0.85em; justify-content:center;";
+                fBtn.innerText = "❤️ حفظ في خزانتي";
+                fBtn.onclick = () => toggleFavorite(`نصيحة (${m}): ${moodContent}`);
+                card.appendChild(fBtn);
+                if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<div onclick="deleteItem('moods/${m}')" style="color:red; cursor:pointer; font-size:0.8em; margin-top:10px;">🗑️ حذف</div>`;
+                grid.appendChild(card);
             });
-        });
-    }
-
-    function startKhalwa() {
-        db.ref('khalwa').once('value', s => {
-            const data = s.val() || ["تهيأ للقاء الله بقلب حاضر.."];
-            const phrases = Object.values(data);
-            const overlay = document.getElementById('khalwaOverlay');
-            const textElem = document.getElementById('khalwaAyah');
-            overlay.style.display = 'flex';
-            let i = 0;
-            textElem.innerText = phrases[0];
-            window.kTimer = setInterval(() => {
-                textElem.style.opacity = 0;
-                setTimeout(() => {
-                    i = (i + 1) % phrases.length;
-                    textElem.innerText = phrases[i];
-                    textElem.style.opacity = 1;
-                }, 1000);
-            }, 6000);
-        });
-    }
-    function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display = 'none'; }
-
-    function saveToFirebase() {
-        const type = document.getElementById('adminActionType').value;
-        const target = document.getElementById('targetName').value;
-        const content = document.getElementById('mainContent').value;
-        if(!content) return;
-        if(type === 'thoughts' || type === 'khalwa') {
-            db.ref(type).push(content);
-        } else if(type === 'tasks') {
-            if(!target) return alert("اكتب اسم الله في الخانة الأولى!");
-            db.ref('tasks/' + target).push(content);
-        } else {
-            if(!target) return alert("اكتب الاسم أو نوع الحالة!");
-            db.ref(type + '/' + target).set(content);
-        }
-        alert("تم الحفظ بنجاح ✓");
-        document.getElementById('mainContent').value = "";
-    }
-
-    function deleteItem(path) { if(confirm('حذف نهائي؟')) db.ref(path).remove(); }
-    function submitUserStory() {
-        const text = document.getElementById('userStoryText').value;
-        if(!text) return;
-        db.ref('stories/' + currentActiveName).push(text);
-        document.getElementById('userStoryText').value = "";
-    }
-
-    function toggleFavorite(text) {
-        const index = myFavs.indexOf(text);
-        if(index > -1) myFavs.splice(index, 1);
-        else myFavs.push(text);
-        localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
-        alert("تم التحديث في خزانتي ❤️");
-    }
-
-    function renderFavorites() {
-        const list = document.getElementById('favList'); list.innerHTML = "";
-        myFavs.forEach(text => {
-            const div = document.createElement('div'); div.className = "card";
-            div.innerHTML = `<p>${text}</p>`;
-            list.appendChild(div);
         });
     }
 
@@ -421,24 +367,94 @@
             Object.keys(data).reverse().forEach(k => {
                 const text = data[k];
                 const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>`;
+                card.innerHTML = `<p>${text}</p>`;
+                const fBtn = document.createElement('button'); fBtn.style = "border:none; background:none; color:red; cursor:pointer;";
+                fBtn.innerText = "❤️ حفظ";
+                fBtn.onclick = () => toggleFavorite(text);
+                card.appendChild(fBtn);
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`;
                 list.appendChild(card);
             });
         });
     }
 
-    function sendMunajat() {
-        alert("الله يسمعك.. طِب نفساً ✨");
-        document.getElementById('munajatInput').value = "";
-        showSection('home');
+    function toggleFavorite(text) {
+        const clean = text.trim();
+        const i = myFavs.indexOf(clean);
+        if(i > -1) { myFavs.splice(i, 1); alert("تمت الإزالة"); }
+        else { myFavs.push(clean); alert("تم الحفظ ❤️"); }
+        localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
     }
+
+    function renderFavorites() {
+        const list = document.getElementById('favList'); list.innerHTML = "";
+        const favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
+        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; }
+        favs.forEach((t, idx) => {
+            const d = document.createElement('div'); d.className = "card";
+            d.innerHTML = `<p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button>`;
+            list.appendChild(d);
+        });
+    }
+    function removeFav(i) { myFavs.splice(i, 1); localStorage.setItem('allah_first_favs', JSON.stringify(myFavs)); renderFavorites(); }
+
+    function showUserLogs() {
+        const d = document.getElementById('logsDisplay');
+        if(d.style.display === 'block') { d.style.display = 'none'; return; }
+        d.style.display = 'block';
+        db.ref('user_logs').once('value', s => {
+            let h = "<b>السجل:</b><br>";
+            const logs = s.val() || {};
+            Object.keys(logs).forEach(id => { h += `👤 ${logs[id].name}<br>🕒 ${logs[id].last_seen}<hr>`; });
+            d.innerHTML = h;
+        });
+    }
+
+    function startKhalwa() {
+        db.ref('khalwa').once('value', s => {
+            const phrases = Object.values(s.val() || ["تهيأ للقاء الله.."]);
+            const overlay = document.getElementById('khalwaOverlay');
+            overlay.style.display = 'flex';
+            let i = 0;
+            document.getElementById('khalwaAyah').innerText = phrases[0];
+            window.kTimer = setInterval(() => {
+                i = (i + 1) % phrases.length;
+                document.getElementById('khalwaAyah').innerText = phrases[i];
+            }, 6000);
+        });
+    }
+    function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display = 'none'; }
+
+    function saveToFirebase() {
+        const type = document.getElementById('adminActionType').value;
+        const target = document.getElementById('targetName').value;
+        const content = document.getElementById('mainContent').value;
+        if(!content) return;
+        if(type === 'thoughts' || type === 'khalwa') db.ref(type).push(content);
+        else if(type === 'tasks') db.ref('tasks/' + target).push(content);
+        else db.ref(type + '/' + target).set(content);
+        alert("تم الحفظ ✓");
+        document.getElementById('mainContent').value = "";
+    }
+
+    function toggleMode(m) {
+        document.body.classList.remove('dark-mode', 'ramadan-mode');
+        if(m === 'dark') document.body.classList.add('dark-mode');
+        if(m === 'ramadan') document.body.classList.add('ramadan-mode');
+    }
+
+    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
+    function submitUserStory() {
+        const t = document.getElementById('userStoryText').value;
+        if(t) { db.ref('stories/' + currentActiveName).push(t); document.getElementById('userStoryText').value = ""; }
+    }
+    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
+    function sendMunajat() { alert("الله يسمعك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
 
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
         document.getElementById('resetBtn').style.display = 'block';
     }
-    tg.expand();
 </script>
 </body>
-</html> 
+</html>
