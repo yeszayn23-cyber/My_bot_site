@@ -304,6 +304,25 @@
         tg.HapticFeedback.impactOccurred('light');
     }
 
+    function uploadBackground(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+                db.ref('app_settings/custom_bg').set(base64Image)
+                    .then(() => alert("تم تحديث الخلفية عند الجميع! ✨"))
+                    .catch(err => alert("حجم الصورة كبير جداً، حاول اختيار صورة أصغر."));
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function deleteBackground() {
+        if(confirm('هل تريد حذف الخلفية المخصصة والعودة للأصل؟')) {
+            db.ref('app_settings/custom_bg').remove();
+        }
+    }
+
     function loadNames() {
         db.ref('names').on('value', s => {
             const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
@@ -348,11 +367,11 @@
             Object.keys(data).forEach(m => {
                 const moodContent = data[m];
                 const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<h3 style="color:var(--dark-gold)">${m}</h3><p>${moodContent}</p>`;
+                card.innerHTML = `<h3 style="color:var(--dark-gold); margin:0;">${m}</h3><p>${moodContent}</p>`;
                 const fBtn = document.createElement('button'); fBtn.className = "main-btn-3d";
                 fBtn.style = "padding:8px; font-size:0.85em; justify-content:center;";
                 fBtn.innerText = "❤️ حفظ في خزانتي";
-                fBtn.onclick = () => toggleFavorite(`نصيحة (${m}): ${moodContent}`);
+                fBtn.onclick = () => toggleFavorite(`نصيحة لقلبي في حال (${m}): ${moodContent}`);
                 card.appendChild(fBtn);
                 if(tg.initDataUnsafe.user?.id === ADMIN_ID) card.innerHTML += `<div onclick="deleteItem('moods/${m}')" style="color:red; cursor:pointer; font-size:0.8em; margin-top:10px;">🗑️ حذف</div>`;
                 grid.appendChild(card);
@@ -381,18 +400,18 @@
     function toggleFavorite(text) {
         const clean = text.trim();
         const i = myFavs.indexOf(clean);
-        if(i > -1) { myFavs.splice(i, 1); alert("تمت الإزالة"); }
-        else { myFavs.push(clean); alert("تم الحفظ ❤️"); }
+        if(i > -1) { myFavs.splice(i, 1); alert("تمت الإزالة من خزانتي"); }
+        else { myFavs.push(clean); alert("تم الحفظ في خزانتي ❤️"); }
         localStorage.setItem('allah_first_favs', JSON.stringify(myFavs));
     }
 
     function renderFavorites() {
         const list = document.getElementById('favList'); list.innerHTML = "";
         const favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
-        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; }
+        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center; opacity:0.6;'>خزانتك فارغة حالياً..</p>"; return; }
         favs.forEach((t, idx) => {
             const d = document.createElement('div'); d.className = "card";
-            d.innerHTML = `<p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button>`;
+            d.innerHTML = `<p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer; font-size:0.8em;">❌ إزالة</button>`;
             list.appendChild(d);
         });
     }
@@ -403,16 +422,16 @@
         if(d.style.display === 'block') { d.style.display = 'none'; return; }
         d.style.display = 'block';
         db.ref('user_logs').once('value', s => {
-            let h = "<b>السجل:</b><br>";
+            let h = "<b>السجل (آخر الزيارات):</b><br>";
             const logs = s.val() || {};
-            Object.keys(logs).forEach(id => { h += `👤 ${logs[id].name}<br>🕒 ${logs[id].last_seen}<hr>`; });
+            Object.keys(logs).forEach(id => { h += `👤 ${logs[id].name} (@${logs[id].username})<br>🕒 ${logs[id].last_seen}<hr style="border:0.5px solid #eee">`; });
             d.innerHTML = h;
         });
     }
 
     function startKhalwa() {
         db.ref('khalwa').once('value', s => {
-            const phrases = Object.values(s.val() || ["تهيأ للقاء الله.."]);
+            const phrases = Object.values(s.val() || ["تهيأ للقاء الله بقلب حاضر.."]);
             const overlay = document.getElementById('khalwaOverlay');
             overlay.style.display = 'flex';
             let i = 0;
@@ -433,7 +452,7 @@
         if(type === 'thoughts' || type === 'khalwa') db.ref(type).push(content);
         else if(type === 'tasks') db.ref('tasks/' + target).push(content);
         else db.ref(type + '/' + target).set(content);
-        alert("تم الحفظ ✓");
+        alert("تم الحفظ بنجاح ✓");
         document.getElementById('mainContent').value = "";
     }
 
@@ -443,13 +462,13 @@
         if(m === 'ramadan') document.body.classList.add('ramadan-mode');
     }
 
-    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
+    function deleteItem(path) { if(confirm('هل أنتِ متأكدة من الحذف نهائياً؟')) db.ref(path).remove(); }
     function submitUserStory() {
         const t = document.getElementById('userStoryText').value;
         if(t) { db.ref('stories/' + currentActiveName).push(t); document.getElementById('userStoryText').value = ""; }
     }
-    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
-    function sendMunajat() { alert("الله يسمعك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
+    function resetGlobal(e) { e.stopPropagation(); if(confirm('هل تريدين تصفير العداد الجماعي؟')) db.ref('global_count').set(0); }
+    function sendMunajat() { alert("الله يسمعك.. طِب نفساً ✨"); document.getElementById('munajatInput').value = ""; showSection('home'); }
 
     if(tg.initDataUnsafe.user?.id === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
