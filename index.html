@@ -29,21 +29,23 @@
         .container { max-width: 500px; margin: auto; position: relative; }
         .logo { font-family: 'Reem Kufi', sans-serif; font-size: 3.5em; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; text-align: center; filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.1)); }
 
-        .main-btn-3d { background: var(--card-bg); border: 2px solid var(--dark-gold); padding: 15px; border-radius: 15px; margin-bottom: 12px; color: var(--text-color); font-weight: bold; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--btn-shadow); transition: 0.2s; box-sizing: border-box; text-decoration: none; }
+        .main-btn-3d { background: var(--card-bg); border: 2px solid var(--dark-gold); padding: 15px; border-radius: 15px; margin-bottom: 12px; color: var(--text-color); font-weight: bold; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--btn-shadow); transition: 0.2s; box-sizing: border-box; text-decoration: none; font-size: 1.1em; }
         .main-btn-3d:active { transform: scale(0.98); }
 
         .section { display: none; }
         .active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card-bg); padding: 18px; border-radius: 18px; box-shadow: var(--btn-shadow); border-right: 6px solid var(--dark-gold); margin-bottom: 15px; text-align: right; line-height: 1.7; position: relative; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 18px; box-shadow: var(--btn-shadow); border-right: 6px solid var(--dark-gold); margin-bottom: 15px; text-align: center; line-height: 1.8; position: relative; }
 
-        /* واجهة الاشتراك الفخمة */
+        /* ستايل واجهة الاشتراك كما في الصورة بالضبط */
         #subGuard {
             display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 100000;
-            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
         }
+        .sub-title { font-family: 'Reem Kufi', sans-serif; font-size: 2.8em; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; font-weight: bold; }
+        .sub-card { background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; margin-bottom: 30px; border-bottom: 8px solid var(--dark-gold); color: #4a342e; font-size: 1.1em; }
 
         .global-tasbih-circle { width: 160px; height: 160px; margin: 20px auto; border-radius: 50%; background: var(--card-bg); border: 5px double var(--dark-gold); display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: var(--btn-shadow); cursor: pointer; position: relative; }
         
@@ -54,13 +56,12 @@
 <body>
 
 <div id="subGuard">
-    <h1 class="logo" style="font-size: 2.8em;">الله أولاً</h1>
-    <div class="card" style="width: 80%; border-right: none; border-bottom: 5px solid var(--dark-gold); text-align:center;">
-        مرحباً بك في رحاب الإيمان..<br>
-        لطفاً، اشترك في القناة لتفتح لك أبواب التطبيق.
+    <div class="sub-title">محبة في الله..</div>
+    <div class="sub-card">
+        للاستمرار في تطبيق <b>"الله أولاً"</b>، يرجى الانضمام لقناتنا الرسمية لتصلك الخواطر والرسائل الإيمانية.
     </div>
-    <a id="chLink" href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="background: var(--gold-gradient); color: #000; justify-content: center; width: 220px;">انضم للقناة الآن ✨</a>
-    <button class="main-btn-3d" style="width: 220px; justify-content: center; margin-top: 10px;" onclick="verifySubscription()">تحقق من الاشتراك ✅</button>
+    <a id="chLink" href="https://t.me/fi9ha" target="_blank" class="main-btn-3d" style="background: var(--gold-gradient); color: #000; justify-content: center; width: 85%; border-radius: 20px; box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);">انضم للقناة الآن</a>
+    <button class="main-btn-3d" style="width: 85%; justify-content: center; margin-top: 15px; border-radius: 20px; background: #fff;" onclick="verifySubscription()">لقد اشتركت، دخول ✨</button>
 </div>
 
 <div id="khalwaOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center;">
@@ -72,7 +73,7 @@
 <div class="container">
     <div id="home" class="section active">
         <h1 class="logo">الله أولاً</h1>
-        <div onclick="showSection('activityPage')" style="width:100%; height:40px; position:absolute; top:0; opacity:0;"></div>
+        <div onclick="showSection('activityPage')" style="width:100px; height:50px; position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:0; z-index:100;"></div>
 
         <div class="global-tasbih-circle" onclick="incrementGlobal()">
             <span style="font-size: 0.8em; color: var(--dark-gold);">السبحة الجماعية</span>
@@ -110,7 +111,7 @@
     <div id="thoughtsSection" class="section"><h2 class="logo">خواطر</h2><div id="thoughtsList"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
     <div id="moodPage" class="section"><h2 class="logo">حال قلبك</h2><div id="moodGrid"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
     <div id="favoritesPage" class="section"><h2 class="logo">خزانتي السحابية</h2><div id="favList"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
-    <div id="activityPage" class="section"><h2 class="logo">المخطط</h2><div class="card">جاري العمل على المخطط الفخم..</div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
+    <div id="activityPage" class="section"><h2 class="logo">مخطط البوت</h2><div class="card">إحصائيات ونشاط التطبيق قريباً..</div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
     <div id="munajatPage" class="section"><h2 class="logo">مناجاة</h2><textarea id="munajatInput" class="admin-input" style="height:150px" placeholder="تحدث مع خالقك.."></textarea><button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; justify-content:center;" onclick="sendMunajat()">أستودع الله قلبي</button><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
 </div>
 
@@ -125,7 +126,6 @@
     const userId = tg.initDataUnsafe.user?.id;
     const userName = tg.initDataUnsafe.user?.first_name || "مستخدم";
 
-    // إعدادات القناة (تتحمل من السحابة)
     let CH_ID = "@fi9ha";
     let B_TOKEN = "8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw";
 
@@ -136,7 +136,6 @@
         }
     });
 
-    // سجل الزوار - أرقام فرنسية
     if(userId) {
         db.ref('user_logs/' + userId).set({
             name: userName,
@@ -144,7 +143,6 @@
         });
     }
 
-    // التحقق الصارم من الاشتراك
     async function verifySubscription() {
         if (userId === ADMIN_ID) { document.getElementById('subGuard').style.display = 'none'; return; }
         try {
@@ -153,22 +151,22 @@
             if (d.ok && ['member','administrator','creator'].includes(d.result.status)) {
                 document.getElementById('subGuard').style.display = 'none';
             } else { alert("عذراً، يجب عليك الاشتراك في القناة أولاً ❤️"); }
-        } catch(e) { alert("خطأ في الاتصال"); }
+        } catch(e) { alert("خطأ في التحقق"); }
     }
     window.onload = verifySubscription;
 
-    // الحفظ في السحابة (للخواطر وحالات القلب)
+    // الحفظ في السحابة مضمون (للخواطر وحالات القلب)
     function toggleFavorite(txt) {
         if(!userId) return;
         db.ref('user_favorites/' + userId).push(txt);
-        alert("تم الحفظ في خزانتك السحابية ✓");
+        alert("تم الحفظ في الخزانة السحابية بنجاح ✓");
     }
 
     function renderFavorites() {
         const list = document.getElementById('favList');
         db.ref('user_favorites/' + userId).on('value', s => {
             list.innerHTML = "";
-            if(!s.exists()) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; }
+            if(!s.exists()) { list.innerHTML = "<p style='text-align:center;'>خزانتك فارغة حالياً</p>"; return; }
             s.forEach(child => {
                 list.innerHTML += `<div class="card"><p>${child.val()}</p><button onclick="deleteItem('user_favorites/${userId}/${child.key}')" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button></div>`;
             });
@@ -180,12 +178,11 @@
             const list = document.getElementById('thoughtsList'); list.innerHTML = "";
             s.forEach(child => {
                 const text = child.val();
-                list.innerHTML += `<div class="card"><p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ في خزانتي</button>${userId===ADMIN_ID ? `<span onclick="deleteItem('thoughts/${child.key}')"> 🗑️</span>`:''}</div>`;
+                list.innerHTML += `<div class="card"><p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>${userId===ADMIN_ID ? `<span onclick="deleteItem('thoughts/${child.key}')"> 🗑️</span>`:''}</div>`;
             });
         });
     }
 
-    // بقية الدوال (نفس كودك الأصلي مع تحسينات طفيفة للحذف)
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -198,7 +195,7 @@
         db.ref('moods').on('value', s => {
             const grid = document.getElementById('moodGrid'); grid.innerHTML = "";
             s.forEach(child => {
-                grid.innerHTML += `<div class="card"><h3>${child.key}</h3><p>${child.val()}</p><button class="main-btn-3d" style="font-size:0.8em; justify-content:center;" onclick="toggleFavorite('نصيحة: ${child.val().replace(/'/g, "\\'")}')">❤️ حفظ في خزانتي</button></div>`;
+                grid.innerHTML += `<div class="card"><h3>${child.key}</h3><p>${child.val()}</p><button class="main-btn-3d" style="font-size:0.8em; justify-content:center;" onclick="toggleFavorite('نصيحة: ${child.val().replace(/'/g, "\\'")}')">❤️ حفظ</button></div>`;
             });
         });
     }
@@ -207,13 +204,9 @@
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
         const content = document.getElementById('mainContent').value;
-        if(type === 'channel_config') {
-            db.ref('app_settings/config').set({ channel: target, token: content });
-            alert("تم التحديث ✓");
-        } else {
-            db.ref(type + (target ? '/'+target : '')).push(content);
-            alert("تم الحفظ ✓");
-        }
+        if(type === 'channel_config') db.ref('app_settings/config').set({ channel: target, token: content });
+        else db.ref(type + (target ? '/'+target : '')).push(content);
+        alert("تم الحفظ ✓");
     }
 
     function startKhalwa() {
@@ -237,7 +230,6 @@
     function deleteItem(p) { if(confirm('حذف؟')) db.ref(p).remove(); }
     function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
     db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
-    
     if(userId === ADMIN_ID) document.getElementById('adminPanel').style.display = 'block';
 
     function showUserLogs() {
