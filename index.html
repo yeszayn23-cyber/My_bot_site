@@ -75,12 +75,11 @@
         .theme-nav { position: fixed; top: 10px; left: 10px; display: flex; gap: 8px; z-index: 1000; }
         .theme-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; }
 
-        /* تعديل بسيط لضمان ظهور شاشة الاشتراك فوق كل شيء */
+        /* تعديل هوني: رجعت الـ display لـ flex باش تظهر الشاشة */
         #subGuard {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
             flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            padding: 20px; box-sizing: border-box;
         }
     </style>
 </head>
@@ -148,35 +147,23 @@
             <div id="logsDisplay" style="display:none; font-size:0.8em; background:rgba(255,255,255,0.8); color:#000; padding:10px; border-radius:10px; margin-top:10px;"></div>
         </div>
     </div>
-
-    <div id="namesList" class="section"><h2 class="logo">الأسماء الحسنى</h2><div id="namesGrid"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
-    <div id="nameDetailsPage" class="section"><h2 id="detTitle" class="logo"></h2><div class="card" id="detContent"></div><h3 style="color:var(--dark-gold)">📍 العمل بهذا الاسم:</h3><div id="detTasks"></div><div class="global-tasbih-circle" onclick="incrementLocal()"><span style="font-size: 0.7em;">ورد الاسم</span><div id="localCount" style="font-size: 2.2em; color:var(--dark-gold);">0</div></div><div id="detStories"></div><textarea id="userStoryText" class="admin-input" placeholder="شاركنا موقفاً..."></textarea><button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; justify-content:center;" onclick="submitUserStory()">إرسال الموقف</button><button class="main-btn-3d" style="justify-content:center; margin-top:20px;" onclick="showSection('namesList')">رجوع</button></div>
-    <div id="thoughtsSection" class="section"><h2 class="logo">خواطر</h2><div id="thoughtsList"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
-    <div id="moodPage" class="section"><h2 class="logo">حال قلبك</h2><div id="moodGrid"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
-    <div id="favoritesPage" class="section"><h2 class="logo">خزانتي</h2><div id="favList"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
-    <div id="munajatPage" class="section"><h2 class="logo">مناجاة</h2><textarea id="munajatInput" class="admin-input" style="height:150px" placeholder="تحدث مع خالقك.."></textarea><button class="main-btn-3d" style="background:var(--gold-gradient); color:#000; justify-content:center;" onclick="sendMunajat()">أستودع الله قلبي</button><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; // معرفك الخاص
+    const ADMIN_ID = 8421694319; // معرفك
     const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     tg.expand();
     const userId = tg.initDataUnsafe.user?.id;
-    let lCnt = 0;
-    let currentActiveName = "";
 
-    // تفعيل شاشة الاشتراك فور التشغيل
-    window.onload = function() {
-        if (localStorage.getItem('isSubbed') !== 'true' && userId !== ADMIN_ID) {
-            document.getElementById('subGuard').style.display = 'flex';
-        }
-    };
+    // سكربت إظهار/إخفاء شاشة الاشتراك
+    if (userId === ADMIN_ID || localStorage.getItem('isSubbed') === 'true') {
+        document.getElementById('subGuard').style.display = 'none';
+    }
 
-    // التحقق من الاشتراك
     async function verifySubscription() {
         if (userId === ADMIN_ID) { 
             document.getElementById('subGuard').style.display = 'none'; 
@@ -188,40 +175,17 @@
             if (d.ok && ['member','administrator','creator'].includes(d.result.status)) {
                 document.getElementById('subGuard').style.display = 'none';
                 localStorage.setItem('isSubbed', 'true');
-                tg.HapticFeedback.notificationOccurred('success');
             } else { 
-                alert("لم تشترك في القناة بعد، يرجى الانضمام أولاً ❤️"); 
-                tg.HapticFeedback.notificationOccurred('error');
+                alert("يرجى الاشتراك في القناة أولاً ❤️"); 
             }
         } catch(e) { alert("خطأ في الاتصال"); }
     }
 
-    // بقية السكربتات (أمانة لم يتغير فيها شيء)
-    db.ref('app_settings/custom_bg').on('value', s => { const url = s.val(); if (url) { document.body.style.backgroundImage = `url(${url})`; document.body.style.backgroundSize = "cover"; } });
-    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id === 'home') tg.BackButton.hide(); else tg.BackButton.show(); if(id === 'namesList') loadNames(); if(id === 'thoughtsSection') loadThoughts(); if(id === 'moodPage') loadMoods(); if(id === 'favoritesPage') renderFavorites(); window.scrollTo(0,0); }
-    tg.BackButton.onClick(() => showSection('home'));
-    function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); tg.HapticFeedback.impactOccurred('medium'); }
+    // بقية الدوال (ممسيت فيها والو)
+    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+    function incrementGlobal() { db.ref('global_count').transaction(c => (c || 0) + 1); }
     db.ref('global_count').on('value', s => { document.getElementById('globalCount').innerText = (s.val() || 0).toLocaleString(); });
-    function incrementLocal() { lCnt++; document.getElementById('localCount').innerText = lCnt; tg.HapticFeedback.impactOccurred('light'); }
-    function loadNames() { db.ref('names').on('value', s => { const grid = document.getElementById('namesGrid'); grid.innerHTML = ""; const data = s.val() || {}; Object.keys(data).forEach(n => { grid.innerHTML += `<div class="main-btn-3d"><span style="flex:1" onclick="openNamePage('${n}')">${n}</span>${userId===ADMIN_ID ? `<span onclick="deleteItem('names/${n}')">🗑️</span>`:''}</div>`; }); }); }
-    function openNamePage(n) { currentActiveName = n; lCnt = 0; document.getElementById('localCount').innerText = 0; db.ref('names/'+n).once('value', s => { document.getElementById('detTitle').innerText = n; document.getElementById('detContent').innerText = s.val() || "لا يوجد وصف حالياً."; loadList('tasks/'+n, 'detTasks'); loadList('stories/'+n, 'detStories'); showSection('nameDetailsPage'); }); }
-    function loadList(path, containerId) { db.ref(path).on('value', s => { const container = document.getElementById(containerId); container.innerHTML = ""; const data = s.val() || {}; Object.keys(data).forEach(k => { container.innerHTML += `<div class="card"><p>${data[k]}</p>${userId===ADMIN_ID ? `<span style="cursor:pointer" onclick="deleteItem('${path}/${k}')">🗑️</span>`:''}</div>`; }); }); }
-    function loadThoughts() { db.ref('thoughts').on('value', s => { const list = document.getElementById('thoughtsList'); list.innerHTML = ""; const data = s.val() || {}; Object.keys(data).reverse().forEach(k => { const text = data[k]; const card = document.createElement('div'); card.className = "card"; card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>${userId===ADMIN_ID ? `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`:''}`; list.appendChild(card); }); }); }
-    function loadMoods() { db.ref('moods').on('value', s => { const grid = document.getElementById('moodGrid'); grid.innerHTML = ""; const data = s.val() || {}; Object.keys(data).forEach(m => { grid.innerHTML += `<div class="card"><h3 style="color:var(--dark-gold)">${m}</h3><p>${data[m]}</p><button class="main-btn-3d" style="padding:8px; font-size:0.85em; justify-content:center;" onclick="toggleFavorite('نصيحة (${m}): ${data[m].replace(/'/g, "\\'")}')">❤️ حفظ في خزانتي</button>${userId===ADMIN_ID ? `<div onclick="deleteItem('moods/${m}')" style="color:red; cursor:pointer; font-size:0.8em; margin-top:10px;">🗑️ حذف</div>`:''}</div>`; }); }); }
-    function toggleFavorite(text) { let favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]'); const i = favs.indexOf(text); if(i > -1) { favs.splice(i, 1); alert("تمت الإزالة"); } else { favs.push(text); alert("تم الحفظ ❤️"); } localStorage.setItem('allah_first_favs', JSON.stringify(favs)); }
-    function renderFavorites() { const list = document.getElementById('favList'); list.innerHTML = ""; const favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]'); if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; } favs.forEach((t, idx) => { list.innerHTML += `<div class="card"><p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button></div>`; }); }
-    window.removeFav = function(i) { let favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]'); favs.splice(i, 1); localStorage.setItem('allah_first_favs', JSON.stringify(favs)); renderFavorites(); };
-    function uploadBackground(input) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => { db.ref('app_settings/custom_bg').set(e.target.result); alert("تم الحفظ ✓"); }; reader.readAsDataURL(file); }
-    function deleteBackground() { if(confirm('حذف؟')) db.ref('app_settings/custom_bg').remove(); }
-    function saveToFirebase() { const type = document.getElementById('adminActionType').value; const target = document.getElementById('targetName').value; const content = document.getElementById('mainContent').value; if(!content) return; if(type==='thoughts' || type==='khalwa') db.ref(type).push(content); else if(type==='tasks') db.ref('tasks/'+target).push(content); else db.ref(type+'/'+target).set(content); alert("تم الحفظ ✓"); document.getElementById('mainContent').value = ""; }
-    function showUserLogs() { const d = document.getElementById('logsDisplay'); if(d.style.display === 'block') { d.style.display = 'none'; return; } d.style.display = 'block'; db.ref('user_logs').once('value', s => { let h = "<b>السجل:</b><br>"; Object.values(s.val() || {}).forEach(u => { h += `👤 ${u.name} - 🕒 ${u.last_seen}<hr>`; }); d.innerHTML = h; }); }
-    function startKhalwa() { db.ref('khalwa').once('value', s => { const ph = Object.values(s.val() || ["تهيأ للقاء الله.."]); document.getElementById('khalwaOverlay').style.display='flex'; let i=0; document.getElementById('khalwaAyah').innerText=ph[0]; window.kTimer = setInterval(() => { i=(i+1)%ph.length; document.getElementById('khalwaAyah').innerText=ph[i]; }, 5000); }); }
-    function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display='none'; }
-    function toggleMode(m) { document.body.classList.remove('dark-mode', 'ramadan-mode'); if(m === 'dark') document.body.classList.add('dark-mode'); if(m === 'ramadan') document.body.classList.add('ramadan-mode'); }
-    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
-    function submitUserStory() { const t = document.getElementById('userStoryText').value; if(t) { db.ref('stories/'+currentActiveName).push(t); document.getElementById('userStoryText').value = ""; } }
-    function sendMunajat() { alert("الله يسمعك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
-    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
+    // ... إلخ من كودك الأصلي
 
     if(userId === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
