@@ -66,7 +66,7 @@
             border: 2px dashed var(--dark-gold); 
             padding: 15px; border-radius: 20px; 
             margin-top: 30px; text-align: right;
-            padding-bottom: 100px; /* لضمان ظهور الأزرار فوق الكيبورد */
+            padding-bottom: 100px; 
         }
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; font-size: 16px; }
 
@@ -147,7 +147,14 @@
         </div>
     </div>
 
-    <div id="namesList" class="section"><h2 class="logo">الأسماء الحسنى</h2><div id="namesGrid"></div><button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button></div>
+    <div id="namesList" class="section">
+        <h2 class="logo">الأسماء الحسنى</h2>
+        <div style="padding: 10px;">
+            <input type="text" id="searchInput" class="admin-input" placeholder="🔍 ابحث عن اسم الله..." oninput="filterNames()">
+        </div>
+        <div id="namesGrid"></div>
+        <button class="main-btn-3d" style="justify-content:center" onclick="showSection('home')">رجوع</button>
+    </div>
     
     <div id="nameDetailsPage" class="section">
         <h2 id="detTitle" class="logo"></h2>
@@ -179,10 +186,10 @@
 
     tg.expand();
     const userId = tg.initDataUnsafe.user?.id;
-    let lCnt = 0; // تعريف عداد ورد الاسم
+    let lCnt = 0; 
     let currentActiveName = "";
+    let cachedNames = {}; // مخزن مؤقت للبحث
 
-    // تحميل الخلفية فوراً
     db.ref('app_settings/custom_bg').on('value', s => {
         const url = s.val();
         if (url) {
@@ -236,14 +243,29 @@
         tg.HapticFeedback.impactOccurred('light');
     }
 
+    // وظيفة تحميل الأسماء المعدلة لتدعم البحث
     function loadNames() {
         db.ref('names').on('value', s => {
-            const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
-            const data = s.val() || {};
-            Object.keys(data).forEach(n => {
-                grid.innerHTML += `<div class="main-btn-3d"><span style="flex:1" onclick="openNamePage('${n}')">${n}</span>${userId===ADMIN_ID ? `<span onclick="deleteItem('names/${n}')">🗑️</span>`:''}</div>`;
-            });
+            cachedNames = s.val() || {};
+            displayNames(cachedNames);
         });
+    }
+
+    function displayNames(data) {
+        const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
+        Object.keys(data).forEach(n => {
+            grid.innerHTML += `<div class="main-btn-3d"><span style="flex:1" onclick="openNamePage('${n}')">${n}</span>${userId===ADMIN_ID ? `<span onclick="deleteItem('names/${n}')">🗑️</span>`:''}</div>`;
+        });
+    }
+
+    // محرك البحث اللحظي
+    function filterNames() {
+        const query = document.getElementById('searchInput').value.trim();
+        const filtered = {};
+        Object.keys(cachedNames).forEach(name => {
+            if (name.includes(query)) filtered[name] = cachedNames[name];
+        });
+        displayNames(filtered);
     }
 
     function openNamePage(n) {
