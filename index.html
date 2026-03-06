@@ -32,7 +32,6 @@
             margin: 0; padding: 15px; 
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.3s ease;
         }
 
         .dark-mode { --bg-color: #2b1d0e; --text-color: #fcf9f2; --card-bg: #3d2b1a; --btn-shadow: 5px 5px 12px #1a1209, -2px -2px 8px #4d3621; }
@@ -48,7 +47,7 @@
             cursor: pointer; display: flex; justify-content: space-between; align-items: center;
             box-shadow: var(--btn-shadow); transition: 0.2s; box-sizing: border-box;
         }
-        .main-btn-3d:active { transform: scale(0.96); }
+        .main-btn-3d:active { transform: scale(0.98); }
 
         .global-tasbih-circle {
             width: 160px; height: 160px; margin: 20px auto;
@@ -67,7 +66,7 @@
             border: 2px dashed var(--dark-gold); 
             padding: 15px; border-radius: 20px; 
             margin-top: 30px; text-align: right;
-            padding-bottom: 50px;
+            padding-bottom: 100px; /* لضمان ظهور الأزرار فوق الكيبورد */
         }
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--dark-gold); background: var(--card-bg); color: var(--text-color); font-family: 'Amiri'; box-sizing: border-box; font-size: 16px; }
 
@@ -79,7 +78,7 @@
         #subGuard {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); background-image: var(--pattern); z-index: 99999;
-            flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
     </style>
 </head>
@@ -173,34 +172,17 @@
 
 <script>
     const tg = window.Telegram.WebApp;
-    const ADMIN_ID = 8421694319; 
+    const ADMIN_ID = 8421694319;
     const firebaseConfig = { databaseURL: "https://allahfirst-b9c52-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     tg.expand();
     const userId = tg.initDataUnsafe.user?.id;
-    let lCnt = 0;
+    let lCnt = 0; // تعريف عداد ورد الاسم
     let currentActiveName = "";
 
-    // 1. نظام الاشتراك الإجباري
-    async function verifySubscription() {
-        if (userId === ADMIN_ID) { document.getElementById('subGuard').style.display = 'none'; return; }
-        try {
-            const res = await fetch(`https://api.telegram.org/bot8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw/getChatMember?chat_id=@fi9ha&user_id=${userId}`);
-            const d = await res.json();
-            if (d.ok && ['member','administrator','creator'].includes(d.result.status)) {
-                document.getElementById('subGuard').style.display = 'none';
-                localStorage.setItem('isSubbed', 'true');
-            } else { alert("يرجى الاشتراك أولاً ❤️"); }
-        } catch(e) { alert("خطأ في الاتصال"); }
-    }
-
-    if (localStorage.getItem('isSubbed') !== 'true' && userId !== ADMIN_ID) {
-        document.getElementById('subGuard').style.display = 'flex';
-    }
-
-    // 2. تحميل الخلفية والبيانات الأساسية
+    // تحميل الخلفية فوراً
     db.ref('app_settings/custom_bg').on('value', s => {
         const url = s.val();
         if (url) {
@@ -213,21 +195,35 @@
         }
     });
 
-    // 3. إدارة التنقل
+    if (localStorage.getItem('isSubbed') !== 'true' && userId !== ADMIN_ID) {
+        document.getElementById('subGuard').style.display = 'flex';
+    }
+
+    async function verifySubscription() {
+        if (userId === ADMIN_ID) { document.getElementById('subGuard').style.display = 'none'; return; }
+        try {
+            const res = await fetch(`https://api.telegram.org/bot8000457608:AAEmrrhrKUf1-qRM-JDR1Ux8db3ia_v3zKw/getChatMember?chat_id=@fi9ha&user_id=${userId}`);
+            const d = await res.json();
+            if (d.ok && ['member','administrator','creator'].includes(d.result.status)) {
+                document.getElementById('subGuard').style.display = 'none';
+                localStorage.setItem('isSubbed', 'true');
+            } else { alert("يرجى الاشتراك أولاً ❤️"); }
+        } catch(e) { alert("خطأ في الاتصال"); }
+    }
+
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'home') tg.BackButton.hide(); else tg.BackButton.show();
-        
         if(id === 'namesList') loadNames();
         if(id === 'thoughtsSection') loadThoughts();
         if(id === 'moodPage') loadMoods();
         if(id === 'favoritesPage') renderFavorites();
         window.scrollTo(0,0);
     }
+
     tg.BackButton.onClick(() => showSection('home'));
 
-    // 4. وظائف التسبيح
     function incrementGlobal() { 
         db.ref('global_count').transaction(c => (c || 0) + 1); 
         tg.HapticFeedback.impactOccurred('medium');
@@ -240,16 +236,12 @@
         tg.HapticFeedback.impactOccurred('light');
     }
 
-    // 5. تحميل البيانات
     function loadNames() {
         db.ref('names').on('value', s => {
             const grid = document.getElementById('namesGrid'); grid.innerHTML = "";
             const data = s.val() || {};
             Object.keys(data).forEach(n => {
-                const btn = document.createElement('div'); btn.className = "main-btn-3d";
-                btn.innerHTML = `<span style="flex:1" onclick="openNamePage('${n}')">${n}</span>`;
-                if(userId === ADMIN_ID) btn.innerHTML += `<span onclick="deleteItem('names/${n}')">🗑️</span>`;
-                grid.appendChild(btn);
+                grid.innerHTML += `<div class="main-btn-3d"><span style="flex:1" onclick="openNamePage('${n}')">${n}</span>${userId===ADMIN_ID ? `<span onclick="deleteItem('names/${n}')">🗑️</span>`:''}</div>`;
             });
         });
     }
@@ -282,7 +274,7 @@
             Object.keys(data).reverse().forEach(k => {
                 const text = data[k];
                 const card = document.createElement('div'); card.className = "card";
-                card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ في خزانتي</button>${userId===ADMIN_ID ? `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`:''}`;
+                card.innerHTML = `<p>${text}</p><button onclick="toggleFavorite('${text.replace(/'/g, "\\'")}')" style="border:none; background:none; color:red; cursor:pointer;">❤️ حفظ</button>${userId===ADMIN_ID ? `<span onclick="deleteItem('thoughts/${k}')"> 🗑️</span>`:''}`;
                 list.appendChild(card);
             });
         });
@@ -298,21 +290,20 @@
         });
     }
 
-    // 6. نظام المفضلات (الخزانة)
     function toggleFavorite(text) {
         let favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
         const i = favs.indexOf(text);
         if(i > -1) { favs.splice(i, 1); alert("تمت الإزالة"); }
-        else { favs.push(text); alert("تم الحفظ في خزانتي ❤️"); }
+        else { favs.push(text); alert("تم الحفظ ❤️"); }
         localStorage.setItem('allah_first_favs', JSON.stringify(favs));
     }
 
     function renderFavorites() {
         const list = document.getElementById('favList'); list.innerHTML = "";
         const favs = JSON.parse(localStorage.getItem('allah_first_favs') || '[]');
-        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة حالياً..</p>"; return; }
+        if(favs.length === 0) { list.innerHTML = "<p style='text-align:center;'>الخزانة فارغة</p>"; return; }
         favs.forEach((t, idx) => {
-            list.innerHTML += `<div class="card"><p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة من الخزانة</button></div>`;
+            list.innerHTML += `<div class="card"><p>${t}</p><button onclick="removeFav(${idx})" style="border:none; background:none; color:gray; cursor:pointer;">❌ إزالة</button></div>`;
         });
     }
     window.removeFav = function(i) { 
@@ -322,7 +313,15 @@
         renderFavorites(); 
     };
 
-    // 7. إدارة المالك والتحكم
+    function uploadBackground(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => { db.ref('app_settings/custom_bg').set(e.target.result); alert("تم الحفظ ✓"); };
+        reader.readAsDataURL(file);
+    }
+    function deleteBackground() { if(confirm('حذف؟')) db.ref('app_settings/custom_bg').remove(); }
+
     function saveToFirebase() {
         const type = document.getElementById('adminActionType').value;
         const target = document.getElementById('targetName').value;
@@ -334,68 +333,42 @@
         alert("تم الحفظ ✓"); document.getElementById('mainContent').value = "";
     }
 
-    function uploadBackground(input) {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => { db.ref('app_settings/custom_bg').set(e.target.result); alert("تم تعميم الخلفية على الجميع ✓"); };
-        reader.readAsDataURL(file);
-    }
-    function deleteBackground() { if(confirm('هل تريد حذف الخلفية؟')) db.ref('app_settings/custom_bg').remove(); }
-
     function showUserLogs() {
         const d = document.getElementById('logsDisplay');
         if(d.style.display === 'block') { d.style.display = 'none'; return; }
         d.style.display = 'block';
         db.ref('user_logs').once('value', s => {
-            let h = "<b>سجل الزوار الأخير:</b><br>";
-            Object.values(s.val() || {}).forEach(u => { h += `👤 ${u.name || 'مجهول'} - 🕒 ${u.last_seen || ''}<hr>`; });
+            let h = "<b>السجل:</b><br>";
+            Object.values(s.val() || {}).forEach(u => { h += `👤 ${u.name} - 🕒 ${u.last_seen}<hr>`; });
             d.innerHTML = h;
         });
     }
 
-    // 8. ميزات إضافية
     function startKhalwa() {
         db.ref('khalwa').once('value', s => {
-            const ph = Object.values(s.val() || ["تهيأ للقاء الله..", "استشعر قربه.."]);
+            const ph = Object.values(s.val() || ["تهيأ للقاء الله.."]);
             document.getElementById('khalwaOverlay').style.display='flex';
             let i=0; document.getElementById('khalwaAyah').innerText=ph[0];
             window.kTimer = setInterval(() => { i=(i+1)%ph.length; document.getElementById('khalwaAyah').innerText=ph[i]; }, 5000);
         });
     }
     function closeKhalwa() { clearInterval(window.kTimer); document.getElementById('khalwaOverlay').style.display='none'; }
-    
     function toggleMode(m) {
         document.body.classList.remove('dark-mode', 'ramadan-mode');
         if(m === 'dark') document.body.classList.add('dark-mode');
         if(m === 'ramadan') document.body.classList.add('ramadan-mode');
     }
-
-    function deleteItem(path) { if(confirm('متأكد من الحذف؟')) db.ref(path).remove(); }
-    
+    function deleteItem(path) { if(confirm('حذف؟')) db.ref(path).remove(); }
     function submitUserStory() {
         const t = document.getElementById('userStoryText').value;
-        if(t) { db.ref('stories/'+currentActiveName).push(t); document.getElementById('userStoryText').value = ""; alert("تم الإرسال.. جزاك الله خيراً"); }
+        if(t) { db.ref('stories/'+currentActiveName).push(t); document.getElementById('userStoryText').value = ""; }
     }
+    function sendMunajat() { alert("الله يسمعك.."); document.getElementById('munajatInput').value = ""; showSection('home'); }
+    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير؟')) db.ref('global_count').set(0); }
 
-    function sendMunajat() { 
-        if(!document.getElementById('munajatInput').value) return;
-        alert("الله يسمعك.. استودعنا الله قلبك"); 
-        document.getElementById('munajatInput').value = ""; 
-        showSection('home'); 
-    }
-
-    function resetGlobal(e) { e.stopPropagation(); if(confirm('تصفير العداد للجميع؟')) db.ref('global_count').set(0); }
-
-    // تفعيل لوحة الأدمن
     if(userId === ADMIN_ID) {
         document.getElementById('adminPanel').style.display = 'block';
         document.getElementById('resetBtn').style.display = 'block';
-        // تسجيل دخول الأدمن في السجلات
-        db.ref('user_logs/'+userId).set({ name: "المالكة ✨", last_seen: new Date().toLocaleString() });
-    } else if(userId) {
-        // تسجيل دخول المستخدم العادي
-        db.ref('user_logs/'+userId).set({ name: tg.initDataUnsafe.user.first_name, last_seen: new Date().toLocaleString() });
     }
 </script>
 </body>
